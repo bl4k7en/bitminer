@@ -530,28 +530,28 @@
                 <div id="workers"></div>
             </div>
             
-            <!-- NEUE STATISTIK BOX zwischen Workers und Save Game -->
+            <!-- STATISTICS BOX between Workers and Save Game -->
             <div class="panel" style="margin-top: 12px;">
-                <div class="title">▬ STATISTIK</div>
-                <div style="color: #666; font-size: 11px; margin-bottom: 8px;">GESAMTE MULTIPLIKATOREN</div>
+                <div class="title">▬ STATISTICS</div>
+                <div style="color: #666; font-size: 11px; margin-bottom: 8px;">TOTAL MULTIPLIERS</div>
                 <div class="stat-item">
-                    <span>Energie-Boost:</span>
+                    <span>Energy Boost:</span>
                     <span style="color: #75c0c7;" id="stat-energy-mult">x1.00</span>
                 </div>
                 <div class="stat-item">
-                    <span>Power-Multi:</span>
+                    <span>Power Multi:</span>
                     <span style="color: #75c0c7;" id="stat-power-mult">x1.00</span>
                 </div>
                 <div class="stat-item">
-                    <span>Ascension-Bonus:</span>
+                    <span>Ascension Bonus:</span>
                     <span style="color: #75c0c7;" id="stat-prestige-mult">x1.00</span>
                 </div>
                 <div class="stat-item">
-                    <span>Rank-Bonus:</span>
+                    <span>Rank Bonus:</span>
                     <span style="color: #75c0c7;" id="stat-rank-mult">x1.00</span>
                 </div>
                 <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222;">
-                    <div style="color: #888; font-size: 11px;">UPGRADE-WERTE</div>
+                    <div style="color: #888; font-size: 11px;">UPGRADE VALUES</div>
                     <div class="stat-item">
                         <span>Mining Power:</span>
                         <span style="color: #f7c516;" id="stat-upgrade-power">1.00</span>
@@ -754,7 +754,7 @@
         
         // Format large numbers with suffixes (K, M, B, T)
         function fmt(n) {
-            if (n < 1e6) return Math.floor(n).toLocaleString('de');
+            if (n < 1e6) return Math.floor(n).toLocaleString('en');
             if (n < 1e9) return (n/1e6).toFixed(2) + 'M';
             if (n < 1e12) return (n/1e9).toFixed(2) + 'B';
             return (n/1e12).toFixed(2) + 'T';
@@ -788,7 +788,7 @@
         
         // Add a new message to the game log
         function log(msg) {
-            const time = new Date().toLocaleTimeString('de-DE');
+            const time = new Date().toLocaleTimeString('en-US', {hour12: false});
             game.log.unshift({time, msg});
             if (game.log.length > 100) game.log.pop();
             updateLog();
@@ -844,7 +844,7 @@
             document.getElementById('conv-salt').disabled = game.benis < 5000;
             document.getElementById('conv-rage').disabled = game.salt < 50;
 
-            // Update Statistik Box
+            // Update Statistics Box
             document.getElementById('stat-energy-mult').textContent = 'x' + (1 + (game.karma * 0.01)).toFixed(2);
             document.getElementById('stat-power-mult').textContent = 'x' + Math.pow(1.12, game.rage).toFixed(2);
             document.getElementById('stat-prestige-mult').textContent = 'x' + (1 + (game.prestige * 0.05)).toFixed(2);
@@ -1090,14 +1090,14 @@
             notify('SAVED');
         });
         
-        // Hard reset game - KORRIGIERTE VERSION
+        // Hard reset game
         document.getElementById('reset-btn').addEventListener('click', () => {
             if (!confirm('HARD RESET: Delete everything?\nThis will reset ALL progress including Ascension levels!')) return;
             
-            // Lösche den Speicher
+            // Delete save
             localStorage.removeItem('bitminer');
             
-            // Setze das Spiel komplett zurück
+            // Reset game completely
             game.benis = 0;
             game.karma = 0;
             game.salt = 0;
@@ -1123,7 +1123,7 @@
             });
             
             // Clear log
-            game.log = [{time: new Date().toLocaleTimeString('de-DE'), msg: 'SYSTEM RESET - NEW GAME STARTED'}];
+            game.log = [{time: new Date().toLocaleTimeString('en-US', {hour12: false}), msg: 'SYSTEM RESET - NEW GAME STARTED'}];
             
             log('HARD RESET - NEW GAME STARTED');
             notify('GAME COMPLETELY RESET');
