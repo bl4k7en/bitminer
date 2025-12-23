@@ -1,4 +1,4 @@
-# Bit-Miner Operation
+# Bitminer
 
 A minimalist clicking/incremental game in terminal style. Build your mining operation, optimize your income, and climb the ranks!
 
