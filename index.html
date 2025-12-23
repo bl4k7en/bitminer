@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bit-Miner Operation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #888;
+            font-size: 13px;
+            line-height: 1.3;
+            padding: 10px;
+        }
+        
+        .main {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr 250px;
+            gap: 8px;
+        }
+        
+        @media (max-width: 900px) {
+            .main { grid-template-columns: 1fr; }
+        }
+        
+        .panel {
+            background: #151515;
+            border: 1px solid #222;
+            padding: 8px;
+        }
+        
+        .title {
+            color: #d23c22;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .resource {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 11px;
+        }
+        
+        .resource-name { color: #666; }
+        .resource-val { color: #75c0c7; font-weight: bold; }
+        
+        .btn {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #888;
+            padding: 8px;
+            margin: 4px 0;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-align: left;
+            transition: all 0.1s;
+        }
+        
+        .btn:hover:not(:disabled) {
+            background: #222;
+            border-color: #75c0c7;
+            color: #ccc;
+        }
+        
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .btn-active {
+            border-color: #d23c22;
+            background: #1a0f0f;
+        }
+        
+        .cost {
+            color: #f7c516;
+            float: right;
+        }
+        
+        .mine-zone {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .mine-btn {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border: 3px solid #d23c22;
+            cursor: pointer;
+            font-size: 72px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.05s;
+        }
+        
+        .mine-btn:hover {
+            border-color: #75c0c7;
+            transform: scale(1.02);
+        }
+        
+        .mine-btn:active {
+            transform: scale(0.98);
+            background: #0a0a0a;
+        }
+        
+        .mine-rate {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #d23c22;
+            border: 2px solid #f7c516;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .mine-info {
+            margin-top: 15px;
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .upgrade {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            padding: 8px;
+            margin: 4px 0;
+        }
+        
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        
+        .upgrade-name {
+            color: #ccc;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .upgrade-level {
+            color: #666;
+            font-size: 10px;
+        }
+        
+        .upgrade-desc {
+            color: #666;
+            font-size: 10px;
+            margin-bottom: 6px;
+        }
+        
+        .progress {
+            height: 3px;
+            background: #0f0f0f;
+            margin: 4px 0;
+            border: 1px solid #222;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #75c0c7;
+            transition: width 0.3s;
+        }
+        
+        .log {
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 10px;
+        }
+        
+        .log-entry {
+            padding: 3px 0;
+            border-bottom: 1px solid #1a1a1a;
+            color: #666;
+        }
+        
+        .log-time {
+            color: #444;
+            margin-right: 6px;
+        }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #75c0c7; }
+        
+        .tab-bar {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #222;
+        }
+        
+        .tab {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #555;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+        
+        .tab:hover { color: #888; }
+        .tab.active {
+            color: #75c0c7;
+            border-bottom-color: #75c0c7;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .worker {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            margin: 3px 0;
+            font-size: 11px;
+        }
+        
+        .worker-icon {
+            width: 30px;
+            height: 30px;
+            background: #0f0f0f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .worker-info { flex: 1; }
+        .worker-name { color: #ccc; font-weight: bold; }
+        .worker-rate { color: #666; font-size: 10px; }
+        .worker-count { color: #75c0c7; font-weight: bold; margin-left: 8px; }
+        
+        .crit { animation: crit 0.2s; }
+        @keyframes crit { 50% { border-color: #ff0000; transform: scale(1.05); } }
+        
+        .notification {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #1a1a1a;
+            border: 2px solid #f7c516;
+            padding: 10px;
+            max-width: 250px;
+            z-index: 1000;
+            animation: notif 0.3s, notif-out 0.3s 2.5s;
+        }
+        
+        @keyframes notif { from { transform: translateX(300px); opacity: 0; } }
+        @keyframes notif-out { to { transform: translateX(300px); opacity: 0; } }
+        
+        .rank-display {
+            text-align: center;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            margin-bottom: 8px;
+        }
+        
+        .rank-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #444;
+            color: #fff;
+            font-weight: bold;
+            font-size: 11px;
+            margin: 4px;
+        }
+        
+        .stat-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .stat {
+            background: #1a1a1a;
+            border-left: 2px solid #75c0c7;
+            padding: 8px;
+        }
+        
+        .stat-val {
+            font-size: 18px;
+            font-weight: bold;
+            color: #75c0c7;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <!-- Left Panel: Resources & Workers -->
+        <div>
+            <div class="panel">
+                <div class="title">▬ RESOURCES</div>
+                <div class="resource">
+                    <span class="resource-name">BITS</span>
+                    <span class="resource-val" id="benis">0</span>
+                </div>
+                <div class="resource">
+                    <span class="resource-name">ENERGY</span>
+                    <span class="resource-val" id="karma">0</span>
+                </div>
+                <div class="resource">
+                    <span class="resource-name">CRYSTALS</span>
+                    <span class="resource-val" id="salt">0</span>
+                </div>
+                <div class="resource">
+                    <span class="resource-name">POWER</span>
+                    <span class="resource-val" id="rage">0</span>
+                </div>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #222; font-size: 10px;">
+                    <div style="color: #666;">BITS/s: <span id="benis-rate" style="color: #75c0c7;">0</span></div>
+                    <div style="color: #666;">MULTIPLIER: <span id="multi" style="color: #f7c516;">x1.0</span></div>
+                </div>
+            </div>
+            
+            <div class="panel" style="margin-top: 8px;">
+                <div class="title">▬ WORKERS</div>
+                <div id="workers"></div>
+            </div>
+            
+            <div class="panel" style="margin-top: 8px;">
+                <button class="btn" id="save-btn">▶ SAVE GAME</button>
+                <button class="btn" id="reset-btn" style="border-color: #d23c22; color: #d23c22;">▶ HARD RESET</button>
+            </div>
+        </div>
+        
+        <!-- Center Panel: Mining & Upgrades -->
+        <div>
+            <div class="rank-display">
+                <div style="color: #666; font-size: 10px; margin-bottom: 4px;">CURRENT RANK</div>
+                <span id="rank-name" style="color: #ccc; font-weight: bold;">INITIATE</span>
+                <span class="rank-badge" id="rank-badge">0</span>
+                <div style="margin-top: 8px; color: #666; font-size: 10px;">
+                    ASCENSION: <span id="prestige" style="color: #f7c516; font-weight: bold;">0</span>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="mine-zone">
+                    <button class="mine-btn" id="mine-btn">
+                        💎
+                        <span class="mine-rate" id="mine-rate">+1</span>
+                    </button>
+                    <div class="mine-info">
+                        TOTAL MINED: <span id="total-mined" style="color: #75c0c7;">0</span> BITS
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel" style="margin-top: 8px;">
+                <div class="tab-bar">
+                    <button class="tab active" data-tab="power">POWER</button>
+                    <button class="tab" data-tab="convert">CONVERT</button>
+                    <button class="tab" data-tab="prestige">ASCEND</button>
+                </div>
+                
+                <div class="tab-content active" id="tab-power">
+                    <div id="power-upgrades"></div>
+                </div>
+                
+                <div class="tab-content" id="tab-convert">
+                    <div style="color: #666; font-size: 10px; margin-bottom: 8px;">CONVERT BITS TO OTHER RESOURCES</div>
+                    <button class="btn" id="conv-karma">
+                        CONVERT TO ENERGY
+                        <span class="cost">1000 Bits → 1 Energy</span>
+                    </button>
+                    <button class="btn" id="conv-salt">
+                        CONVERT TO CRYSTALS
+                        <span class="cost">5000 Bits → 1 Crystal</span>
+                    </button>
+                    <button class="btn" id="conv-rage">
+                        CONVERT TO POWER
+                        <span class="cost">50 Crystals → 1 Power</span>
+                    </button>
+                    <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #222;">
+                        <div style="color: #666; font-size: 10px; margin-bottom: 6px;">ENERGY BOOSTS BITS GAIN</div>
+                        <div style="color: #666; font-size: 10px; margin-bottom: 6px;">CRYSTALS UNLOCK WORKERS</div>
+                        <div style="color: #666; font-size: 10px;">POWER MULTIPLIES EVERYTHING</div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="tab-prestige">
+                    <div style="color: #666; font-size: 10px; margin-bottom: 8px;">ASCEND FOR PERMANENT BONUSES</div>
+                    <div style="margin: 8px 0; padding: 8px; background: #1a1a1a; border: 1px solid #333;">
+                        <div style="color: #888; font-size: 11px;">ASCENSION BONUS</div>
+                        <div style="color: #f7c516; font-weight: bold;">+<span id="prestige-bonus">0</span>% ALL GAIN</div>
+                    </div>
+                    <div style="color: #888; font-size: 10px; margin: 8px 0;">
+                        REQUIRES: <span id="prestige-req" style="color: #75c0c7; font-weight: bold;">1,000,000</span> BITS
+                    </div>
+                    <button class="btn" id="prestige-btn" style="border-color: #d23c22;">
+                        ▶ ASCEND NOW
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel" style="margin-top: 8px;">
+                <div class="stat-row">
+                    <div class="stat">
+                        <div class="stat-val" id="stat-clicks">0</div>
+                        <div class="stat-label">Clicks</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" id="stat-time">0s</div>
+                        <div class="stat-label">Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel: Log & Info -->
+        <div>
+            <div class="panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="title">▬ LOG</div>
+                    <button class="btn" id="clear-log" style="width: auto; padding: 4px 8px; margin: 0;">CLEAR</button>
+                </div>
+                <div class="log" id="log">
+                    <div class="log-entry">
+                        <span class="log-time">[00:00:00]</span>
+                        <span>SYSTEM ONLINE</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel" style="margin-top: 8px;">
+                <div class="title">▬ RANKS</div>
+                <div id="ranks" style="font-size: 10px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notifications"></div>
+    
+    <script>
+        const game = {
+            benis: 0,
+            karma: 0,
+            salt: 0,
+            rage: 0,
+            totalMined: 0,
+            clickPower: 1,
+            clicks: 0,
+            time: 0,
+            prestige: 0,
+            workers: {
+                bot: {name: 'Mining Bot', icon: '⚙', count: 0, cost: 50, rate: 1, costMult: 1.5},
+                slave: {name: 'Code Slave', icon: '👨', count: 0, cost: 500, rate: 5, costMult: 1.6},
+                script: {name: 'Auto Script', icon: '📜', count: 0, cost: 5000, rate: 25, costMult: 1.7},
+                farm: {name: 'Click Farm', icon: '🏭', count: 0, cost: 50000, rate: 100, costMult: 1.8}
+            },
+            upgrades: {
+                power: {name: 'Mining Power', level: 0, baseCost: 100, costMult: 1.6, effect: 1},
+                crit: {name: 'Critical Hit', level: 0, baseCost: 500, costMult: 1.7, effect: 0},
+                efficiency: {name: 'Worker Efficiency', level: 0, baseCost: 1000, costMult: 1.8, effect: 1},
+                karmaBoost: {name: 'Energy Boost', level: 0, baseCost: 2000, costMult: 1.9, effect: 1}
+            },
+            rankIndex: 0,
+            multi: 1,
+            log: []
+        };
+        
+        const ranks = [
+            {name: 'Initiate', req: 0, color: '#444'},
+            {name: 'Apprentice', req: 10000, color: '#6c432b'},
+            {name: 'Technician', req: 100000, color: '#e108e9'},
+            {name: 'Engineer', req: 500000, color: '#fff'},
+            {name: 'Architect', req: 2000000, color: '#1cb992'},
+            {name: 'Master', req: 10000000, color: '#5bb91c'},
+            {name: 'Overlord', req: 50000000, color: '#008fff'},
+            {name: 'Titan', req: 200000000, color: '#ff9900'}
+        ];
+        
+        function fmt(n) {
+            if (n < 1e6) return Math.floor(n).toLocaleString('de');
+            if (n < 1e9) return (n/1e6).toFixed(2) + 'M';
+            if (n < 1e12) return (n/1e9).toFixed(2) + 'B';
+            return (n/1e12).toFixed(2) + 'T';
+        }
+        
+        function fmtTime(s) {
+            const h = Math.floor(s/3600);
+            const m = Math.floor((s%3600)/60);
+            const sec = s%60;
+            return h > 0 ? `${h}h ${m}m` : m > 0 ? `${m}m ${sec}s` : `${sec}s`;
+        }
+        
+        function getMulti() {
+            let m = game.multi;
+            m *= 1 + (game.karma * 0.01);
+            m *= Math.pow(1.1, game.rage);
+            m *= 1 + (game.prestige * 0.05);
+            return m;
+        }
+        
+        function getWorkerRate() {
+            let total = 0;
+            Object.values(game.workers).forEach(w => {
+                total += w.count * w.rate * game.upgrades.efficiency.effect;
+            });
+            return total * getMulti();
+        }
+        
+        function log(msg) {
+            const time = new Date().toLocaleTimeString('de-DE');
+            game.log.unshift({time, msg});
+            if (game.log.length > 100) game.log.pop();
+            updateLog();
+        }
+        
+        function notify(msg) {
+            const div = document.createElement('div');
+            div.className = 'notification';
+            div.textContent = msg;
+            document.getElementById('notifications').appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+        
+        function updateLog() {
+            const el = document.getElementById('log');
+            el.innerHTML = '';
+            game.log.slice(0, 50).forEach(l => {
+                const div = document.createElement('div');
+                div.className = 'log-entry';
+                div.innerHTML = `<span class="log-time">[${l.time}]</span><span>${l.msg}</span>`;
+                el.appendChild(div);
+            });
+        }
+        
+        function update() {
+            document.getElementById('benis').textContent = fmt(game.benis);
+            document.getElementById('karma').textContent = fmt(game.karma);
+            document.getElementById('salt').textContent = fmt(game.salt);
+            document.getElementById('rage').textContent = fmt(game.rage);
+            document.getElementById('benis-rate').textContent = fmt(getWorkerRate());
+            document.getElementById('multi').textContent = 'x' + getMulti().toFixed(2);
+            document.getElementById('mine-rate').textContent = '+' + Math.floor(game.clickPower * game.upgrades.power.effect * getMulti());
+            document.getElementById('total-mined').textContent = fmt(game.totalMined);
+            document.getElementById('stat-clicks').textContent = fmt(game.clicks);
+            document.getElementById('stat-time').textContent = fmtTime(game.time);
+            document.getElementById('prestige').textContent = game.prestige;
+            document.getElementById('prestige-bonus').textContent = (game.prestige * 5).toFixed(0);
+            
+            const prReq = 1000000 * Math.pow(10, game.prestige);
+            document.getElementById('prestige-req').textContent = fmt(prReq);
+            document.getElementById('prestige-btn').disabled = game.benis < prReq;
+            
+            document.getElementById('conv-karma').disabled = game.benis < 1000;
+            document.getElementById('conv-salt').disabled = game.benis < 5000;
+            document.getElementById('conv-rage').disabled = game.salt < 50;
+            
+            updateRanks();
+            updateWorkers();
+            updateUpgrades();
+        }
+        
+        function updateRanks() {
+            ranks.forEach((r, i) => {
+                if (game.benis >= r.req && i > game.rankIndex) {
+                    game.rankIndex = i;
+                    game.multi *= 1.1;
+                    log('RANK UP: ' + r.name);
+                    notify('RANK UP: ' + r.name);
+                }
+            });
+            
+            const r = ranks[game.rankIndex];
+            document.getElementById('rank-name').textContent = r.name.toUpperCase();
+            document.getElementById('rank-badge').textContent = game.rankIndex;
+            document.getElementById('rank-badge').style.background = r.color;
+            
+            const list = document.getElementById('ranks');
+            list.innerHTML = '';
+            ranks.forEach((rank, i) => {
+                const div = document.createElement('div');
+                div.style.padding = '4px 0';
+                div.style.borderBottom = '1px solid #1a1a1a';
+                div.style.color = i <= game.rankIndex ? '#888' : '#444';
+                div.innerHTML = `[${i}] ${rank.name} <span style="float: right;">${fmt(rank.req)}</span>`;
+                list.appendChild(div);
+            });
+        }
+        
+        function updateWorkers() {
+            const list = document.getElementById('workers');
+            list.innerHTML = '';
+            Object.entries(game.workers).forEach(([key, w]) => {
+                const cost = Math.floor(w.cost * Math.pow(w.costMult, w.count));
+                const div = document.createElement('div');
+                div.className = 'worker';
+                div.innerHTML = `
+                    <div class="worker-icon">${w.icon}</div>
+                    <div class="worker-info">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="worker-name">${w.name}</div>
+                            <div class="worker-count">x${w.count}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px;">
+                            <div class="worker-rate">${(w.rate * game.upgrades.efficiency.effect * getMulti()).toFixed(1)}/s each</div>
+                            <div style="color: ${game.benis >= cost ? '#f7c516' : '#666'};">${fmt(cost)} Bits</div>
+                        </div>
+                    </div>
+                `;
+                div.onclick = () => buyWorker(key);
+                div.style.cursor = 'pointer';
+                div.style.opacity = game.benis >= cost ? '1' : '0.4';
+                div.title = 'Cost: ' + fmt(cost) + ' Bits';
+                list.appendChild(div);
+            });
+        }
+        
+        function updateUpgrades() {
+            const list = document.getElementById('power-upgrades');
+            list.innerHTML = '';
+            Object.entries(game.upgrades).forEach(([key, up]) => {
+                const cost = Math.floor(up.baseCost * Math.pow(up.costMult, up.level));
+                const div = document.createElement('div');
+                div.className = 'upgrade';
+                let effectText = '';
+                if (key === 'power') effectText = 'x' + up.effect.toFixed(2);
+                if (key === 'crit') effectText = up.effect.toFixed(1) + '%';
+                if (key === 'efficiency') effectText = 'x' + up.effect.toFixed(2);
+                if (key === 'karmaBoost') effectText = 'x' + up.effect.toFixed(2);
+                
+                div.innerHTML = `
+                    <div class="upgrade-header">
+                        <div class="upgrade-name">${up.name}</div>
+                        <div class="upgrade-level">LVL ${up.level}</div>
+                    </div>
+                    <div class="upgrade-desc">${effectText}</div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: ${Math.min((up.level/100)*100, 100)}%"></div>
+                    </div>
+                    <button class="btn" ${game.benis >= cost ? '' : 'disabled'}>
+                        UPGRADE <span class="cost">${fmt(cost)} Bits</span>
+                    </button>
+                `;
+                div.querySelector('button').onclick = () => buyUpgrade(key);
+                list.appendChild(div);
+            });
+        }
+        
+        function buyWorker(key) {
+            const w = game.workers[key];
+            const cost = Math.floor(w.cost * Math.pow(w.costMult, w.count));
+            if (game.benis >= cost) {
+                game.benis -= cost;
+                w.count++;
+                log('HIRED: ' + w.name);
+                update();
+            }
+        }
+        
+        function buyUpgrade(key) {
+            const up = game.upgrades[key];
+            const cost = Math.floor(up.baseCost * Math.pow(up.costMult, up.level));
+            if (game.benis >= cost) {
+                game.benis -= cost;
+                up.level++;
+                
+                if (key === 'power') up.effect *= 1.1;
+                if (key === 'crit') up.effect += 0.5;
+                if (key === 'efficiency') up.effect *= 1.05;
+                if (key === 'karmaBoost') up.effect *= 1.08;
+                
+                log('UPGRADED: ' + up.name);
+                update();
+            }
+        }
+        
+        document.getElementById('mine-btn').addEventListener('click', () => {
+            let gain = Math.floor(game.clickPower * game.upgrades.power.effect * getMulti());
+            
+            if (Math.random() * 100 < game.upgrades.crit.effect) {
+                gain *= 2;
+                document.getElementById('mine-btn').classList.add('crit');
+                setTimeout(() => document.getElementById('mine-btn').classList.remove('crit'), 200);
+                log('CRITICAL HIT! +' + fmt(gain));
+            }
+            
+            game.benis += gain;
+            game.totalMined += gain;
+            game.clicks++;
+            update();
+        });
+        
+        document.getElementById('conv-karma').addEventListener('click', () => {
+            if (game.benis >= 1000) {
+                const amount = Math.floor(game.benis / 1000);
+                game.karma += amount;
+                game.benis -= amount * 1000;
+                log('CONVERTED TO ENERGY: +' + amount);
+                update();
+            }
+        });
+        
+        document.getElementById('conv-salt').addEventListener('click', () => {
+            if (game.benis >= 5000) {
+                const amount = Math.floor(game.benis / 5000);
+                game.salt += amount;
+                game.benis -= amount * 5000;
+                log('CONVERTED TO CRYSTALS: +' + amount);
+                update();
+            }
+        });
+        
+        document.getElementById('conv-rage').addEventListener('click', () => {
+            if (game.salt >= 50) {
+                const amount = Math.floor(game.salt / 50);
+                game.rage += amount;
+                game.salt -= amount * 50;
+                log('CONVERTED TO POWER: +' + amount);
+                notify('POWER +' + amount + ' (x' + Math.pow(1.1, game.rage).toFixed(2) + ' MULTI)');
+                update();
+            }
+        });
+        
+        document.getElementById('prestige-btn').addEventListener('click', () => {
+            const req = 1000000 * Math.pow(10, game.prestige);
+            if (game.benis < req) return;
+            if (!confirm('ASCEND: Reset everything for +5% permanent bonus?')) return;
+            
+            game.prestige++;
+            game.benis = 0;
+            game.karma = 0;
+            game.salt = 0;
+            game.rage = 0;
+            game.totalMined = 0;
+            game.clickPower = 1;
+            game.clicks = 0;
+            game.rankIndex = 0;
+            game.multi = 1;
+            
+            Object.values(game.workers).forEach(w => w.count = 0);
+            Object.values(game.upgrades).forEach(up => {
+                up.level = 0;
+                if (up.name === 'Mining Power') up.effect = 1;
+                if (up.name === 'Critical Hit') up.effect = 0;
+                if (up.name === 'Worker Efficiency') up.effect = 1;
+                if (up.name === 'Energy Boost') up.effect = 1;
+            });
+            
+            log('ASCENSION LEVEL ' + game.prestige + ' (+5% BONUS)');
+            notify('ASCENDED TO LEVEL ' + game.prestige + '!');
+            update();
+        });
+        
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('tab-' + target).classList.add('active');
+            });
+        });
+        
+        document.getElementById('save-btn').addEventListener('click', () => {
+            localStorage.setItem('pr0mining', JSON.stringify(game));
+            log('GAME SAVED');
+            notify('SAVED');
+        });
+        
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            if (!confirm('HARD RESET: Delete everything?')) return;
+            localStorage.removeItem('pr0mining');
+            location.reload();
+        });
+        
+        document.getElementById('clear-log').addEventListener('click', () => {
+            game.log = [];
+            updateLog();
+        });
+        
+        setInterval(() => {
+            const gain = getWorkerRate() / 10;
+            if (gain > 0) {
+                game.benis += gain;
+                game.totalMined += gain;
+            }
+        }, 100);
+        
+        setInterval(() => {
+            game.time++;
+            update();
+        }, 1000);
+        
+        const saved = localStorage.getItem('pr0mining');
+        if (saved) {
+            Object.assign(game, JSON.parse(saved));
+            log('GAME LOADED');
+        }
+        
+        update();
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('pr0mining', JSON.stringify(game));
+        });
+    </script>
+</body>
+</html>
