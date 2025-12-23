@@ -21,11 +21,11 @@
         }
         
         .main {
-            max-width: 1200px; /* Breiter gemacht */
+            max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 320px 1fr 320px; /* Breitere Spalten */
-            gap: 10px; /* Größerer Abstand */
+            grid-template-columns: 320px 1fr 320px;
+            gap: 10px;
             flex-grow: 1;
         }
         
@@ -37,15 +37,15 @@
         .panel {
             background: #151515;
             border: 1px solid #222;
-            padding: 10px; /* Mehr Padding */
+            padding: 10px;
             border-radius: 4px;
         }
         
         .title {
             color: #d23c22;
-            font-size: 15px; /* Etwas größer */
+            font-size: 15px;
             font-weight: bold;
-            margin-bottom: 10px; /* Mehr Abstand */
+            margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -54,9 +54,9 @@
         .resource {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0; /* Mehr Padding */
+            padding: 5px 0;
             border-bottom: 1px solid #1a1a1a;
-            font-size: 12px; /* Etwas größer */
+            font-size: 12px;
         }
         
         .resource-name { color: #666; }
@@ -68,11 +68,11 @@
             background: #1a1a1a;
             border: 1px solid #333;
             color: #888;
-            padding: 9px; /* Mehr Padding */
-            margin: 5px 0; /* Mehr Abstand */
+            padding: 9px;
+            margin: 5px 0;
             cursor: pointer;
             font-family: 'Courier New', monospace;
-            font-size: 12px; /* Etwas größer */
+            font-size: 12px;
             text-align: left;
             transition: all 0.1s;
             border-radius: 2px;
@@ -102,16 +102,16 @@
         /* Mining Zone */
         .mine-zone {
             text-align: center;
-            padding: 35px 0; /* Mehr Padding */
+            padding: 35px 0;
         }
         
         .mine-btn {
-            width: 220px; /* Breiter */
-            height: 220px; /* Höher */
+            width: 220px;
+            height: 220px;
             background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
             border: 3px solid #d23c22;
             cursor: pointer;
-            font-size: 80px; /* Größeres Symbol */
+            font-size: 80px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -136,56 +136,56 @@
             right: -8px;
             background: #d23c22;
             border: 2px solid #f7c516;
-            padding: 5px 10px; /* Mehr Padding */
-            font-size: 13px; /* Etwas größer */
+            padding: 5px 10px;
+            font-size: 13px;
             font-weight: bold;
             color: #fff;
             border-radius: 12px;
         }
         
         .mine-info {
-            margin-top: 20px; /* Mehr Abstand */
-            font-size: 12px; /* Etwas größer */
+            margin-top: 20px;
+            font-size: 12px;
             color: #666;
         }
         
-        /* Upgrade Panels */
+        /* Upgrade Panels - in fixed tab container */
         .upgrade {
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
-            padding: 9px; /* Mehr Padding */
-            margin: 5px 0; /* Mehr Abstand */
+            padding: 9px;
+            margin: 5px 0;
             border-radius: 3px;
         }
         
         .upgrade-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px; /* Mehr Abstand */
+            margin-bottom: 5px;
         }
         
         .upgrade-name {
             color: #ccc;
             font-weight: bold;
-            font-size: 12px; /* Etwas größer */
+            font-size: 12px;
         }
         
         .upgrade-level {
             color: #666;
-            font-size: 11px; /* Etwas größer */
+            font-size: 11px;
         }
         
         .upgrade-desc {
             color: #666;
-            font-size: 11px; /* Etwas größer */
-            margin-bottom: 8px; /* Mehr Abstand */
+            font-size: 11px;
+            margin-bottom: 8px;
         }
         
         /* Progress Bar */
         .progress {
-            height: 4px; /* Etwas dicker */
+            height: 4px;
             background: #0f0f0f;
-            margin: 5px 0; /* Mehr Abstand */
+            margin: 5px 0;
             border: 1px solid #222;
             border-radius: 2px;
             overflow: hidden;
@@ -199,24 +199,24 @@
         
         /* Log Section */
         .log {
-            max-height: 350px; /* Höher */
+            max-height: 350px;
             overflow-y: auto;
-            font-size: 11px; /* Etwas größer */
+            font-size: 11px;
         }
         
         .log-entry {
-            padding: 4px 0; /* Mehr Padding */
+            padding: 4px 0;
             border-bottom: 1px solid #1a1a1a;
             color: #666;
         }
         
         .log-time {
             color: #444;
-            margin-right: 8px; /* Mehr Abstand */
+            margin-right: 8px;
         }
         
         /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 5px; } /* Etwas breiter */
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #333; }
         ::-webkit-scrollbar-thumb:hover { background: #75c0c7; }
@@ -224,8 +224,8 @@
         /* Tab Navigation */
         .tab-bar {
             display: flex;
-            gap: 3px; /* Mehr Abstand */
-            margin-bottom: 10px; /* Mehr Abstand */
+            gap: 3px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #222;
         }
         
@@ -234,10 +234,10 @@
             border: none;
             border-bottom: 2px solid transparent;
             color: #555;
-            padding: 7px 12px; /* Mehr Padding */
+            padding: 7px 12px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
-            font-size: 11px; /* Etwas größer */
+            font-size: 11px;
             text-transform: uppercase;
         }
         
@@ -247,37 +247,56 @@
             border-bottom-color: #75c0c7;
         }
         
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        /* FIXED TAB CONTAINER - WICHTIGSTE ÄNDERUNG */
+        .tab-container {
+            position: relative;
+            min-height: 420px; /* Feste Höhe */
+            width: 100%; /* Feste Breite */
+            overflow: hidden;
+        }
+        
+        .tab-content { 
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .tab-content.active { 
+            display: block;
+        }
         
         /* Worker Cards */
         .worker {
             display: flex;
             align-items: center;
-            padding: 7px; /* Mehr Padding */
+            padding: 7px;
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
-            margin: 4px 0; /* Mehr Abstand */
-            font-size: 12px; /* Etwas größer */
+            margin: 4px 0;
+            font-size: 12px;
             border-radius: 3px;
         }
         
         .worker-icon {
-            width: 35px; /* Breiter */
-            height: 35px; /* Höher */
+            width: 35px;
+            height: 35px;
             background: #0f0f0f;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 10px; /* Mehr Abstand */
-            font-size: 18px; /* Größeres Symbol */
+            margin-right: 10px;
+            font-size: 18px;
             border-radius: 3px;
         }
         
         .worker-info { flex: 1; }
         .worker-name { color: #ccc; font-weight: bold; }
-        .worker-rate { color: #666; font-size: 11px; } /* Etwas größer */
-        .worker-count { color: #75c0c7; font-weight: bold; margin-left: 10px; } /* Mehr Abstand */
+        .worker-rate { color: #666; font-size: 11px; }
+        .worker-count { color: #75c0c7; font-weight: bold; margin-left: 10px; }
         
         /* Critical Hit Animation */
         .crit { animation: crit 0.2s; }
@@ -290,8 +309,8 @@
             right: 10px;
             background: #1a1a1a;
             border: 2px solid #f7c516;
-            padding: 12px; /* Mehr Padding */
-            max-width: 280px; /* Breiter */
+            padding: 12px;
+            max-width: 280px;
             z-index: 1000;
             animation: notif 0.3s, notif-out 0.3s 2.5s;
             border-radius: 4px;
@@ -303,21 +322,21 @@
         /* Rank Display */
         .rank-display {
             text-align: center;
-            padding: 15px; /* Mehr Padding */
+            padding: 15px;
             background: #1a1a1a;
             border: 1px solid #333;
-            margin-bottom: 10px; /* Mehr Abstand */
+            margin-bottom: 10px;
             border-radius: 4px;
         }
         
         .rank-badge {
             display: inline-block;
-            padding: 5px 14px; /* Mehr Padding */
+            padding: 5px 14px;
             background: #444;
             color: #fff;
             font-weight: bold;
-            font-size: 12px; /* Etwas größer */
-            margin: 5px; /* Mehr Abstand */
+            font-size: 12px;
+            margin: 5px;
             border-radius: 12px;
         }
         
@@ -325,37 +344,37 @@
         .stat-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px; /* Mehr Abstand */
-            margin-top: 10px; /* Mehr Abstand */
+            gap: 10px;
+            margin-top: 10px;
         }
         
         .stat {
             background: #1a1a1a;
-            border-left: 3px solid #75c0c7; /* Etwas dicker */
-            padding: 10px; /* Mehr Padding */
+            border-left: 3px solid #75c0c7;
+            padding: 10px;
             border-radius: 3px;
         }
         
         .stat-val {
-            font-size: 20px; /* Etwas größer */
+            font-size: 20px;
             font-weight: bold;
             color: #75c0c7;
         }
         
         .stat-label {
-            font-size: 11px; /* Etwas größer */
+            font-size: 11px;
             color: #666;
             text-transform: uppercase;
         }
 
         /* Footer Styles */
         .game-footer {
-            margin-top: 25px; /* Mehr Abstand */
-            padding: 18px; /* Mehr Padding */
+            margin-top: 25px;
+            padding: 18px;
             text-align: center;
             border-top: 1px solid #222;
             color: #666;
-            font-size: 12px; /* Etwas größer */
+            font-size: 12px;
             border-radius: 0 0 6px 6px;
             background: #0f0f0f;
         }
@@ -364,17 +383,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* Mehr Abstand */
+            gap: 15px;
         }
 
         .footer-version {
             color: #666;
-            font-size: 12px; /* Etwas größer */
+            font-size: 12px;
         }
 
         .footer-links {
             display: flex;
-            gap: 20px; /* Mehr Abstand */
+            gap: 20px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -382,11 +401,11 @@
         .link-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px; /* Mehr Abstand */
-            padding: 12px 22px; /* Mehr Padding */
+            gap: 10px;
+            padding: 12px 22px;
             text-decoration: none;
             font-family: 'Courier New', monospace;
-            font-size: 13px; /* Etwas größer */
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -402,8 +421,8 @@
         }
 
         .btn-icon {
-            width: 18px; /* Etwas größer */
-            height: 18px; /* Etwas größer */
+            width: 18px;
+            height: 18px;
             fill: currentColor;
         }
 
@@ -436,11 +455,11 @@
             .footer-links {
                 flex-direction: column;
                 align-items: center;
-                gap: 12px; /* Mehr Abstand */
+                gap: 12px;
             }
             
             .link-btn {
-                width: 240px; /* Breiter */
+                width: 240px;
                 justify-content: center;
             }
         }
@@ -516,47 +535,48 @@
                     <button class="tab" data-tab="prestige">ASCEND</button>
                 </div>
                 
-                <div class="tab-content active" id="tab-power">
-                    <div id="power-upgrades"></div>
-                </div>
-                
-                <div class="tab-content" id="tab-convert">
-                    <div style="color: #666; font-size: 11px; margin-bottom: 10px;">CONVERT BITS TO OTHER RESOURCES</div>
-                    <button class="btn" id="conv-karma">
-                        CONVERT TO ENERGY
-                        <span class="cost">1000 Bits → 1 Energy</span>
-                    </button>
-                    <button class="btn" id="conv-salt">
-                        CONVERT TO CRYSTALS
-                        <span class="cost">5000 Bits → 1 Crystal</span>
-                    </button>
-                    <button class="btn" id="conv-rage">
-                        CONVERT TO POWER
-                        <span class="cost">50 Crystals → 1 Power</span>
-                    </button>
-                    <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #222;">
-                        <div style="color: #666; font-size: 11px; margin-bottom: 8px;">ENERGY BOOSTS BITS GAIN</div>
-                        <div style="color: #666; font-size: 11px; margin-bottom: 8px;">CRYSTALS UNLOCK WORKERS</div>
-                        <div style="color: #666; font-size: 11px;">POWER MULTIPLIES EVERYTHING</div>
+                <!-- FESTER TAB-CONTAINER -->
+                <div class="tab-container">
+                    <div class="tab-content active" id="tab-power">
+                        <div id="power-upgrades"></div>
                     </div>
-                </div>
-                
-                <div class="tab-content" id="tab-prestige">
-                    <div style="color: #666; font-size: 11px; margin-bottom: 10px;">ASCEND FOR PERMANENT BONUSES</div>
-                    <div style="margin: 10px 0; padding: 10px; background: #1a1a1a; border: 1px solid #333;">
-                        <div style="color: #888; font-size: 12px;">ASCENSION BONUS</div>
-                        <div style="color: #f7c516; font-weight: bold;">+<span id="prestige-bonus">0</span>% ALL GAIN</div>
+                    
+                    <div class="tab-content" id="tab-convert">
+                        <div style="color: #666; font-size: 11px; margin-bottom: 10px;">CONVERT BITS TO OTHER RESOURCES</div>
+                        <button class="btn" id="conv-karma">
+                            CONVERT TO ENERGY
+                            <span class="cost">1000 Bits → 1 Energy</span>
+                        </button>
+                        <button class="btn" id="conv-salt">
+                            CONVERT TO CRYSTALS
+                            <span class="cost">5000 Bits → 1 Crystal</span>
+                        </button>
+                        <button class="btn" id="conv-rage">
+                            CONVERT TO POWER
+                            <span class="cost">50 Crystals → 1 Power</span>
+                        </button>
+                        <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #222;">
+                            <div style="color: #666; font-size: 11px; margin-bottom: 8px;">ENERGY BOOSTS BITS GAIN</div>
+                            <div style="color: #666; font-size: 11px; margin-bottom: 8px;">CRYSTALS UNLOCK WORKERS</div>
+                            <div style="color: #666; font-size: 11px;">POWER MULTIPLIES EVERYTHING</div>
+                        </div>
                     </div>
-                    <div style="color: #888; font-size: 11px; margin: 10px 0;">
-                        REQUIRES: <span id="prestige-req" style="color: #75c0c7; font-weight: bold;">1,000,000</span> BITS
+                    
+                    <div class="tab-content" id="tab-prestige">
+                        <div style="color: #666; font-size: 11px; margin-bottom: 10px;">ASCEND FOR PERMANENT BONUSES</div>
+                        <div style="margin: 10px 0; padding: 10px; background: #1a1a1a; border: 1px solid #333;">
+                            <div style="color: #888; font-size: 12px;">ASCENSION BONUS</div>
+                            <div style="color: #f7c516; font-weight: bold;">+<span id="prestige-bonus">0</span>% ALL GAIN</div>
+                        </div>
+                        <div style="color: #888; font-size: 11px; margin: 10px 0;">
+                            REQUIRES: <span id="prestige-req" style="color: #75c0c7; font-weight: bold;">1,000,000</span> BITS
+                        </div>
+                        <button class="btn" id="prestige-btn" style="border-color: #d23c22;">
+                            ▶ ASCEND NOW
+                        </button>
                     </div>
-                    <button class="btn" id="prestige-btn" style="border-color: #d23c22;">
-                        ▶ ASCEND NOW
-                    </button>
                 </div>
             </div>
-            
-            <!-- Stat Row removed from here -->
         </div>
         
         <!-- Right Panel: Log & Info -->
@@ -599,7 +619,7 @@
     <!-- Game Footer with External Links -->
     <footer class="game-footer">
         <div class="footer-content">
-            <p class="footer-version">Bit-Miner Operation v1.0</p>
+            <p class="footer-version">Bitminer v1.0</p>
             <div class="footer-links">
                 <a href="https://github.com/bl4k7en" target="_blank" rel="noopener noreferrer" class="link-btn github-btn">
                     <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true">
@@ -985,7 +1005,7 @@
         
         // Save game to localStorage
         document.getElementById('save-btn').addEventListener('click', () => {
-            localStorage.setItem('pr0mining', JSON.stringify(game));
+            localStorage.setItem('bitminer', JSON.stringify(game));
             log('GAME SAVED');
             notify('SAVED');
         });
@@ -993,7 +1013,7 @@
         // Hard reset game
         document.getElementById('reset-btn').addEventListener('click', () => {
             if (!confirm('HARD RESET: Delete everything?')) return;
-            localStorage.removeItem('pr0mining');
+            localStorage.removeItem('bitminer');
             location.reload();
         });
         
@@ -1021,7 +1041,7 @@
         }, 1000);
         
         // Load saved game from localStorage
-        const saved = localStorage.getItem('pr0mining');
+        const saved = localStorage.getItem('bitminer');
         if (saved) {
             Object.assign(game, JSON.parse(saved));
             log('GAME LOADED');
@@ -1032,7 +1052,7 @@
         
         // Auto-save when leaving the page
         window.addEventListener('beforeunload', () => {
-            localStorage.setItem('pr0mining', JSON.stringify(game));
+            localStorage.setItem('bitminer', JSON.stringify(game));
         });
     </script>
 </body>
