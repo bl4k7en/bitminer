@@ -13,7 +13,6 @@ Upgrade System for mining power, critical hits, and efficiency
 Ascension Mechanics with permanent bonuses
 Rank Progression from Initiate to Titan
 Achievements with multiplier rewards
-Offline Progress - earn while away
 Auto-save with localStorage
 
 ## 💎 Technologies
