@@ -530,6 +530,47 @@
                 <div id="workers"></div>
             </div>
             
+            <!-- NEUE STATISTIK BOX zwischen Workers und Save Game -->
+            <div class="panel" style="margin-top: 12px;">
+                <div class="title">▬ STATISTIK</div>
+                <div style="color: #666; font-size: 11px; margin-bottom: 8px;">GESAMTE MULTIPLIKATOREN</div>
+                <div class="stat-item">
+                    <span>Energie-Boost:</span>
+                    <span style="color: #75c0c7;" id="stat-energy-mult">x1.00</span>
+                </div>
+                <div class="stat-item">
+                    <span>Power-Multi:</span>
+                    <span style="color: #75c0c7;" id="stat-power-mult">x1.00</span>
+                </div>
+                <div class="stat-item">
+                    <span>Ascension-Bonus:</span>
+                    <span style="color: #75c0c7;" id="stat-prestige-mult">x1.00</span>
+                </div>
+                <div class="stat-item">
+                    <span>Rank-Bonus:</span>
+                    <span style="color: #75c0c7;" id="stat-rank-mult">x1.00</span>
+                </div>
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222;">
+                    <div style="color: #888; font-size: 11px;">UPGRADE-WERTE</div>
+                    <div class="stat-item">
+                        <span>Mining Power:</span>
+                        <span style="color: #f7c516;" id="stat-upgrade-power">1.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Critical Hit:</span>
+                        <span style="color: #f7c516;" id="stat-upgrade-crit">0.0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Worker Efficiency:</span>
+                        <span style="color: #f7c516;" id="stat-upgrade-eff">1.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Energy Boost:</span>
+                        <span style="color: #f7c516;" id="stat-upgrade-karma">1.00</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="panel" style="margin-top: 12px;">
                 <button class="btn" id="save-btn">▶ SAVE GAME</button>
                 <button class="btn" id="reset-btn" style="border-color: #d23c22; color: #d23c22;">▶ HARD RESET</button>
@@ -625,63 +666,24 @@
                 </div>
             </div>
             
-<div class="panel" style="margin-top: 12px;">
-    <div class="title">▬ RANKS</div>
-    <div id="ranks" style="font-size: 11px;"></div>
-    
-    <!-- Neue Statistik Box -->
-    <div class="panel" style="margin-top: 12px; padding: 12px;">
-        <div class="title">▬ STATISTIK</div>
-        <div style="color: #666; font-size: 11px; margin-bottom: 8px;">GESAMTE MULTIPLIKATOREN</div>
-        <div class="stat-item">
-            <span>Energie-Boost:</span>
-            <span style="color: #75c0c7;" id="stat-energy-mult">x1.00</span>
-        </div>
-        <div class="stat-item">
-            <span>Power-Multi:</span>
-            <span style="color: #75c0c7;" id="stat-power-mult">x1.00</span>
-        </div>
-        <div class="stat-item">
-            <span>Ascension-Bonus:</span>
-            <span style="color: #75c0c7;" id="stat-prestige-mult">x1.00</span>
-        </div>
-        <div class="stat-item">
-            <span>Rank-Bonus:</span>
-            <span style="color: #75c0c7;" id="stat-rank-mult">x1.00</span>
-        </div>
-        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222;">
-            <div style="color: #888; font-size: 11px;">UPGRADE-WERTE</div>
-            <div class="stat-item">
-                <span>Mining Power:</span>
-                <span style="color: #f7c516;" id="stat-upgrade-power">1.00</span>
-            </div>
-            <div class="stat-item">
-                <span>Critical Hit:</span>
-                <span style="color: #f7c516;" id="stat-upgrade-crit">0.0%</span>
-            </div>
-            <div class="stat-item">
-                <span>Worker Efficiency:</span>
-                <span style="color: #f7c516;" id="stat-upgrade-eff">1.00</span>
-            </div>
-            <div class="stat-item">
-                <span>Energy Boost:</span>
-                <span style="color: #f7c516;" id="stat-upgrade-karma">1.00</span>
+            <div class="panel" style="margin-top: 12px;">
+                <div class="title">▬ RANKS</div>
+                <div id="ranks" style="font-size: 11px;"></div>
+                
+                <!-- Stats moved here under RANKS -->
+                <div class="stat-row" style="margin-top: 15px;">
+                    <div class="stat">
+                        <div class="stat-val" id="stat-clicks">0</div>
+                        <div class="stat-label">Clicks</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" id="stat-time">0s</div>
+                        <div class="stat-label">Time</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    
-    <!-- Stats moved here under RANKS -->
-    <div class="stat-row" style="margin-top: 15px;">
-        <div class="stat">
-            <div class="stat-val" id="stat-clicks">0</div>
-            <div class="stat-label">Clicks</div>
-        </div>
-        <div class="stat">
-            <div class="stat-val" id="stat-time">0s</div>
-            <div class="stat-label">Time</div>
-        </div>
-    </div>
-</div>
     
     <!-- Notification Container -->
     <div id="notifications"></div>
@@ -1030,7 +1032,7 @@
                 game.rage += amount;
                 game.salt -= amount * 50;
                 log('CONVERTED TO POWER: +' + amount);
-                notify('POWER +' + amount + ' (x' + Math.pow(1.1, game.rage).toFixed(2) + ' MULTI)');
+                notify('POWER +' + amount + ' (x' + Math.pow(1.12, game.rage).toFixed(2) + ' MULTI)');
                 update();
             }
         });
