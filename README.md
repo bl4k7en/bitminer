@@ -1,7 +1,11 @@
-Bitminer 💎
+# Bitminer 💎
+
 A minimalist incremental mining game where you click to collect bits, hire workers, upgrade your power, and ascend for permanent bonuses.
 
-💎 Features
+## 💎 Play Now
+**[Play Bitminer](https://bl4k7en.github.io/bitminer/)**
+
+## 💎 Features
 Click Mining with satisfying visual feedback
 Automated Workers to generate passive income
 Resource Conversion between Bits, Energy, Crystals, and Power
@@ -12,21 +16,18 @@ Achievements with multiplier rewards
 Offline Progress - earn while away
 Auto-save with localStorage
 
-💎 Compatibility
-Works on all modern browsers (Chrome, Firefox, Safari, Edge) with full mobile support and responsive design.
+## 💎 Technologies
+- Pure HTML, CSS, and JavaScript
+- Local Storage for saves
+- Fully responsive design
+- No external dependencies
 
-💎 Contributing
+## 💎 Compatibility
+Works on all modern browsers (desktop and mobile) and functions offline.
 
-Contributions are welcome! Feel free to:
+## 💎 Contributing
+Issues and pull requests are welcome for improvements.
 
-Submit issues for bugs or suggestions
-Create pull requests for improvements
-Share feedback on gameplay balance
-
-💎 Support
-If you enjoy the game, consider supporting development:
-
-https://img.shields.io/badge/Ko--fi-Support-orange?style=for-the-badge&logo=ko-fi&logoColor=white
-
-💎 License
-MIT License - open source and free to use.
+## 💎 Support
+If you enjoy the game:  
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-orange?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/bl4k_7en)
