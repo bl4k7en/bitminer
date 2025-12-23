@@ -374,6 +374,15 @@
             color: #666;
             text-transform: uppercase;
         }
+        /* Statistik Item Styling */
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 11px;
+            color: #888;
+            border-bottom: 1px solid #1a1a1a;
+        }
 
         /* Footer Styles */
         .game-footer {
@@ -390,7 +399,7 @@
             margin-right: auto;
             width: 100%;
         }
-
+        
         .footer-content {
             display: flex;
             flex-direction: column;
@@ -616,24 +625,63 @@
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 12px;">
-                <div class="title">▬ RANKS</div>
-                <div id="ranks" style="font-size: 11px;"></div>
-                
-                <!-- Stats moved here under RANKS -->
-                <div class="stat-row" style="margin-top: 15px;">
-                    <div class="stat">
-                        <div class="stat-val" id="stat-clicks">0</div>
-                        <div class="stat-label">Clicks</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-val" id="stat-time">0s</div>
-                        <div class="stat-label">Time</div>
-                    </div>
-                </div>
+<div class="panel" style="margin-top: 12px;">
+    <div class="title">▬ RANKS</div>
+    <div id="ranks" style="font-size: 11px;"></div>
+    
+    <!-- Neue Statistik Box -->
+    <div class="panel" style="margin-top: 12px; padding: 12px;">
+        <div class="title">▬ STATISTIK</div>
+        <div style="color: #666; font-size: 11px; margin-bottom: 8px;">GESAMTE MULTIPLIKATOREN</div>
+        <div class="stat-item">
+            <span>Energie-Boost:</span>
+            <span style="color: #75c0c7;" id="stat-energy-mult">x1.00</span>
+        </div>
+        <div class="stat-item">
+            <span>Power-Multi:</span>
+            <span style="color: #75c0c7;" id="stat-power-mult">x1.00</span>
+        </div>
+        <div class="stat-item">
+            <span>Ascension-Bonus:</span>
+            <span style="color: #75c0c7;" id="stat-prestige-mult">x1.00</span>
+        </div>
+        <div class="stat-item">
+            <span>Rank-Bonus:</span>
+            <span style="color: #75c0c7;" id="stat-rank-mult">x1.00</span>
+        </div>
+        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222;">
+            <div style="color: #888; font-size: 11px;">UPGRADE-WERTE</div>
+            <div class="stat-item">
+                <span>Mining Power:</span>
+                <span style="color: #f7c516;" id="stat-upgrade-power">1.00</span>
+            </div>
+            <div class="stat-item">
+                <span>Critical Hit:</span>
+                <span style="color: #f7c516;" id="stat-upgrade-crit">0.0%</span>
+            </div>
+            <div class="stat-item">
+                <span>Worker Efficiency:</span>
+                <span style="color: #f7c516;" id="stat-upgrade-eff">1.00</span>
+            </div>
+            <div class="stat-item">
+                <span>Energy Boost:</span>
+                <span style="color: #f7c516;" id="stat-upgrade-karma">1.00</span>
             </div>
         </div>
     </div>
+    
+    <!-- Stats moved here under RANKS -->
+    <div class="stat-row" style="margin-top: 15px;">
+        <div class="stat">
+            <div class="stat-val" id="stat-clicks">0</div>
+            <div class="stat-label">Clicks</div>
+        </div>
+        <div class="stat">
+            <div class="stat-val" id="stat-time">0s</div>
+            <div class="stat-label">Time</div>
+        </div>
+    </div>
+</div>
     
     <!-- Notification Container -->
     <div id="notifications"></div>
@@ -674,10 +722,10 @@
             time: 0,
             prestige: 0,
             workers: {
-                bot: {name: 'Mining Bot', icon: '⚙', count: 0, cost: 50, rate: 1, costMult: 1.5},
-                slave: {name: 'Code Slave', icon: '👨', count: 0, cost: 500, rate: 5, costMult: 1.6},
-                script: {name: 'Auto Script', icon: '📜', count: 0, cost: 5000, rate: 25, costMult: 1.7},
-                farm: {name: 'Click Farm', icon: '🏭', count: 0, cost: 50000, rate: 100, costMult: 1.8}
+                bot: {name: 'Mining Bot', icon: '⚙', count: 0, cost: 50, rate: 1.2, costMult: 1.5},
+                slave: {name: 'Code Slave', icon: '👨', count: 0, cost: 500, rate: 6, costMult: 1.6},
+                script: {name: 'Auto Script', icon: '📜', count: 0, cost: 5000, rate: 30, costMult: 1.7},
+                farm: {name: 'Click Farm', icon: '🏭', count: 0, cost: 50000, rate: 120, costMult: 1.8}
             },
             upgrades: {
                 power: {name: 'Mining Power', level: 0, baseCost: 100, costMult: 1.6, effect: 1},
@@ -722,7 +770,7 @@
         function getMulti() {
             let m = game.multi;
             m *= 1 + (game.karma * 0.01); // Energy bonus
-            m *= Math.pow(1.1, game.rage); // Power bonus
+            m *= Math.pow(1.12, game.rage); // Power bonus
             m *= 1 + (game.prestige * 0.05); // Ascension bonus
             return m;
         }
@@ -793,6 +841,16 @@
             document.getElementById('conv-karma').disabled = game.benis < 1000;
             document.getElementById('conv-salt').disabled = game.benis < 5000;
             document.getElementById('conv-rage').disabled = game.salt < 50;
+
+            // Update Statistik Box
+            document.getElementById('stat-energy-mult').textContent = 'x' + (1 + (game.karma * 0.01)).toFixed(2);
+            document.getElementById('stat-power-mult').textContent = 'x' + Math.pow(1.12, game.rage).toFixed(2);
+            document.getElementById('stat-prestige-mult').textContent = 'x' + (1 + (game.prestige * 0.05)).toFixed(2);
+            document.getElementById('stat-rank-mult').textContent = 'x' + Math.pow(1.1, game.rankIndex).toFixed(2);
+            document.getElementById('stat-upgrade-power').textContent = game.upgrades.power.effect.toFixed(2);
+            document.getElementById('stat-upgrade-crit').textContent = game.upgrades.crit.effect.toFixed(1) + '%';
+            document.getElementById('stat-upgrade-eff').textContent = game.upgrades.efficiency.effect.toFixed(2);
+            document.getElementById('stat-upgrade-karma').textContent = game.upgrades.karmaBoost.effect.toFixed(2);
             
             // Update other UI sections
             updateRanks();
@@ -913,10 +971,10 @@
                 up.level++;
                 
                 // Apply upgrade effect multiplier
-                if (key === 'power') up.effect *= 1.1;
-                if (key === 'crit') up.effect += 0.5;
-                if (key === 'efficiency') up.effect *= 1.05;
-                if (key === 'karmaBoost') up.effect *= 1.08;
+                if (key === 'power') up.effect *= 1.12;
+                if (key === 'crit') up.effect += 0.6;
+                if (key === 'efficiency') up.effect *= 1.06;
+                if (key === 'karmaBoost') up.effect *= 1.09;
                 
                 log('UPGRADED: ' + up.name);
                 update();
