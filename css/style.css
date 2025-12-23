@@ -197,22 +197,33 @@ body {
     transition: width 0.3s;
 }
 
-/* Log Section */
+/* Log Section - FIXED HEIGHT */
 .log {
-    max-height: 350px;
+    height: 120px; /* Feste Höhe für 5 Einträge */
     overflow-y: auto;
     font-size: 11px;
+    border: 1px solid #222;
+    background: #0f0f0f;
 }
 
 .log-entry {
-    padding: 4px 0;
+    padding: 4px 6px;
     border-bottom: 1px solid #1a1a1a;
     color: #aaa;
+    min-height: 20px; /* Konsistente Höhe pro Eintrag */
+    display: flex;
+    align-items: center;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
 }
 
 .log-time {
     color: #888;
     margin-right: 8px;
+    min-width: 65px; /* Feste Breite für Zeitstempel */
+    flex-shrink: 0;
 }
 
 /* Scrollbar Styling */
@@ -298,9 +309,87 @@ body {
 .worker-rate { color: #aaa; font-size: 11px; }
 .worker-count { color: #75c0c7; font-weight: bold; margin-left: 10px; }
 
-/* Critical Hit Animation */
-.crit { animation: crit 0.2s; }
-@keyframes crit { 50% { border-color: #ff0000; transform: scale(1.05); } }
+/* Critical Hit Animation - ENHANCED */
+.crit { 
+    animation: crit 0.2s;
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+}
+
+@keyframes crit { 
+    0%, 100% { 
+        border-color: #d23c22;
+        transform: scale(1);
+    }
+    25% { 
+        border-color: #ff0000;
+        transform: scale(1.08);
+    }
+    50% { 
+        border-color: #ff6600;
+        transform: scale(1.05);
+    }
+    75% { 
+        border-color: #ff0000;
+        transform: scale(1.08);
+    }
+}
+
+/* Screen Shake Effect */
+@keyframes shake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-2px, 2px); }
+    20%, 40%, 60%, 80% { transform: translate(2px, -2px); }
+}
+
+/* Floating Numbers */
+.floating-number {
+    position: fixed;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 18px;
+    color: #75c0c7;
+    pointer-events: none;
+    z-index: 9999;
+    animation: float-up 1s ease-out forwards;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.9),
+        0 0 10px rgba(117, 192, 199, 0.5);
+}
+
+.floating-number.crit {
+    font-size: 32px;
+    color: #ff0000;
+    text-shadow: 
+        3px 3px 6px rgba(0, 0, 0, 0.9),
+        0 0 20px rgba(255, 0, 0, 0.8),
+        0 0 30px rgba(255, 0, 0, 0.6);
+    animation: float-up-crit 1.2s ease-out forwards;
+}
+
+@keyframes float-up {
+    0% { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% { 
+        opacity: 0;
+        transform: translateY(-120px) scale(0.8);
+    }
+}
+
+@keyframes float-up-crit {
+    0% { 
+        opacity: 1;
+        transform: translateY(0) scale(0.5) rotate(-10deg);
+    }
+    20% {
+        transform: translateY(-20px) scale(1.3) rotate(5deg);
+    }
+    100% { 
+        opacity: 0;
+        transform: translateY(-150px) scale(0.6) rotate(10deg);
+    }
+}
 
 /* Notification Popups */
 .notification {
@@ -376,6 +465,72 @@ body {
     font-size: 11px;
     color: #ccc;
     border-bottom: 1px solid #1a1a1a;
+}
+
+/* Achievement Styles */
+.achievement {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 5px 0;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 0;
+    transition: all 0.2s;
+}
+
+.achievement.unlocked {
+    border-color: #f7c516;
+    background: #1a1505;
+}
+
+.achievement.locked {
+    opacity: 0.4;
+}
+
+.achievement-icon {
+    width: 40px;
+    height: 40px;
+    background: #0f0f0f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 20px;
+    border-radius: 0;
+    flex-shrink: 0;
+}
+
+.achievement.unlocked .achievement-icon {
+    background: #2a2206;
+    border: 1px solid #f7c516;
+}
+
+.achievement-info {
+    flex: 1;
+}
+
+.achievement-name {
+    color: #ddd;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.achievement.unlocked .achievement-name {
+    color: #f7c516;
+}
+
+.achievement-desc {
+    color: #888;
+    font-size: 10px;
+    margin-bottom: 3px;
+}
+
+.achievement-reward {
+    color: #75c0c7;
+    font-size: 11px;
+    font-weight: bold;
 }
 
 /* Footer Styles */
