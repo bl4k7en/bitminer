@@ -222,7 +222,7 @@
             margin-right: 8px;
         }
         
-        /* Scrollbar Styling - FEHLER BEHOBEN */
+        /* Scrollbar Styling */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #333; }
@@ -1030,11 +1030,44 @@
             notify('SAVED');
         });
         
-        // Hard reset game - FUNKTIONIERT JETZT
+        // Hard reset game - KORRIGIERTE VERSION
         document.getElementById('reset-btn').addEventListener('click', () => {
-            if (!confirm('HARD RESET: Delete everything?')) return;
+            if (!confirm('HARD RESET: Delete everything?\nThis will reset ALL progress including Ascension levels!')) return;
+            
+            // Lösche den Speicher
             localStorage.removeItem('bitminer');
-            location.reload();
+            
+            // Setze das Spiel komplett zurück
+            game.benis = 0;
+            game.karma = 0;
+            game.salt = 0;
+            game.rage = 0;
+            game.totalMined = 0;
+            game.clickPower = 1;
+            game.clicks = 0;
+            game.time = 0;
+            game.prestige = 0;
+            game.rankIndex = 0;
+            game.multi = 1;
+            
+            // Reset workers
+            Object.values(game.workers).forEach(w => w.count = 0);
+            
+            // Reset upgrades
+            Object.values(game.upgrades).forEach(up => {
+                up.level = 0;
+                if (up.name === 'Mining Power') up.effect = 1;
+                if (up.name === 'Critical Hit') up.effect = 0;
+                if (up.name === 'Worker Efficiency') up.effect = 1;
+                if (up.name === 'Energy Boost') up.effect = 1;
+            });
+            
+            // Clear log
+            game.log = [{time: new Date().toLocaleTimeString('de-DE'), msg: 'SYSTEM RESET - NEW GAME STARTED'}];
+            
+            log('HARD RESET - NEW GAME STARTED');
+            notify('GAME COMPLETELY RESET');
+            update();
         });
         
         // Clear game log
@@ -1063,8 +1096,15 @@
         // Load saved game from localStorage
         const saved = localStorage.getItem('bitminer');
         if (saved) {
-            Object.assign(game, JSON.parse(saved));
-            log('GAME LOADED');
+            try {
+                const loaded = JSON.parse(saved);
+                Object.assign(game, loaded);
+                log('GAME LOADED');
+                notify('Welcome back! Game loaded successfully.');
+            } catch (e) {
+                log('ERROR LOADING SAVE: ' + e.message);
+                notify('Error loading save. Starting fresh.');
+            }
         }
         
         // Initial UI update
