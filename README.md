@@ -1,6 +1,6 @@
 # Bitminer
 
-A minimalist clicking/incremental game in terminal style. Build your mining operation, optimize your income, and climb the ranks!
+A minimalist clicking/incremental game. Build your mining operation, optimize your income, and climb the ranks!
 
 ## 🎮 Features
 
