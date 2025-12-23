@@ -223,10 +223,10 @@
         }
         
         /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #333; }
-        ::-webkit-scrollbar-thumb:hover { background: #75c0c7; }
+        :: -webkit-scrollbar { width: 5px; }
+        :: -webkit-scrollbar-track { background: #0a0a0a; }
+        :: -webkit-scrollbar-thumb { background: #333; }
+        :: -webkit-scrollbar-thumb:hover { background: #75c0c7; }
         
         /* Tab Navigation */
         .tab-bar {
@@ -641,7 +641,7 @@
     <!-- Game Footer with External Links -->
     <footer class="game-footer">
         <div class="footer-content">
-            <p class="footer-version">Bitminer v1.1</p>
+            <p class="footer-version">Bitminer v1.0</p>
             <div class="footer-links">
                 <a href="https://github.com/bl4k7en" target="_blank" rel="noopener noreferrer" class="link-btn github-btn">
                     <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true">
@@ -674,21 +674,16 @@
             time: 0,
             prestige: 0,
             workers: {
-                bot: {name: 'Mining Bot', icon: '⚙', count: 0, cost: 50, rate: 1, costMult: 1.5, saltRequired: 0},
-                slave: {name: 'Code Slave', icon: '👨', count: 0, cost: 500, rate: 5, costMult: 1.6, saltRequired: 0},
-                script: {name: 'Auto Script', icon: '📜', count: 0, cost: 5000, rate: 25, costMult: 1.7, saltRequired: 10},
-                farm: {name: 'Click Farm', icon: '🏭', count: 0, cost: 50000, rate: 100, costMult: 1.8, saltRequired: 50},
-                ai: {name: 'AI Miner', icon: '🤖', count: 0, cost: 250000, rate: 500, costMult: 1.9, saltRequired: 200},
-                quantum: {name: 'Quantum Core', icon: '⚛', count: 0, cost: 1000000, rate: 2000, costMult: 2.0, saltRequired: 1000},
-                swarm: {name: 'Drone Swarm', icon: '🛸', count: 0, cost: 5000000, rate: 10000, costMult: 2.1, saltRequired: 5000},
-                singularity: {name: 'Singularity', icon: '🌀', count: 0, cost: 25000000, rate: 50000, costMult: 2.2, saltRequired: 25000}
+                bot: {name: 'Mining Bot', icon: '⚙', count: 0, cost: 50, rate: 1, costMult: 1.5},
+                slave: {name: 'Code Slave', icon: '👨', count: 0, cost: 500, rate: 5, costMult: 1.6},
+                script: {name: 'Auto Script', icon: '📜', count: 0, cost: 5000, rate: 25, costMult: 1.7},
+                farm: {name: 'Click Farm', icon: '🏭', count: 0, cost: 50000, rate: 100, costMult: 1.8}
             },
             upgrades: {
                 power: {name: 'Mining Power', level: 0, baseCost: 100, costMult: 1.6, effect: 1},
                 crit: {name: 'Critical Hit', level: 0, baseCost: 500, costMult: 1.7, effect: 0},
                 efficiency: {name: 'Worker Efficiency', level: 0, baseCost: 1000, costMult: 1.8, effect: 1},
-                karmaBoost: {name: 'Energy Boost', level: 0, baseCost: 2000, costMult: 1.9, effect: 1},
-                autoMine: {name: 'Auto Mining', level: 0, baseCost: 10000, costMult: 2.0, effect: 0}
+                karmaBoost: {name: 'Energy Boost', level: 0, baseCost: 2000, costMult: 1.9, effect: 1}
             },
             rankIndex: 0,
             multi: 1,
@@ -704,21 +699,15 @@
             {name: 'Architect', req: 2000000, color: '#1cb992'},
             {name: 'Master', req: 10000000, color: '#5bb91c'},
             {name: 'Overlord', req: 50000000, color: '#008fff'},
-            {name: 'Titan', req: 200000000, color: '#ff9900'},
-            {name: 'Celestial', req: 1000000000, color: '#ff00ff'},
-            {name: 'Cosmic', req: 5000000000, color: '#00ffff'}
+            {name: 'Titan', req: 200000000, color: '#ff9900'}
         ];
         
         // Format large numbers with suffixes (K, M, B, T)
         function fmt(n) {
-            if (n < 1e3) return Math.floor(n).toLocaleString('de');
-            if (n < 1e6) return (n/1e3).toFixed(1) + 'K';
+            if (n < 1e6) return Math.floor(n).toLocaleString('de');
             if (n < 1e9) return (n/1e6).toFixed(2) + 'M';
             if (n < 1e12) return (n/1e9).toFixed(2) + 'B';
-            if (n < 1e15) return (n/1e12).toFixed(2) + 'T';
-            if (n < 1e18) return (n/1e15).toFixed(2) + 'Qa';
-            if (n < 1e21) return (n/1e18).toFixed(2) + 'Qi';
-            return (n/1e21).toFixed(2) + 'Sx';
+            return (n/1e12).toFixed(2) + 'T';
         }
         
         // Format seconds into readable time (hours, minutes, seconds)
@@ -735,7 +724,6 @@
             m *= 1 + (game.karma * 0.01); // Energy bonus
             m *= Math.pow(1.1, game.rage); // Power bonus
             m *= 1 + (game.prestige * 0.05); // Ascension bonus
-            m *= 1 + (game.upgrades.autoMine.level * 0.02); // Auto mining bonus
             return m;
         }
         
@@ -820,7 +808,7 @@
                     game.rankIndex = i;
                     game.multi *= 1.1;
                     log('RANK UP: ' + r.name);
-                    notify('RANK UP: ' + r.name + ' (+10% MULTIPLIER)');
+                    notify('RANK UP: ' + r.name);
                 }
             });
             
@@ -849,7 +837,6 @@
             list.innerHTML = '';
             Object.entries(game.workers).forEach(([key, w]) => {
                 const cost = Math.floor(w.cost * Math.pow(w.costMult, w.count));
-                const canAfford = game.benis >= cost && game.salt >= w.saltRequired;
                 const div = document.createElement('div');
                 div.className = 'worker';
                 div.innerHTML = `
@@ -861,15 +848,14 @@
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 11px;">
                             <div class="worker-rate">${(w.rate * game.upgrades.efficiency.effect * getMulti()).toFixed(1)}/s each</div>
-                            <div style="color: ${canAfford ? '#f7c516' : '#666'};">${fmt(cost)} Bits</div>
+                            <div style="color: ${game.benis >= cost ? '#f7c516' : '#666'};">${fmt(cost)} Bits</div>
                         </div>
-                        ${w.saltRequired > 0 ? `<div style="font-size: 10px; color: #666; margin-top: 2px;">Requires: ${fmt(w.saltRequired)} Crystals</div>` : ''}
                     </div>
                 `;
                 div.onclick = () => buyWorker(key);
-                div.style.cursor = canAfford ? 'pointer' : 'not-allowed';
-                div.style.opacity = canAfford ? '1' : '0.4';
-                div.title = `Cost: ${fmt(cost)} Bits${w.saltRequired > 0 ? `, ${fmt(w.saltRequired)} Crystals` : ''}`;
+                div.style.cursor = 'pointer';
+                div.style.opacity = game.benis >= cost ? '1' : '0.4';
+                div.title = 'Cost: ' + fmt(cost) + ' Bits';
                 list.appendChild(div);
             });
         }
@@ -887,7 +873,6 @@
                 if (key === 'crit') effectText = up.effect.toFixed(1) + '%';
                 if (key === 'efficiency') effectText = 'x' + up.effect.toFixed(2);
                 if (key === 'karmaBoost') effectText = 'x' + up.effect.toFixed(2);
-                if (key === 'autoMine') effectText = '+' + (up.level * 2) + '% Auto';
                 
                 div.innerHTML = `
                     <div class="upgrade-header">
@@ -896,7 +881,7 @@
                     </div>
                     <div class="upgrade-desc">${effectText}</div>
                     <div class="progress">
-                        <div class="progress-bar" style="width: ${Math.min((up.level/50)*100, 100)}%"></div>
+                        <div class="progress-bar" style="width: ${Math.min((up.level/100)*100, 100)}%"></div>
                     </div>
                     <button class="btn" ${game.benis >= cost ? '' : 'disabled'}>
                         UPGRADE <span class="cost">${fmt(cost)} Bits</span>
@@ -907,17 +892,14 @@
             });
         }
         
-        // Purchase a worker if player has enough bits and crystals
+        // Purchase a worker if player has enough bits
         function buyWorker(key) {
             const w = game.workers[key];
             const cost = Math.floor(w.cost * Math.pow(w.costMult, w.count));
-            if (game.benis >= cost && game.salt >= w.saltRequired) {
+            if (game.benis >= cost) {
                 game.benis -= cost;
                 w.count++;
                 log('HIRED: ' + w.name);
-                if (w.saltRequired > 0) {
-                    game.salt -= w.saltRequired;
-                }
                 update();
             }
         }
@@ -935,7 +917,6 @@
                 if (key === 'crit') up.effect += 0.5;
                 if (key === 'efficiency') up.effect *= 1.05;
                 if (key === 'karmaBoost') up.effect *= 1.08;
-                if (key === 'autoMine') up.effect += 0.02;
                 
                 log('UPGRADED: ' + up.name);
                 update();
@@ -949,8 +930,7 @@
             let gain = Math.floor(game.clickPower * game.upgrades.power.effect * getMulti());
             
             // Check for critical hit
-            const critChance = game.upgrades.crit.effect;
-            if (Math.random() * 100 < critChance) {
+            if (Math.random() * 100 < game.upgrades.crit.effect) {
                 gain *= 2;
                 document.getElementById('mine-btn').classList.add('crit');
                 setTimeout(() => document.getElementById('mine-btn').classList.remove('crit'), 200);
@@ -960,17 +940,6 @@
             game.benis += gain;
             game.totalMined += gain;
             game.clicks++;
-            
-            // Auto mining from upgrade
-            if (game.upgrades.autoMine.level > 0 && Math.random() < 0.1) {
-                const autoGain = Math.floor(gain * 0.5);
-                if (autoGain > 0) {
-                    game.benis += autoGain;
-                    game.totalMined += autoGain;
-                    log('AUTO MINING: +' + fmt(autoGain));
-                }
-            }
-            
             update();
         });
         
@@ -1012,7 +981,7 @@
         document.getElementById('prestige-btn').addEventListener('click', () => {
             const req = 1000000 * Math.pow(10, game.prestige);
             if (game.benis < req) return;
-            if (!confirm(`ASCEND: Reset everything for +5% permanent bonus?\nYou will keep your Ascension level (${game.prestige + 1}).`)) return;
+            if (!confirm('ASCEND: Reset everything for +5% permanent bonus?')) return;
             
             // Reset game state but keep ascension level
             game.prestige++;
@@ -1023,7 +992,6 @@
             game.totalMined = 0;
             game.clickPower = 1;
             game.clicks = 0;
-            game.time = 0;
             game.rankIndex = 0;
             game.multi = 1;
             
@@ -1037,11 +1005,10 @@
                 if (up.name === 'Critical Hit') up.effect = 0;
                 if (up.name === 'Worker Efficiency') up.effect = 1;
                 if (up.name === 'Energy Boost') up.effect = 1;
-                if (up.name === 'Auto Mining') up.effect = 0;
             });
             
             log('ASCENSION LEVEL ' + game.prestige + ' (+5% BONUS)');
-            notify('ASCENDED TO LEVEL ' + game.prestige + '! (+5% PERMANENT BONUS)');
+            notify('ASCENDED TO LEVEL ' + game.prestige + '!');
             update();
         });
         
@@ -1065,7 +1032,7 @@
         
         // Hard reset game
         document.getElementById('reset-btn').addEventListener('click', () => {
-            if (!confirm('HARD RESET: Delete everything?\nThis will remove ALL progress including Ascension levels!')) return;
+            if (!confirm('HARD RESET: Delete everything?')) return;
             localStorage.removeItem('bitminer');
             location.reload();
         });
@@ -1093,28 +1060,11 @@
             update();
         }, 1000);
         
-        // Auto-click simulation for auto mining upgrade
-        setInterval(() => {
-            if (game.upgrades.autoMine.level > 0) {
-                const autoChance = game.upgrades.autoMine.level * 0.01;
-                if (Math.random() < autoChance) {
-                    const autoGain = Math.floor(game.clickPower * game.upgrades.power.effect * getMulti() * 0.3);
-                    if (autoGain > 0) {
-                        game.benis += autoGain;
-                        game.totalMined += autoGain;
-                    }
-                }
-            }
-        }, 500);
-        
         // Load saved game from localStorage
         const saved = localStorage.getItem('bitminer');
         if (saved) {
-            const loaded = JSON.parse(saved);
-            // Merge loaded data with default structure
-            Object.assign(game, loaded);
+            Object.assign(game, JSON.parse(saved));
             log('GAME LOADED');
-            notify('Welcome back! Game loaded successfully.');
         }
         
         // Initial UI update
