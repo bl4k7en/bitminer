@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitminer</title>
+    <!-- Chrome Translate DISABLE -->
     <meta name="google" content="notranslate">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="Content-Language" content="en">
-    <script data-goatcounter="https://bl4k7en.goatcounter.com/count"async src="//gc.zgo.at/count.js"></script>
+    <!-- GoatCounter Analytics -->
+    <script data-goatcounter="https://bl4k7en.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <style>
         /* Reset and Base Styles */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,7 +17,7 @@
         body {
             font-family: 'Courier New', monospace;
             background: #0a0a0a;
-            color: #ccc;
+            color: #ccc;  /* GESTEIGERT von #aaa auf #ccc */
             font-size: 13px;
             line-height: 1.3;
             padding: 10px;
@@ -69,7 +71,7 @@
             font-size: 12px;
         }
         
-        .resource-name { color: #aaa; }
+        .resource-name { color: #aaa; }  /* GESTEIGERT von #888 auf #aaa */
         .resource-val { color: #75c0c7; font-weight: bold; }
         
         /* Button Styles */
@@ -77,7 +79,7 @@
             width: 100%;
             background: #1a1a1a;
             border: 1px solid #333;
-            color: #ccc;
+            color: #ccc;  /* GESTEIGERT von #aaa auf #ccc */
             padding: 9px;
             margin: 5px 0;
             cursor: pointer;
@@ -91,7 +93,7 @@
         .btn:hover:not(:disabled) {
             background: #222;
             border-color: #75c0c7;
-            color: #ccc;
+            color: #fff;  /* HELLER beim Hover */
         }
         
         .btn:disabled {
@@ -157,7 +159,7 @@
         .mine-info {
             margin-top: 20px;
             font-size: 12px;
-            color: #888;
+            color: #aaa;  /* GESTEIGERT von #888 auf #aaa */
         }
         
         /* Upgrade Panels */
@@ -176,18 +178,18 @@
         }
         
         .upgrade-name {
-            color: #ccc;
+            color: #ddd;  /* GESTEIGERT von #ccc auf #ddd */
             font-weight: bold;
             font-size: 12px;
         }
         
         .upgrade-level {
-            color: #666;
+            color: #aaa;  /* GESTEIGERT von #888 auf #aaa */
             font-size: 11px;
         }
         
         .upgrade-desc {
-            color: #888;
+            color: #aaa;  /* GESTEIGERT von #888 auf #aaa */
             font-size: 11px;
             margin-bottom: 8px;
         }
@@ -218,11 +220,11 @@
         .log-entry {
             padding: 4px 0;
             border-bottom: 1px solid #1a1a1a;
-            color: #888;
+            color: #aaa;  /* GESTEIGERT von #888 auf #aaa */
         }
         
         .log-time {
-            color: #444;
+            color: #888;  /* GESTEIGERT von #666 auf #888 */
             margin-right: 8px;
         }
         
@@ -244,7 +246,7 @@
             background: transparent;
             border: none;
             border-bottom: 2px solid transparent;
-            color: #888;
+            color: #aaa;  /* GESTEIGERT von #888 auf #aaa */
             padding: 7px 12px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
@@ -252,7 +254,7 @@
             text-transform: uppercase;
         }
         
-        .tab:hover { color: #888; }
+        .tab:hover { color: #ccc; }  /* GESTEIGERT von #aaa auf #ccc */
         .tab.active {
             color: #75c0c7;
             border-bottom-color: #75c0c7;
@@ -305,8 +307,8 @@
         }
         
         .worker-info { flex: 1; }
-        .worker-name { color: #ccc; font-weight: bold; }
-        .worker-rate { color: #888; font-size: 11px; }
+        .worker-name { color: #ddd; font-weight: bold; }  /* GESTEIGERT von #ccc auf #ddd */
+        .worker-rate { color: #aaa; font-size: 11px; }    /* GESTEIGERT von #888 auf #aaa */
         .worker-count { color: #75c0c7; font-weight: bold; margin-left: 10px; }
         
         /* Critical Hit Animation */
@@ -344,7 +346,7 @@
         .rank-badge {
             display: inline-block;
             padding: 5px 14px;
-            background: #444;
+            background: #666;  /* GESTEIGERT von #444 auf #666 */
             color: #fff;
             font-weight: bold;
             font-size: 12px;
@@ -375,16 +377,17 @@
         
         .stat-label {
             font-size: 11px;
-            color: #666;
+            color: #aaa;  /* GESTEIGERT von #888 auf #aaa */
             text-transform: uppercase;
         }
         
+        /* Statistics Item Styling */
         .stat-item {
             display: flex;
             justify-content: space-between;
             padding: 4px 0;
             font-size: 11px;
-            color: #aaa;
+            color: #ccc;  /* GESTEIGERT von #aaa auf #ccc */
             border-bottom: 1px solid #1a1a1a;
         }
 
@@ -394,7 +397,7 @@
             padding: 20px;
             text-align: center;
             border-top: 1px solid #222;
-            color: #666;
+            color: #aaa;  /* GESTEIGERT von #888 auf #aaa */
             font-size: 12px;
             border-radius: 0;
             background: #0f0f0f;
@@ -412,7 +415,7 @@
         }
 
         .footer-version {
-            color: #666;
+            color: #aaa;  /* GESTEIGERT von #666 auf #aaa */
             font-size: 12px;
         }
 
@@ -436,13 +439,14 @@
             transition: all 0.2s ease;
             border-radius: 0;
             border: 1px solid transparent;
-            color: #ccc;
+            color: #ccc;  /* GESTEIGERT */
             background: #1a1a1a;
         }
 
         .link-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #fff;  /* HELLER beim Hover */
         }
 
         .btn-icon {
@@ -453,7 +457,7 @@
 
         /* GitHub Button */
         .github-btn {
-            border-color: #333;
+            border-color: #444;  /* GESTEIGERT von #333 auf #444 */
         }
 
         .github-btn:hover {
