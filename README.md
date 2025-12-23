@@ -1,34 +1,67 @@
-# Bitminer
+# Bitminer 🕹️
 
-A minimalist clicking/incremental game. Build your mining operation, optimize your income, and climb the ranks!
+A minimalist incremental mining game where you collect bits, hire workers, upgrade your mining power, and ascend for permanent bonuses.
 
-## 🎮 Features
+## 🎮 Play Now
+**[Play Bitminer](https://bl4k7en.github.io/bitminer/)**
 
-- **Mining System**: Click to earn bits or automate the process
-- **Worker System**: 4 different worker types with varying speeds
-- **Upgrade System**: Improve your mining power, critical hits, and worker efficiency
-- **Resource Conversion**: Convert Bits to Energy, Crystals, and Power
-- **Ranking System**: Progress through 8 ranks from Initiate to Titan
-- **Ascension**: Reset your progress for permanent bonuses
-- **Save System**: Auto-save and manual save options
+## ✨ Features
 
-## 🚀 How to Play
+- **Click Mining**: Tap the gem to mine bits manually
+- **Workers**: Hire automated workers that mine for you
+- **Upgrades**: Boost your mining power, critical hit chance, and worker efficiency
+- **Resources**: Convert bits to Energy, Crystals, and Power
+- **Ascension**: Reset your progress for permanent multipliers
+- **Statistics**: Track all multipliers and upgrade values
+- **Auto-save**: Game progress is saved automatically
 
-1. Click the diamond to mine Bits
-2. Hire workers to automate mining
-3. Upgrade your mining capabilities
-4. Convert Bits to other resources for bonuses
-5. Reach new ranks for multipliers
-6. Ascend when ready for permanent boosts
+## 🎯 How to Play
 
-## 💾 Save System
+1. **Click the gem** to mine bits
+2. **Hire workers** to automate mining
+3. **Upgrade** your mining power and efficiency
+4. **Convert** bits to other resources
+5. **Ascend** when you reach milestones for permanent bonuses
+6. **Climb ranks** from Initiate to Titan
 
-- Game auto-saves to localStorage
-- Manual save button available
-- Hard reset option to start fresh
+## 🛠️ Technologies
 
-## 🎯 Tips
+- Pure HTML, CSS, and JavaScript
+- Local Storage for game saves
+- Responsive design
+- No frameworks or external dependencies
 
-- Balance between clicking and automation
-- Convert resources strategically
-- Time your ascensions for optimal progress
+## 🔧 Local Development
+
+```bash
+# Clone the repository
+git clone https://github.com/bl4k7en/bitminer.git
+
+# Open index.html in your browser
+```
+
+## 📱 Compatibility
+
+- Desktop browsers (Chrome, Firefox, Safari, Edge)
+- Mobile browsers (Chrome, Safari)
+- Works offline after initial load
+
+## 🤝 Contributing
+
+Feel free to submit issues or pull requests for improvements.
+
+## ☕ Support
+
+If you enjoy the game, consider supporting the developer:
+
+[![Support on Ko-fi](https://user-images.githubusercontent.com/46975001/87250934-2a12c880-c460-11ea-9570-609cd200f052.png)](https://ko-fi.com/bl4k_7en)
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+---
+
+Made with 💎 by [bl4k7en](https://github.com/bl4k7en)
+
+*Last updated: March 2024*
