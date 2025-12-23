@@ -21,22 +21,22 @@
                 <div class="title">▬ RESOURCES</div>
                 <div class="resource">
                     <span class="resource-name">BITS</span>
-                    <span class="resource-val" id="benis">0</span>
+                    <span class="resource-val" id="bits">0</span>  <!-- GEÄNDERT: benis → bits -->
                 </div>
                 <div class="resource">
                     <span class="resource-name">ENERGY</span>
-                    <span class="resource-val" id="karma">0</span>
+                    <span class="resource-val" id="energy">0</span>  <!-- GEÄNDERT: karma → energy -->
                 </div>
                 <div class="resource">
                     <span class="resource-name">CRYSTALS</span>
-                    <span class="resource-val" id="salt">0</span>
+                    <span class="resource-val" id="crystals">0</span>  <!-- GEÄNDERT: salt → crystals -->
                 </div>
                 <div class="resource">
                     <span class="resource-name">POWER</span>
-                    <span class="resource-val" id="rage">0</span>
+                    <span class="resource-val" id="power">0</span>  <!-- GEÄNDERT: rage → power -->
                 </div>
                 <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222; font-size: 11px;">
-                    <div style="color: #666;">BITS/s: <span id="benis-rate" style="color: #75c0c7;">0</span></div>
+                    <div style="color: #666;">BITS/s: <span id="bits-rate" style="color: #75c0c7;">0</span></div>  <!-- GEÄNDERT: benis-rate → bits-rate -->
                     <div style="color: #666;">MULTIPLIER: <span id="multi" style="color: #f7c516;">x1.0</span></div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                     </div>
                     <div class="stat-item">
                         <span>Energy Boost:</span>
-                        <span style="color: #f7c516;" id="stat-upgrade-karma">1.00</span>
+                        <span style="color: #f7c516;" id="stat-upgrade-energy">1.00</span>  <!-- GEÄNDERT: karma → energy -->
                     </div>
                 </div>
             </div>
@@ -131,15 +131,15 @@
                     
                     <div class="tab-content" id="tab-convert">
                         <div style="color: #666; font-size: 11px; margin-bottom: 10px;">CONVERT BITS TO OTHER RESOURCES</div>
-                        <button class="btn" id="conv-karma">
+                        <button class="btn" id="convert-energy">  <!-- GEÄNDERT: conv-karma → convert-energy -->
                             CONVERT TO ENERGY
                             <span class="cost">1000 Bits → 1 Energy</span>
                         </button>
-                        <button class="btn" id="conv-salt">
+                        <button class="btn" id="convert-crystals">  <!-- GEÄNDERT: conv-salt → convert-crystals -->
                             CONVERT TO CRYSTALS
                             <span class="cost">5000 Bits → 1 Crystal</span>
                         </button>
-                        <button class="btn" id="conv-rage">
+                        <button class="btn" id="convert-power">  <!-- GEÄNDERT: conv-rage → convert-power -->
                             CONVERT TO POWER
                             <span class="cost">50 Crystals → 1 Power</span>
                         </button>
