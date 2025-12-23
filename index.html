@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bit-Miner Operation</title>
+    <title>Bitminer</title>
     <style>
         /* Reset and Base Styles */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,15 +21,15 @@
         }
         
         .main {
-            max-width: 1000px;
+            max-width: 1200px; /* Breiter gemacht */
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 300px 1fr 250px;
-            gap: 8px;
+            grid-template-columns: 320px 1fr 320px; /* Breitere Spalten */
+            gap: 10px; /* Größerer Abstand */
             flex-grow: 1;
         }
         
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
             .main { grid-template-columns: 1fr; }
         }
         
@@ -37,15 +37,15 @@
         .panel {
             background: #151515;
             border: 1px solid #222;
-            padding: 8px;
+            padding: 10px; /* Mehr Padding */
             border-radius: 4px;
         }
         
         .title {
             color: #d23c22;
-            font-size: 14px;
+            font-size: 15px; /* Etwas größer */
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px; /* Mehr Abstand */
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -54,9 +54,9 @@
         .resource {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 5px 0; /* Mehr Padding */
             border-bottom: 1px solid #1a1a1a;
-            font-size: 11px;
+            font-size: 12px; /* Etwas größer */
         }
         
         .resource-name { color: #666; }
@@ -68,11 +68,11 @@
             background: #1a1a1a;
             border: 1px solid #333;
             color: #888;
-            padding: 8px;
-            margin: 4px 0;
+            padding: 9px; /* Mehr Padding */
+            margin: 5px 0; /* Mehr Abstand */
             cursor: pointer;
             font-family: 'Courier New', monospace;
-            font-size: 11px;
+            font-size: 12px; /* Etwas größer */
             text-align: left;
             transition: all 0.1s;
             border-radius: 2px;
@@ -102,16 +102,16 @@
         /* Mining Zone */
         .mine-zone {
             text-align: center;
-            padding: 30px 0;
+            padding: 35px 0; /* Mehr Padding */
         }
         
         .mine-btn {
-            width: 200px;
-            height: 200px;
+            width: 220px; /* Breiter */
+            height: 220px; /* Höher */
             background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
             border: 3px solid #d23c22;
             cursor: pointer;
-            font-size: 72px;
+            font-size: 80px; /* Größeres Symbol */
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -136,16 +136,16 @@
             right: -8px;
             background: #d23c22;
             border: 2px solid #f7c516;
-            padding: 4px 8px;
-            font-size: 12px;
+            padding: 5px 10px; /* Mehr Padding */
+            font-size: 13px; /* Etwas größer */
             font-weight: bold;
             color: #fff;
             border-radius: 12px;
         }
         
         .mine-info {
-            margin-top: 15px;
-            font-size: 11px;
+            margin-top: 20px; /* Mehr Abstand */
+            font-size: 12px; /* Etwas größer */
             color: #666;
         }
         
@@ -153,39 +153,39 @@
         .upgrade {
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
-            padding: 8px;
-            margin: 4px 0;
+            padding: 9px; /* Mehr Padding */
+            margin: 5px 0; /* Mehr Abstand */
             border-radius: 3px;
         }
         
         .upgrade-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
+            margin-bottom: 5px; /* Mehr Abstand */
         }
         
         .upgrade-name {
             color: #ccc;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 12px; /* Etwas größer */
         }
         
         .upgrade-level {
             color: #666;
-            font-size: 10px;
+            font-size: 11px; /* Etwas größer */
         }
         
         .upgrade-desc {
             color: #666;
-            font-size: 10px;
-            margin-bottom: 6px;
+            font-size: 11px; /* Etwas größer */
+            margin-bottom: 8px; /* Mehr Abstand */
         }
         
         /* Progress Bar */
         .progress {
-            height: 3px;
+            height: 4px; /* Etwas dicker */
             background: #0f0f0f;
-            margin: 4px 0;
+            margin: 5px 0; /* Mehr Abstand */
             border: 1px solid #222;
             border-radius: 2px;
             overflow: hidden;
@@ -199,24 +199,24 @@
         
         /* Log Section */
         .log {
-            max-height: 300px;
+            max-height: 350px; /* Höher */
             overflow-y: auto;
-            font-size: 10px;
+            font-size: 11px; /* Etwas größer */
         }
         
         .log-entry {
-            padding: 3px 0;
+            padding: 4px 0; /* Mehr Padding */
             border-bottom: 1px solid #1a1a1a;
             color: #666;
         }
         
         .log-time {
             color: #444;
-            margin-right: 6px;
+            margin-right: 8px; /* Mehr Abstand */
         }
         
         /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 5px; } /* Etwas breiter */
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #333; }
         ::-webkit-scrollbar-thumb:hover { background: #75c0c7; }
@@ -224,8 +224,8 @@
         /* Tab Navigation */
         .tab-bar {
             display: flex;
-            gap: 2px;
-            margin-bottom: 8px;
+            gap: 3px; /* Mehr Abstand */
+            margin-bottom: 10px; /* Mehr Abstand */
             border-bottom: 1px solid #222;
         }
         
@@ -234,10 +234,10 @@
             border: none;
             border-bottom: 2px solid transparent;
             color: #555;
-            padding: 6px 10px;
+            padding: 7px 12px; /* Mehr Padding */
             cursor: pointer;
             font-family: 'Courier New', monospace;
-            font-size: 10px;
+            font-size: 11px; /* Etwas größer */
             text-transform: uppercase;
         }
         
@@ -254,30 +254,30 @@
         .worker {
             display: flex;
             align-items: center;
-            padding: 6px;
+            padding: 7px; /* Mehr Padding */
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
-            margin: 3px 0;
-            font-size: 11px;
+            margin: 4px 0; /* Mehr Abstand */
+            font-size: 12px; /* Etwas größer */
             border-radius: 3px;
         }
         
         .worker-icon {
-            width: 30px;
-            height: 30px;
+            width: 35px; /* Breiter */
+            height: 35px; /* Höher */
             background: #0f0f0f;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 8px;
-            font-size: 16px;
+            margin-right: 10px; /* Mehr Abstand */
+            font-size: 18px; /* Größeres Symbol */
             border-radius: 3px;
         }
         
         .worker-info { flex: 1; }
         .worker-name { color: #ccc; font-weight: bold; }
-        .worker-rate { color: #666; font-size: 10px; }
-        .worker-count { color: #75c0c7; font-weight: bold; margin-left: 8px; }
+        .worker-rate { color: #666; font-size: 11px; } /* Etwas größer */
+        .worker-count { color: #75c0c7; font-weight: bold; margin-left: 10px; } /* Mehr Abstand */
         
         /* Critical Hit Animation */
         .crit { animation: crit 0.2s; }
@@ -290,8 +290,8 @@
             right: 10px;
             background: #1a1a1a;
             border: 2px solid #f7c516;
-            padding: 10px;
-            max-width: 250px;
+            padding: 12px; /* Mehr Padding */
+            max-width: 280px; /* Breiter */
             z-index: 1000;
             animation: notif 0.3s, notif-out 0.3s 2.5s;
             border-radius: 4px;
@@ -303,21 +303,21 @@
         /* Rank Display */
         .rank-display {
             text-align: center;
-            padding: 12px;
+            padding: 15px; /* Mehr Padding */
             background: #1a1a1a;
             border: 1px solid #333;
-            margin-bottom: 8px;
+            margin-bottom: 10px; /* Mehr Abstand */
             border-radius: 4px;
         }
         
         .rank-badge {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 5px 14px; /* Mehr Padding */
             background: #444;
             color: #fff;
             font-weight: bold;
-            font-size: 11px;
-            margin: 4px;
+            font-size: 12px; /* Etwas größer */
+            margin: 5px; /* Mehr Abstand */
             border-radius: 12px;
         }
         
@@ -325,37 +325,37 @@
         .stat-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 10px; /* Mehr Abstand */
+            margin-top: 10px; /* Mehr Abstand */
         }
         
         .stat {
             background: #1a1a1a;
-            border-left: 2px solid #75c0c7;
-            padding: 8px;
+            border-left: 3px solid #75c0c7; /* Etwas dicker */
+            padding: 10px; /* Mehr Padding */
             border-radius: 3px;
         }
         
         .stat-val {
-            font-size: 18px;
+            font-size: 20px; /* Etwas größer */
             font-weight: bold;
             color: #75c0c7;
         }
         
         .stat-label {
-            font-size: 10px;
+            font-size: 11px; /* Etwas größer */
             color: #666;
             text-transform: uppercase;
         }
 
         /* Footer Styles */
         .game-footer {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 25px; /* Mehr Abstand */
+            padding: 18px; /* Mehr Padding */
             text-align: center;
             border-top: 1px solid #222;
             color: #666;
-            font-size: 11px;
+            font-size: 12px; /* Etwas größer */
             border-radius: 0 0 6px 6px;
             background: #0f0f0f;
         }
@@ -364,17 +364,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 15px; /* Mehr Abstand */
         }
 
         .footer-version {
             color: #666;
-            font-size: 11px;
+            font-size: 12px; /* Etwas größer */
         }
 
         .footer-links {
             display: flex;
-            gap: 15px;
+            gap: 20px; /* Mehr Abstand */
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -382,11 +382,11 @@
         .link-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
+            gap: 10px; /* Mehr Abstand */
+            padding: 12px 22px; /* Mehr Padding */
             text-decoration: none;
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 13px; /* Etwas größer */
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -402,8 +402,8 @@
         }
 
         .btn-icon {
-            width: 16px;
-            height: 16px;
+            width: 18px; /* Etwas größer */
+            height: 18px; /* Etwas größer */
             fill: currentColor;
         }
 
@@ -436,11 +436,11 @@
             .footer-links {
                 flex-direction: column;
                 align-items: center;
-                gap: 10px;
+                gap: 12px; /* Mehr Abstand */
             }
             
             .link-btn {
-                width: 220px;
+                width: 240px; /* Breiter */
                 justify-content: center;
             }
         }
@@ -469,18 +469,18 @@
                     <span class="resource-name">POWER</span>
                     <span class="resource-val" id="rage">0</span>
                 </div>
-                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #222; font-size: 10px;">
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222; font-size: 11px;">
                     <div style="color: #666;">BITS/s: <span id="benis-rate" style="color: #75c0c7;">0</span></div>
                     <div style="color: #666;">MULTIPLIER: <span id="multi" style="color: #f7c516;">x1.0</span></div>
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
+            <div class="panel" style="margin-top: 10px;">
                 <div class="title">▬ WORKERS</div>
                 <div id="workers"></div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
+            <div class="panel" style="margin-top: 10px;">
                 <button class="btn" id="save-btn">▶ SAVE GAME</button>
                 <button class="btn" id="reset-btn" style="border-color: #d23c22; color: #d23c22;">▶ HARD RESET</button>
             </div>
@@ -489,10 +489,10 @@
         <!-- Center Panel: Mining & Upgrades -->
         <div>
             <div class="rank-display">
-                <div style="color: #666; font-size: 10px; margin-bottom: 4px;">CURRENT RANK</div>
+                <div style="color: #666; font-size: 11px; margin-bottom: 5px;">CURRENT RANK</div>
                 <span id="rank-name" style="color: #ccc; font-weight: bold;">INITIATE</span>
                 <span class="rank-badge" id="rank-badge">0</span>
-                <div style="margin-top: 8px; color: #666; font-size: 10px;">
+                <div style="margin-top: 10px; color: #666; font-size: 11px;">
                     ASCENSION: <span id="prestige" style="color: #f7c516; font-weight: bold;">0</span>
                 </div>
             </div>
@@ -509,7 +509,7 @@
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
+            <div class="panel" style="margin-top: 10px;">
                 <div class="tab-bar">
                     <button class="tab active" data-tab="power">POWER</button>
                     <button class="tab" data-tab="convert">CONVERT</button>
@@ -521,7 +521,7 @@
                 </div>
                 
                 <div class="tab-content" id="tab-convert">
-                    <div style="color: #666; font-size: 10px; margin-bottom: 8px;">CONVERT BITS TO OTHER RESOURCES</div>
+                    <div style="color: #666; font-size: 11px; margin-bottom: 10px;">CONVERT BITS TO OTHER RESOURCES</div>
                     <button class="btn" id="conv-karma">
                         CONVERT TO ENERGY
                         <span class="cost">1000 Bits → 1 Energy</span>
@@ -534,20 +534,20 @@
                         CONVERT TO POWER
                         <span class="cost">50 Crystals → 1 Power</span>
                     </button>
-                    <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #222;">
-                        <div style="color: #666; font-size: 10px; margin-bottom: 6px;">ENERGY BOOSTS BITS GAIN</div>
-                        <div style="color: #666; font-size: 10px; margin-bottom: 6px;">CRYSTALS UNLOCK WORKERS</div>
-                        <div style="color: #666; font-size: 10px;">POWER MULTIPLIES EVERYTHING</div>
+                    <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #222;">
+                        <div style="color: #666; font-size: 11px; margin-bottom: 8px;">ENERGY BOOSTS BITS GAIN</div>
+                        <div style="color: #666; font-size: 11px; margin-bottom: 8px;">CRYSTALS UNLOCK WORKERS</div>
+                        <div style="color: #666; font-size: 11px;">POWER MULTIPLIES EVERYTHING</div>
                     </div>
                 </div>
                 
                 <div class="tab-content" id="tab-prestige">
-                    <div style="color: #666; font-size: 10px; margin-bottom: 8px;">ASCEND FOR PERMANENT BONUSES</div>
-                    <div style="margin: 8px 0; padding: 8px; background: #1a1a1a; border: 1px solid #333;">
-                        <div style="color: #888; font-size: 11px;">ASCENSION BONUS</div>
+                    <div style="color: #666; font-size: 11px; margin-bottom: 10px;">ASCEND FOR PERMANENT BONUSES</div>
+                    <div style="margin: 10px 0; padding: 10px; background: #1a1a1a; border: 1px solid #333;">
+                        <div style="color: #888; font-size: 12px;">ASCENSION BONUS</div>
                         <div style="color: #f7c516; font-weight: bold;">+<span id="prestige-bonus">0</span>% ALL GAIN</div>
                     </div>
-                    <div style="color: #888; font-size: 10px; margin: 8px 0;">
+                    <div style="color: #888; font-size: 11px; margin: 10px 0;">
                         REQUIRES: <span id="prestige-req" style="color: #75c0c7; font-weight: bold;">1,000,000</span> BITS
                     </div>
                     <button class="btn" id="prestige-btn" style="border-color: #d23c22;">
@@ -556,26 +556,15 @@
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
-                <div class="stat-row">
-                    <div class="stat">
-                        <div class="stat-val" id="stat-clicks">0</div>
-                        <div class="stat-label">Clicks</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-val" id="stat-time">0s</div>
-                        <div class="stat-label">Time</div>
-                    </div>
-                </div>
-            </div>
+            <!-- Stat Row removed from here -->
         </div>
         
         <!-- Right Panel: Log & Info -->
         <div>
             <div class="panel">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <div class="title">▬ LOG</div>
-                    <button class="btn" id="clear-log" style="width: auto; padding: 4px 8px; margin: 0;">CLEAR</button>
+                    <button class="btn" id="clear-log" style="width: auto; padding: 5px 10px; margin: 0;">CLEAR</button>
                 </div>
                 <div class="log" id="log">
                     <div class="log-entry">
@@ -585,9 +574,21 @@
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
+            <div class="panel" style="margin-top: 10px;">
                 <div class="title">▬ RANKS</div>
-                <div id="ranks" style="font-size: 10px;"></div>
+                <div id="ranks" style="font-size: 11px;"></div>
+                
+                <!-- Stats moved here under RANKS -->
+                <div class="stat-row" style="margin-top: 15px;">
+                    <div class="stat">
+                        <div class="stat-val" id="stat-clicks">0</div>
+                        <div class="stat-label">Clicks</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" id="stat-time">0s</div>
+                        <div class="stat-label">Time</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -782,7 +783,7 @@
             list.innerHTML = '';
             ranks.forEach((rank, i) => {
                 const div = document.createElement('div');
-                div.style.padding = '4px 0';
+                div.style.padding = '5px 0';
                 div.style.borderBottom = '1px solid #1a1a1a';
                 div.style.color = i <= game.rankIndex ? '#888' : '#444';
                 div.innerHTML = `[${i}] ${rank.name} <span style="float: right;">${fmt(rank.req)}</span>`;
@@ -805,7 +806,7 @@
                             <div class="worker-name">${w.name}</div>
                             <div class="worker-count">x${w.count}</div>
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 11px;">
                             <div class="worker-rate">${(w.rate * game.upgrades.efficiency.effect * getMulti()).toFixed(1)}/s each</div>
                             <div style="color: ${game.benis >= cost ? '#f7c516' : '#666'};">${fmt(cost)} Bits</div>
                         </div>
