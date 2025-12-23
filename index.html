@@ -1,71 +1,87 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pr0gramm Mining Operation</title>
+    <title>Bitminer</title>
     <style>
+        /* Reset and Base Styles */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Courier New', monospace;
             background: #0a0a0a;
             color: #888;
-            font-size: 12px;
+            font-size: 13px;
             line-height: 1.3;
             padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         .main {
-            max-width: 1000px;
+            max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 300px 1fr 250px;
-            gap: 8px;
+            grid-template-columns: 320px 1fr 320px;
+            gap: 12px;
+            flex-grow: 1;
         }
         
-        @media (max-width: 900px) {
+        @media (max-width: 1100px) {
             .main { grid-template-columns: 1fr; }
         }
         
+        /* Alle Panels gleiche Breite */
         .panel {
             background: #151515;
             border: 1px solid #222;
-            padding: 8px;
+            padding: 12px;
+            border-radius: 0;
+            width: 100%;
+        }
+        
+        /* Center Panels - gleiche Breite wie links/rechts */
+        .center-panel {
+            width: 100%;
         }
         
         .title {
             color: #d23c22;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         
+        /* Resource Display */
         .resource {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 5px 0;
             border-bottom: 1px solid #1a1a1a;
-            font-size: 11px;
+            font-size: 12px;
         }
         
         .resource-name { color: #666; }
         .resource-val { color: #75c0c7; font-weight: bold; }
         
+        /* Button Styles */
         .btn {
             width: 100%;
             background: #1a1a1a;
             border: 1px solid #333;
             color: #888;
-            padding: 8px;
-            margin: 4px 0;
+            padding: 9px;
+            margin: 5px 0;
             cursor: pointer;
             font-family: 'Courier New', monospace;
-            font-size: 11px;
+            font-size: 12px;
             text-align: left;
             transition: all 0.1s;
+            border-radius: 0;
         }
         
         .btn:hover:not(:disabled) {
@@ -89,23 +105,26 @@
             float: right;
         }
         
+        /* Mining Zone */
         .mine-zone {
             text-align: center;
-            padding: 30px 0;
+            padding: 35px 0;
+            width: 100%;
         }
         
         .mine-btn {
-            width: 200px;
-            height: 200px;
+            width: 240px;
+            height: 240px;
             background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
             border: 3px solid #d23c22;
             cursor: pointer;
-            font-size: 72px;
+            font-size: 80px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             position: relative;
             transition: all 0.05s;
+            border-radius: 0;
         }
         
         .mine-btn:hover {
@@ -124,53 +143,59 @@
             right: -8px;
             background: #d23c22;
             border: 2px solid #f7c516;
-            padding: 4px 8px;
-            font-size: 12px;
+            padding: 5px 10px;
+            font-size: 13px;
             font-weight: bold;
             color: #fff;
+            border-radius: 0;
         }
         
         .mine-info {
-            margin-top: 15px;
-            font-size: 11px;
+            margin-top: 20px;
+            font-size: 12px;
             color: #666;
         }
         
+        /* Upgrade Panels */
         .upgrade {
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
-            padding: 8px;
-            margin: 4px 0;
+            padding: 9px;
+            margin: 5px 0;
+            border-radius: 0;
         }
         
         .upgrade-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
         
         .upgrade-name {
             color: #ccc;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 12px;
         }
         
         .upgrade-level {
             color: #666;
-            font-size: 10px;
+            font-size: 11px;
         }
         
         .upgrade-desc {
             color: #666;
-            font-size: 10px;
-            margin-bottom: 6px;
+            font-size: 11px;
+            margin-bottom: 8px;
         }
         
+        /* Progress Bar */
         .progress {
-            height: 3px;
+            height: 4px;
             background: #0f0f0f;
-            margin: 4px 0;
+            margin: 5px 0;
             border: 1px solid #222;
+            border-radius: 0;
+            overflow: hidden;
         }
         
         .progress-bar {
@@ -179,32 +204,35 @@
             transition: width 0.3s;
         }
         
+        /* Log Section */
         .log {
-            max-height: 300px;
+            max-height: 350px;
             overflow-y: auto;
-            font-size: 10px;
+            font-size: 11px;
         }
         
         .log-entry {
-            padding: 3px 0;
+            padding: 4px 0;
             border-bottom: 1px solid #1a1a1a;
             color: #666;
         }
         
         .log-time {
             color: #444;
-            margin-right: 6px;
+            margin-right: 8px;
         }
         
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #333; }
-        ::-webkit-scrollbar-thumb:hover { background: #75c0c7; }
+        /* Scrollbar Styling */
+        :: -webkit-scrollbar { width: 5px; }
+        :: -webkit-scrollbar-track { background: #0a0a0a; }
+        :: -webkit-scrollbar-thumb { background: #333; }
+        :: -webkit-scrollbar-thumb:hover { background: #75c0c7; }
         
+        /* Tab Navigation */
         .tab-bar {
             display: flex;
-            gap: 2px;
-            margin-bottom: 8px;
+            gap: 3px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #222;
         }
         
@@ -213,10 +241,10 @@
             border: none;
             border-bottom: 2px solid transparent;
             color: #555;
-            padding: 6px 10px;
+            padding: 7px 12px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
-            font-size: 10px;
+            font-size: 11px;
             text-transform: uppercase;
         }
         
@@ -226,208 +254,374 @@
             border-bottom-color: #75c0c7;
         }
         
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        /* FESTER TAB CONTAINER */
+        .tab-container {
+            position: relative;
+            min-height: 320px;
+            width: 100%;
+            overflow: hidden;
+        }
         
+        .tab-content { 
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .tab-content.active { 
+            display: block;
+        }
+        
+        /* Worker Cards */
         .worker {
             display: flex;
             align-items: center;
-            padding: 6px;
+            padding: 7px;
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
-            margin: 3px 0;
-            font-size: 11px;
+            margin: 4px 0;
+            font-size: 12px;
+            border-radius: 0;
         }
         
         .worker-icon {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             background: #0f0f0f;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 8px;
-            font-size: 16px;
+            margin-right: 10px;
+            font-size: 18px;
+            border-radius: 0;
         }
         
         .worker-info { flex: 1; }
         .worker-name { color: #ccc; font-weight: bold; }
-        .worker-rate { color: #666; font-size: 10px; }
-        .worker-count { color: #75c0c7; font-weight: bold; margin-left: 8px; }
+        .worker-rate { color: #666; font-size: 11px; }
+        .worker-count { color: #75c0c7; font-weight: bold; margin-left: 10px; }
         
+        /* Critical Hit Animation */
         .crit { animation: crit 0.2s; }
         @keyframes crit { 50% { border-color: #ff0000; transform: scale(1.05); } }
         
+        /* Notification Popups */
         .notification {
             position: fixed;
             top: 10px;
             right: 10px;
             background: #1a1a1a;
             border: 2px solid #f7c516;
-            padding: 10px;
-            max-width: 250px;
+            padding: 12px;
+            max-width: 280px;
             z-index: 1000;
             animation: notif 0.3s, notif-out 0.3s 2.5s;
+            border-radius: 0;
         }
         
         @keyframes notif { from { transform: translateX(300px); opacity: 0; } }
         @keyframes notif-out { to { transform: translateX(300px); opacity: 0; } }
         
+        /* Rank Display */
         .rank-display {
             text-align: center;
-            padding: 12px;
+            padding: 15px;
             background: #1a1a1a;
             border: 1px solid #333;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            border-radius: 0;
+            width: 100%;
         }
         
         .rank-badge {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 5px 14px;
             background: #444;
             color: #fff;
             font-weight: bold;
-            font-size: 11px;
-            margin: 4px;
+            font-size: 12px;
+            margin: 5px;
+            border-radius: 0;
         }
         
+        /* Stats Display */
         .stat-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 10px;
+            margin-top: 10px;
         }
         
         .stat {
             background: #1a1a1a;
-            border-left: 2px solid #75c0c7;
-            padding: 8px;
+            border-left: 3px solid #75c0c7;
+            padding: 10px;
+            border-radius: 0;
         }
         
         .stat-val {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #75c0c7;
         }
         
         .stat-label {
-            font-size: 10px;
+            font-size: 11px;
             color: #666;
             text-transform: uppercase;
+        }
+
+        /* Footer Styles */
+        .game-footer {
+            margin-top: 30px;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #222;
+            color: #666;
+            font-size: 12px;
+            border-radius: 0;
+            background: #0f0f0f;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-version {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 22px;
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 0;
+            border: 1px solid transparent;
+            color: #ccc;
+            background: #1a1a1a;
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* GitHub Button */
+        .github-btn {
+            border-color: #333;
+        }
+
+        .github-btn:hover {
+            background: #222;
+            border-color: #75c0c7;
+            color: #fff;
+        }
+
+        /* Ko-fi Button mit neuem Logo */
+        .kofi-btn {
+            background: #1a1a1a;
+            border-color: #29abe0;
+            color: #29abe0;
+        }
+
+        .kofi-btn:hover {
+            background: #14232e;
+            border-color: #ff5f5f;
+            color: #ff5f5f;
+        }
+
+        .kofi-logo {
+            width: 18px;
+            height: 18px;
+            filter: brightness(0) saturate(100%) invert(61%) sepia(73%) saturate(3746%) hue-rotate(169deg) brightness(93%) contrast(88%);
+        }
+
+        .kofi-btn:hover .kofi-logo {
+            filter: brightness(0) saturate(100%) invert(48%) sepia(98%) saturate(2426%) hue-rotate(326deg) brightness(101%) contrast(101%);
+        }
+
+        /* Responsive Footer */
+        @media (max-width: 600px) {
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .link-btn {
+                width: 240px;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Main Game Container -->
     <div class="main">
         <!-- Left Panel: Resources & Workers -->
-        <div>
+        <div class="center-panel">
             <div class="panel">
                 <div class="title">▬ RESOURCES</div>
                 <div class="resource">
-                    <span class="resource-name">BENIS</span>
+                    <span class="resource-name">BITS</span>
                     <span class="resource-val" id="benis">0</span>
                 </div>
                 <div class="resource">
-                    <span class="resource-name">KARMA</span>
+                    <span class="resource-name">ENERGY</span>
                     <span class="resource-val" id="karma">0</span>
                 </div>
                 <div class="resource">
-                    <span class="resource-name">SALT</span>
+                    <span class="resource-name">CRYSTALS</span>
                     <span class="resource-val" id="salt">0</span>
                 </div>
                 <div class="resource">
-                    <span class="resource-name">RAGE</span>
+                    <span class="resource-name">POWER</span>
                     <span class="resource-val" id="rage">0</span>
                 </div>
-                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #222; font-size: 10px;">
-                    <div style="color: #666;">BENIS/s: <span id="benis-rate" style="color: #75c0c7;">0</span></div>
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222; font-size: 11px;">
+                    <div style="color: #666;">BITS/s: <span id="benis-rate" style="color: #75c0c7;">0</span></div>
                     <div style="color: #666;">MULTIPLIER: <span id="multi" style="color: #f7c516;">x1.0</span></div>
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
+            <div class="panel" style="margin-top: 12px;">
                 <div class="title">▬ WORKERS</div>
                 <div id="workers"></div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
+            <div class="panel" style="margin-top: 12px;">
                 <button class="btn" id="save-btn">▶ SAVE GAME</button>
                 <button class="btn" id="reset-btn" style="border-color: #d23c22; color: #d23c22;">▶ HARD RESET</button>
             </div>
         </div>
         
         <!-- Center Panel: Mining & Upgrades -->
-        <div>
-            <div class="rank-display">
-                <div style="color: #666; font-size: 10px; margin-bottom: 4px;">CURRENT RANK</div>
-                <span id="rank-name" style="color: #ccc; font-weight: bold;">GEBANNT</span>
+        <div class="center-panel">
+            <div class="panel rank-display">
+                <div style="color: #666; font-size: 11px; margin-bottom: 5px;">CURRENT RANK</div>
+                <span id="rank-name" style="color: #ccc; font-weight: bold;">INITIATE</span>
                 <span class="rank-badge" id="rank-badge">0</span>
-                <div style="margin-top: 8px; color: #666; font-size: 10px;">
-                    PRESTIGE: <span id="prestige" style="color: #f7c516; font-weight: bold;">0</span>
+                <div style="margin-top: 10px; color: #666; font-size: 11px;">
+                    ASCENSION: <span id="prestige" style="color: #f7c516; font-weight: bold;">0</span>
                 </div>
             </div>
             
-            <div class="panel">
+            <div class="panel" style="margin-top: 12px;">
                 <div class="mine-zone">
                     <button class="mine-btn" id="mine-btn">
                         💎
                         <span class="mine-rate" id="mine-rate">+1</span>
                     </button>
                     <div class="mine-info">
-                        TOTAL MINED: <span id="total-mined" style="color: #75c0c7;">0</span> BENIS
+                        TOTAL MINED: <span id="total-mined" style="color: #75c0c7;">0</span> BITS
                     </div>
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
+            <div class="panel" style="margin-top: 12px;">
                 <div class="tab-bar">
                     <button class="tab active" data-tab="power">POWER</button>
                     <button class="tab" data-tab="convert">CONVERT</button>
-                    <button class="tab" data-tab="prestige">PRESTIGE</button>
+                    <button class="tab" data-tab="prestige">ASCEND</button>
                 </div>
                 
-                <div class="tab-content active" id="tab-power">
-                    <div id="power-upgrades"></div>
-                </div>
-                
-                <div class="tab-content" id="tab-convert">
-                    <div style="color: #666; font-size: 10px; margin-bottom: 8px;">CONVERT BENIS TO OTHER RESOURCES</div>
-                    <button class="btn" id="conv-karma">
-                        CONVERT TO KARMA
-                        <span class="cost">1000 Benis → 1 Karma</span>
-                    </button>
-                    <button class="btn" id="conv-salt">
-                        CONVERT TO SALT
-                        <span class="cost">5000 Benis → 1 Salt</span>
-                    </button>
-                    <button class="btn" id="conv-rage">
-                        CONVERT TO RAGE
-                        <span class="cost">50 Salt → 1 Rage</span>
-                    </button>
-                    <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #222;">
-                        <div style="color: #666; font-size: 10px; margin-bottom: 6px;">KARMA BOOSTS BENIS GAIN</div>
-                        <div style="color: #666; font-size: 10px; margin-bottom: 6px;">SALT UNLOCKS WORKERS</div>
-                        <div style="color: #666; font-size: 10px;">RAGE MULTIPLIES EVERYTHING</div>
+                <!-- FESTER TAB-CONTAINER -->
+                <div class="tab-container">
+                    <div class="tab-content active" id="tab-power">
+                        <div id="power-upgrades"></div>
+                    </div>
+                    
+                    <div class="tab-content" id="tab-convert">
+                        <div style="color: #666; font-size: 11px; margin-bottom: 10px;">CONVERT BITS TO OTHER RESOURCES</div>
+                        <button class="btn" id="conv-karma">
+                            CONVERT TO ENERGY
+                            <span class="cost">1000 Bits → 1 Energy</span>
+                        </button>
+                        <button class="btn" id="conv-salt">
+                            CONVERT TO CRYSTALS
+                            <span class="cost">5000 Bits → 1 Crystal</span>
+                        </button>
+                        <button class="btn" id="conv-rage">
+                            CONVERT TO POWER
+                            <span class="cost">50 Crystals → 1 Power</span>
+                        </button>
+                        <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #222;">
+                            <div style="color: #666; font-size: 11px; margin-bottom: 8px;">ENERGY BOOSTS BITS GAIN</div>
+                            <div style="color: #666; font-size: 11px; margin-bottom: 8px;">CRYSTALS UNLOCK WORKERS</div>
+                            <div style="color: #666; font-size: 11px;">POWER MULTIPLIES EVERYTHING</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="tab-prestige">
+                        <div style="color: #666; font-size: 11px; margin-bottom: 10px;">ASCEND FOR PERMANENT BONUSES</div>
+                        <div style="margin: 10px 0; padding: 10px; background: #1a1a1a; border: 1px solid #333;">
+                            <div style="color: #888; font-size: 12px;">ASCENSION BONUS</div>
+                            <div style="color: #f7c516; font-weight: bold;">+<span id="prestige-bonus">0</span>% ALL GAIN</div>
+                        </div>
+                        <div style="color: #888; font-size: 11px; margin: 10px 0;">
+                            REQUIRES: <span id="prestige-req" style="color: #75c0c7; font-weight: bold;">1,000,000</span> BITS
+                        </div>
+                        <button class="btn" id="prestige-btn" style="border-color: #d23c22;">
+                            ▶ ASCEND NOW
+                        </button>
                     </div>
                 </div>
-                
-                <div class="tab-content" id="tab-prestige">
-                    <div style="color: #666; font-size: 10px; margin-bottom: 8px;">RESET EVERYTHING FOR PERMANENT BONUSES</div>
-                    <div style="margin: 8px 0; padding: 8px; background: #1a1a1a; border: 1px solid #333;">
-                        <div style="color: #888; font-size: 11px;">PRESTIGE BONUS</div>
-                        <div style="color: #f7c516; font-weight: bold;">+<span id="prestige-bonus">0</span>% ALL GAIN</div>
+            </div>
+        </div>
+        
+        <!-- Right Panel: Log & Info -->
+        <div class="center-panel">
+            <div class="panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div class="title">▬ LOG</div>
+                    <button class="btn" id="clear-log" style="width: auto; padding: 5px 10px; margin: 0;">CLEAR</button>
+                </div>
+                <div class="log" id="log">
+                    <div class="log-entry">
+                        <span class="log-time">[00:00:00]</span>
+                        <span>SYSTEM ONLINE</span>
                     </div>
-                    <div style="color: #888; font-size: 10px; margin: 8px 0;">
-                        REQUIRES: <span id="prestige-req" style="color: #75c0c7; font-weight: bold;">1,000,000</span> BENIS
-                    </div>
-                    <button class="btn" id="prestige-btn" style="border-color: #d23c22;">
-                        ▶ PRESTIGE NOW
-                    </button>
                 </div>
             </div>
             
-            <div class="panel" style="margin-top: 8px;">
-                <div class="stat-row">
+            <div class="panel" style="margin-top: 12px;">
+                <div class="title">▬ RANKS</div>
+                <div id="ranks" style="font-size: 11px;"></div>
+                
+                <!-- Stats moved here under RANKS -->
+                <div class="stat-row" style="margin-top: 15px;">
                     <div class="stat">
                         <div class="stat-val" id="stat-clicks">0</div>
                         <div class="stat-label">Clicks</div>
@@ -439,32 +633,36 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Right Panel: Log & Info -->
-        <div>
-            <div class="panel">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <div class="title">▬ LOG</div>
-                    <button class="btn" id="clear-log" style="width: auto; padding: 4px 8px; margin: 0;">CLEAR</button>
-                </div>
-                <div class="log" id="log">
-                    <div class="log-entry">
-                        <span class="log-time">[00:00:00]</span>
-                        <span>SYSTEM ONLINE</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="panel" style="margin-top: 8px;">
-                <div class="title">▬ RANKS</div>
-                <div id="ranks" style="font-size: 10px;"></div>
-            </div>
-        </div>
     </div>
     
+    <!-- Notification Container -->
     <div id="notifications"></div>
     
+    <!-- Game Footer with External Links -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <p class="footer-version">Bitminer v1.0</p>
+            <div class="footer-links">
+                <a href="https://github.com/bl4k7en" target="_blank" rel="noopener noreferrer" class="link-btn github-btn">
+                    <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+                    </svg>
+                    View on GitHub
+                </a>
+                <a href="https://ko-fi.com/bl4k_7en" target="_blank" rel="noopener noreferrer" class="link-btn kofi-btn">
+                    <!-- Ko-fi Logo aus deinem Link -->
+                    <img src="https://user-images.githubusercontent.com/46975001/87250934-2a12c880-c460-11ea-9570-609cd200f052.png" 
+                         alt="Ko-fi" 
+                         class="kofi-logo">
+                    Support on Ko-fi
+                </a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Game JavaScript -->
     <script>
+        // Game state object containing all variables
         const game = {
             benis: 0,
             karma: 0,
@@ -485,24 +683,26 @@
                 power: {name: 'Mining Power', level: 0, baseCost: 100, costMult: 1.6, effect: 1},
                 crit: {name: 'Critical Hit', level: 0, baseCost: 500, costMult: 1.7, effect: 0},
                 efficiency: {name: 'Worker Efficiency', level: 0, baseCost: 1000, costMult: 1.8, effect: 1},
-                karmaBoost: {name: 'Karma Boost', level: 0, baseCost: 2000, costMult: 1.9, effect: 1}
+                karmaBoost: {name: 'Energy Boost', level: 0, baseCost: 2000, costMult: 1.9, effect: 1}
             },
             rankIndex: 0,
             multi: 1,
             log: []
         };
         
+        // Rank definitions with names, requirements, and colors
         const ranks = [
-            {name: 'Gebannt', req: 0, color: '#444'},
-            {name: 'Fliesentisch', req: 10000, color: '#6c432b'},
-            {name: 'Neuschwuchtel', req: 100000, color: '#e108e9'},
-            {name: 'Schwuchtel', req: 500000, color: '#fff'},
-            {name: 'Edler Spender', req: 2000000, color: '#1cb992'},
-            {name: 'Altschwuchtel', req: 10000000, color: '#5bb91c'},
-            {name: 'Moderator', req: 50000000, color: '#008fff'},
-            {name: 'Administrator', req: 200000000, color: '#ff9900'}
+            {name: 'Initiate', req: 0, color: '#444'},
+            {name: 'Apprentice', req: 10000, color: '#6c432b'},
+            {name: 'Technician', req: 100000, color: '#e108e9'},
+            {name: 'Engineer', req: 500000, color: '#fff'},
+            {name: 'Architect', req: 2000000, color: '#1cb992'},
+            {name: 'Master', req: 10000000, color: '#5bb91c'},
+            {name: 'Overlord', req: 50000000, color: '#008fff'},
+            {name: 'Titan', req: 200000000, color: '#ff9900'}
         ];
         
+        // Format large numbers with suffixes (K, M, B, T)
         function fmt(n) {
             if (n < 1e6) return Math.floor(n).toLocaleString('de');
             if (n < 1e9) return (n/1e6).toFixed(2) + 'M';
@@ -510,6 +710,7 @@
             return (n/1e12).toFixed(2) + 'T';
         }
         
+        // Format seconds into readable time (hours, minutes, seconds)
         function fmtTime(s) {
             const h = Math.floor(s/3600);
             const m = Math.floor((s%3600)/60);
@@ -517,14 +718,16 @@
             return h > 0 ? `${h}h ${m}m` : m > 0 ? `${m}m ${sec}s` : `${sec}s`;
         }
         
+        // Calculate total multiplier from all sources
         function getMulti() {
             let m = game.multi;
-            m *= 1 + (game.karma * 0.01);
-            m *= Math.pow(1.1, game.rage);
-            m *= 1 + (game.prestige * 0.05);
+            m *= 1 + (game.karma * 0.01); // Energy bonus
+            m *= Math.pow(1.1, game.rage); // Power bonus
+            m *= 1 + (game.prestige * 0.05); // Ascension bonus
             return m;
         }
         
+        // Calculate total bits per second from all workers
         function getWorkerRate() {
             let total = 0;
             Object.values(game.workers).forEach(w => {
@@ -533,6 +736,7 @@
             return total * getMulti();
         }
         
+        // Add a new message to the game log
         function log(msg) {
             const time = new Date().toLocaleTimeString('de-DE');
             game.log.unshift({time, msg});
@@ -540,6 +744,7 @@
             updateLog();
         }
         
+        // Show a temporary notification popup
         function notify(msg) {
             const div = document.createElement('div');
             div.className = 'notification';
@@ -548,6 +753,7 @@
             setTimeout(() => div.remove(), 3000);
         }
         
+        // Update the log display with current messages
         function updateLog() {
             const el = document.getElementById('log');
             el.innerHTML = '';
@@ -559,7 +765,9 @@
             });
         }
         
+        // Update all UI elements with current game state
         function update() {
+            // Update resource displays
             document.getElementById('benis').textContent = fmt(game.benis);
             document.getElementById('karma').textContent = fmt(game.karma);
             document.getElementById('salt').textContent = fmt(game.salt);
@@ -568,8 +776,12 @@
             document.getElementById('multi').textContent = 'x' + getMulti().toFixed(2);
             document.getElementById('mine-rate').textContent = '+' + Math.floor(game.clickPower * game.upgrades.power.effect * getMulti());
             document.getElementById('total-mined').textContent = fmt(game.totalMined);
+            
+            // Update statistics
             document.getElementById('stat-clicks').textContent = fmt(game.clicks);
             document.getElementById('stat-time').textContent = fmtTime(game.time);
+            
+            // Update ascension/prestige info
             document.getElementById('prestige').textContent = game.prestige;
             document.getElementById('prestige-bonus').textContent = (game.prestige * 5).toFixed(0);
             
@@ -577,16 +789,20 @@
             document.getElementById('prestige-req').textContent = fmt(prReq);
             document.getElementById('prestige-btn').disabled = game.benis < prReq;
             
+            // Update button states for conversion
             document.getElementById('conv-karma').disabled = game.benis < 1000;
             document.getElementById('conv-salt').disabled = game.benis < 5000;
             document.getElementById('conv-rage').disabled = game.salt < 50;
             
+            // Update other UI sections
             updateRanks();
             updateWorkers();
             updateUpgrades();
         }
         
+        // Update rank display and check for rank promotions
         function updateRanks() {
+            // Check if player has reached any new ranks
             ranks.forEach((r, i) => {
                 if (game.benis >= r.req && i > game.rankIndex) {
                     game.rankIndex = i;
@@ -596,16 +812,18 @@
                 }
             });
             
+            // Update current rank display
             const r = ranks[game.rankIndex];
             document.getElementById('rank-name').textContent = r.name.toUpperCase();
             document.getElementById('rank-badge').textContent = game.rankIndex;
             document.getElementById('rank-badge').style.background = r.color;
             
+            // Update rank list in right panel
             const list = document.getElementById('ranks');
             list.innerHTML = '';
             ranks.forEach((rank, i) => {
                 const div = document.createElement('div');
-                div.style.padding = '4px 0';
+                div.style.padding = '5px 0';
                 div.style.borderBottom = '1px solid #1a1a1a';
                 div.style.color = i <= game.rankIndex ? '#888' : '#444';
                 div.innerHTML = `[${i}] ${rank.name} <span style="float: right;">${fmt(rank.req)}</span>`;
@@ -613,6 +831,7 @@
             });
         }
         
+        // Update worker display with current counts and costs
         function updateWorkers() {
             const list = document.getElementById('workers');
             list.innerHTML = '';
@@ -623,19 +842,25 @@
                 div.innerHTML = `
                     <div class="worker-icon">${w.icon}</div>
                     <div class="worker-info">
-                        <div class="worker-name">${w.name}</div>
-                        <div class="worker-rate">${w.rate}/s each</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="worker-name">${w.name}</div>
+                            <div class="worker-count">x${w.count}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 11px;">
+                            <div class="worker-rate">${(w.rate * game.upgrades.efficiency.effect * getMulti()).toFixed(1)}/s each</div>
+                            <div style="color: ${game.benis >= cost ? '#f7c516' : '#666'};">${fmt(cost)} Bits</div>
+                        </div>
                     </div>
-                    <div class="worker-count">x${w.count}</div>
                 `;
                 div.onclick = () => buyWorker(key);
                 div.style.cursor = 'pointer';
                 div.style.opacity = game.benis >= cost ? '1' : '0.4';
-                div.title = 'Cost: ' + fmt(cost) + ' Benis';
+                div.title = 'Cost: ' + fmt(cost) + ' Bits';
                 list.appendChild(div);
             });
         }
         
+        // Update upgrade display with current levels and costs
         function updateUpgrades() {
             const list = document.getElementById('power-upgrades');
             list.innerHTML = '';
@@ -659,7 +884,7 @@
                         <div class="progress-bar" style="width: ${Math.min((up.level/100)*100, 100)}%"></div>
                     </div>
                     <button class="btn" ${game.benis >= cost ? '' : 'disabled'}>
-                        UPGRADE <span class="cost">${fmt(cost)} Benis</span>
+                        UPGRADE <span class="cost">${fmt(cost)} Bits</span>
                     </button>
                 `;
                 div.querySelector('button').onclick = () => buyUpgrade(key);
@@ -667,6 +892,7 @@
             });
         }
         
+        // Purchase a worker if player has enough bits
         function buyWorker(key) {
             const w = game.workers[key];
             const cost = Math.floor(w.cost * Math.pow(w.costMult, w.count));
@@ -678,6 +904,7 @@
             }
         }
         
+        // Purchase an upgrade if player has enough bits
         function buyUpgrade(key) {
             const up = game.upgrades[key];
             const cost = Math.floor(up.baseCost * Math.pow(up.costMult, up.level));
@@ -685,6 +912,7 @@
                 game.benis -= cost;
                 up.level++;
                 
+                // Apply upgrade effect multiplier
                 if (key === 'power') up.effect *= 1.1;
                 if (key === 'crit') up.effect += 0.5;
                 if (key === 'efficiency') up.effect *= 1.05;
@@ -695,9 +923,13 @@
             }
         }
         
+        // Event Listeners
+        
+        // Main mining button click
         document.getElementById('mine-btn').addEventListener('click', () => {
             let gain = Math.floor(game.clickPower * game.upgrades.power.effect * getMulti());
             
+            // Check for critical hit
             if (Math.random() * 100 < game.upgrades.crit.effect) {
                 gain *= 2;
                 document.getElementById('mine-btn').classList.add('crit');
@@ -711,42 +943,47 @@
             update();
         });
         
+        // Convert bits to energy
         document.getElementById('conv-karma').addEventListener('click', () => {
             if (game.benis >= 1000) {
                 const amount = Math.floor(game.benis / 1000);
                 game.karma += amount;
                 game.benis -= amount * 1000;
-                log('CONVERTED TO KARMA: +' + amount);
+                log('CONVERTED TO ENERGY: +' + amount);
                 update();
             }
         });
         
+        // Convert bits to crystals
         document.getElementById('conv-salt').addEventListener('click', () => {
             if (game.benis >= 5000) {
                 const amount = Math.floor(game.benis / 5000);
                 game.salt += amount;
                 game.benis -= amount * 5000;
-                log('CONVERTED TO SALT: +' + amount);
+                log('CONVERTED TO CRYSTALS: +' + amount);
                 update();
             }
         });
         
+        // Convert crystals to power
         document.getElementById('conv-rage').addEventListener('click', () => {
             if (game.salt >= 50) {
                 const amount = Math.floor(game.salt / 50);
                 game.rage += amount;
                 game.salt -= amount * 50;
-                log('CONVERTED TO RAGE: +' + amount);
-                notify('RAGE +' + amount + ' (x' + Math.pow(1.1, game.rage).toFixed(2) + ' MULTI)');
+                log('CONVERTED TO POWER: +' + amount);
+                notify('POWER +' + amount + ' (x' + Math.pow(1.1, game.rage).toFixed(2) + ' MULTI)');
                 update();
             }
         });
         
+        // Ascend (prestige) button
         document.getElementById('prestige-btn').addEventListener('click', () => {
             const req = 1000000 * Math.pow(10, game.prestige);
             if (game.benis < req) return;
-            if (!confirm('PRESTIGE: Reset everything for +5% permanent bonus?')) return;
+            if (!confirm('ASCEND: Reset everything for +5% permanent bonus?')) return;
             
+            // Reset game state but keep ascension level
             game.prestige++;
             game.benis = 0;
             game.karma = 0;
@@ -758,20 +995,24 @@
             game.rankIndex = 0;
             game.multi = 1;
             
+            // Reset workers
             Object.values(game.workers).forEach(w => w.count = 0);
+            
+            // Reset upgrades to base values
             Object.values(game.upgrades).forEach(up => {
                 up.level = 0;
                 if (up.name === 'Mining Power') up.effect = 1;
                 if (up.name === 'Critical Hit') up.effect = 0;
                 if (up.name === 'Worker Efficiency') up.effect = 1;
-                if (up.name === 'Karma Boost') up.effect = 1;
+                if (up.name === 'Energy Boost') up.effect = 1;
             });
             
-            log('PRESTIGE LEVEL ' + game.prestige + ' (+5% BONUS)');
-            notify('PRESTIGE ' + game.prestige + '!');
+            log('ASCENSION LEVEL ' + game.prestige + ' (+5% BONUS)');
+            notify('ASCENDED TO LEVEL ' + game.prestige + '!');
             update();
         });
         
+        // Tab navigation
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 const target = tab.dataset.tab;
@@ -782,23 +1023,29 @@
             });
         });
         
+        // Save game to localStorage
         document.getElementById('save-btn').addEventListener('click', () => {
-            localStorage.setItem('pr0mining', JSON.stringify(game));
+            localStorage.setItem('bitminer', JSON.stringify(game));
             log('GAME SAVED');
             notify('SAVED');
         });
         
+        // Hard reset game
         document.getElementById('reset-btn').addEventListener('click', () => {
             if (!confirm('HARD RESET: Delete everything?')) return;
-            localStorage.removeItem('pr0mining');
+            localStorage.removeItem('bitminer');
             location.reload();
         });
         
+        // Clear game log
         document.getElementById('clear-log').addEventListener('click', () => {
             game.log = [];
             updateLog();
         });
         
+        // Game Loop
+        
+        // Add passive income from workers every 100ms
         setInterval(() => {
             const gain = getWorkerRate() / 10;
             if (gain > 0) {
@@ -807,20 +1054,25 @@
             }
         }, 100);
         
+        // Update game time every second
         setInterval(() => {
             game.time++;
             update();
         }, 1000);
         
-        const saved = localStorage.getItem('pr0mining');
+        // Load saved game from localStorage
+        const saved = localStorage.getItem('bitminer');
         if (saved) {
             Object.assign(game, JSON.parse(saved));
             log('GAME LOADED');
         }
         
+        // Initial UI update
         update();
+        
+        // Auto-save when leaving the page
         window.addEventListener('beforeunload', () => {
-            localStorage.setItem('pr0mining', JSON.stringify(game));
+            localStorage.setItem('bitminer', JSON.stringify(game));
         });
     </script>
 </body>
