@@ -1,9 +1,9 @@
-// Game state object containing all variables
+// Game state object containing all variables - CLEAN VERSION
 const game = {
-    benis: 0,
-    karma: 0,
-    salt: 0,
-    rage: 0,
+    bits: 0,
+    energy: 0,
+    crystals: 0,
+    power: 0,
     totalMined: 0,
     clickPower: 1,
     clicks: 0,
@@ -19,7 +19,7 @@ const game = {
         power: {name: 'Mining Power', level: 0, baseCost: 100, costMult: 1.6, effect: 1},
         crit: {name: 'Critical Hit', level: 0, baseCost: 500, costMult: 1.7, effect: 0},
         efficiency: {name: 'Worker Efficiency', level: 0, baseCost: 1000, costMult: 1.8, effect: 1},
-        karmaBoost: {name: 'Energy Boost', level: 0, baseCost: 2000, costMult: 1.9, effect: 1}
+        energyBoost: {name: 'Energy Boost', level: 0, baseCost: 2000, costMult: 1.9, effect: 1}
     },
     rankIndex: 0,
     multi: 1,
@@ -59,10 +59,10 @@ function getMulti() {
     let m = game.multi;
     
     // ENERGY: Logarithmic scaling to prevent OP early game
-    m *= 1 + (Math.log10(game.karma + 1) * 0.25);
+    m *= 1 + (Math.log10(game.energy + 1) * 0.25);
     
     // POWER: Slightly reduced from 1.12 to 1.09
-    m *= Math.pow(1.09, game.rage);
+    m *= Math.pow(1.09, game.power);
     
     // Ascension bonus
     m *= 1 + (game.prestige * 0.05);
@@ -82,9 +82,9 @@ function getWorkerRate() {
 // Get conversion costs (scaling with amount owned)
 function getConversionCosts() {
     return {
-        karma: Math.floor(1000 * Math.pow(1.005, game.karma)),
-        salt: Math.floor(5000 * Math.pow(1.002, game.salt)),
-        rage: Math.floor(50 * Math.pow(1.01, game.rage))
+        energy: Math.floor(1000 * Math.pow(1.005, game.energy)),
+        crystals: Math.floor(5000 * Math.pow(1.002, game.crystals)),
+        power: Math.floor(50 * Math.pow(1.01, game.power))
     };
 }
 
@@ -120,11 +120,11 @@ function updateLog() {
 // Update all UI elements with current game state
 function update() {
     // Update resource displays
-    document.getElementById('benis').textContent = fmt(game.benis);
-    document.getElementById('karma').textContent = fmt(game.karma);
-    document.getElementById('salt').textContent = fmt(game.salt);
-    document.getElementById('rage').textContent = fmt(game.rage);
-    document.getElementById('benis-rate').textContent = fmt(getWorkerRate());
+    document.getElementById('bits').textContent = fmt(game.bits);
+    document.getElementById('energy').textContent = fmt(game.energy);
+    document.getElementById('crystals').textContent = fmt(game.crystals);
+    document.getElementById('power').textContent = fmt(game.power);
+    document.getElementById('bits-rate').textContent = fmt(getWorkerRate());
     document.getElementById('multi').textContent = 'x' + getMulti().toFixed(2);
     document.getElementById('mine-rate').textContent = '+' + Math.floor(game.clickPower * game.upgrades.power.effect * getMulti());
     document.getElementById('total-mined').textContent = fmt(game.totalMined);
@@ -139,32 +139,32 @@ function update() {
     
     const prReq = 1000000 * Math.pow(10, game.prestige);
     document.getElementById('prestige-req').textContent = fmt(prReq);
-    document.getElementById('prestige-btn').disabled = game.benis < prReq;
+    document.getElementById('prestige-btn').disabled = game.bits < prReq;
     
     // Update conversion costs and button states
     const costs = getConversionCosts();
     
-    document.getElementById('conv-karma').disabled = game.benis < costs.karma;
-    document.getElementById('conv-karma').innerHTML = 
-        'CONVERT TO ENERGY <span class="cost">' + fmt(costs.karma) + ' Bits → 1 Energy</span>';
+    document.getElementById('convert-energy').disabled = game.bits < costs.energy;
+    document.getElementById('convert-energy').innerHTML = 
+        'CONVERT TO ENERGY <span class="cost">' + fmt(costs.energy) + ' Bits → 1 Energy</span>';
     
-    document.getElementById('conv-salt').disabled = game.benis < costs.salt;
-    document.getElementById('conv-salt').innerHTML = 
-        'CONVERT TO CRYSTALS <span class="cost">' + fmt(costs.salt) + ' Bits → 1 Crystal</span>';
+    document.getElementById('convert-crystals').disabled = game.bits < costs.crystals;
+    document.getElementById('convert-crystals').innerHTML = 
+        'CONVERT TO CRYSTALS <span class="cost">' + fmt(costs.crystals) + ' Bits → 1 Crystal</span>';
     
-    document.getElementById('conv-rage').disabled = game.salt < costs.rage;
-    document.getElementById('conv-rage').innerHTML = 
-        'CONVERT TO POWER <span class="cost">' + fmt(costs.rage) + ' Crystals → 1 Power</span>';
+    document.getElementById('convert-power').disabled = game.crystals < costs.power;
+    document.getElementById('convert-power').innerHTML = 
+        'CONVERT TO POWER <span class="cost">' + fmt(costs.power) + ' Crystals → 1 Power</span>';
 
     // Update Statistics Box with new formulas
-    document.getElementById('stat-energy-mult').textContent = 'x' + (1 + (Math.log10(game.karma + 1) * 0.25)).toFixed(2);
-    document.getElementById('stat-power-mult').textContent = 'x' + Math.pow(1.09, game.rage).toFixed(2);
+    document.getElementById('stat-energy-mult').textContent = 'x' + (1 + (Math.log10(game.energy + 1) * 0.25)).toFixed(2);
+    document.getElementById('stat-power-mult').textContent = 'x' + Math.pow(1.09, game.power).toFixed(2);
     document.getElementById('stat-prestige-mult').textContent = 'x' + (1 + (game.prestige * 0.05)).toFixed(2);
     document.getElementById('stat-rank-mult').textContent = 'x' + Math.pow(1.1, game.rankIndex).toFixed(2);
     document.getElementById('stat-upgrade-power').textContent = game.upgrades.power.effect.toFixed(2);
     document.getElementById('stat-upgrade-crit').textContent = game.upgrades.crit.effect.toFixed(1) + '%';
     document.getElementById('stat-upgrade-eff').textContent = game.upgrades.efficiency.effect.toFixed(2);
-    document.getElementById('stat-upgrade-karma').textContent = game.upgrades.karmaBoost.effect.toFixed(2);
+    document.getElementById('stat-upgrade-energy').textContent = game.upgrades.energyBoost.effect.toFixed(2);
     
     // Update other UI sections
     updateRanks();
@@ -176,7 +176,7 @@ function update() {
 function updateRanks() {
     // Check if player has reached any new ranks
     ranks.forEach((r, i) => {
-        if (game.benis >= r.req && i > game.rankIndex) {
+        if (game.bits >= r.req && i > game.rankIndex) {
             game.rankIndex = i;
             game.multi *= 1.1;
             log('RANK UP: ' + r.name);
@@ -220,13 +220,13 @@ function updateWorkers() {
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 11px;">
                     <div class="worker-rate">${(w.rate * game.upgrades.efficiency.effect * getMulti()).toFixed(1)}/s each</div>
-                    <div style="color: ${game.benis >= cost ? '#f7c516' : '#666'};">${fmt(cost)} Bits</div>
+                    <div style="color: ${game.bits >= cost ? '#f7c516' : '#666'};">${fmt(cost)} Bits</div>
                 </div>
             </div>
         `;
         div.onclick = () => buyWorker(key);
         div.style.cursor = 'pointer';
-        div.style.opacity = game.benis >= cost ? '1' : '0.4';
+        div.style.opacity = game.bits >= cost ? '1' : '0.4';
         div.title = 'Cost: ' + fmt(cost) + ' Bits';
         list.appendChild(div);
     });
@@ -244,7 +244,7 @@ function updateUpgrades() {
         if (key === 'power') effectText = 'x' + up.effect.toFixed(2);
         if (key === 'crit') effectText = up.effect.toFixed(1) + '%';
         if (key === 'efficiency') effectText = 'x' + up.effect.toFixed(2);
-        if (key === 'karmaBoost') effectText = 'x' + up.effect.toFixed(2);
+        if (key === 'energyBoost') effectText = 'x' + up.effect.toFixed(2);
         
         div.innerHTML = `
             <div class="upgrade-header">
@@ -255,7 +255,7 @@ function updateUpgrades() {
             <div class="progress">
                 <div class="progress-bar" style="width: ${Math.min((up.level/100)*100, 100)}%"></div>
             </div>
-            <button class="btn" ${game.benis >= cost ? '' : 'disabled'}>
+            <button class="btn" ${game.bits >= cost ? '' : 'disabled'}>
                 UPGRADE <span class="cost">${fmt(cost)} Bits</span>
             </button>
         `;
@@ -268,8 +268,8 @@ function updateUpgrades() {
 function buyWorker(key) {
     const w = game.workers[key];
     const cost = Math.floor(w.cost * Math.pow(w.costMult, w.count));
-    if (game.benis >= cost) {
-        game.benis -= cost;
+    if (game.bits >= cost) {
+        game.bits -= cost;
         w.count++;
         log('HIRED: ' + w.name);
         update();
@@ -280,15 +280,15 @@ function buyWorker(key) {
 function buyUpgrade(key) {
     const up = game.upgrades[key];
     const cost = Math.floor(up.baseCost * Math.pow(up.costMult, up.level));
-    if (game.benis >= cost) {
-        game.benis -= cost;
+    if (game.bits >= cost) {
+        game.bits -= cost;
         up.level++;
         
         // Apply upgrade effect multiplier
         if (key === 'power') up.effect *= 1.12;
         if (key === 'crit') up.effect += 0.6;
         if (key === 'efficiency') up.effect *= 1.06;
-        if (key === 'karmaBoost') up.effect *= 1.09;
+        if (key === 'energyBoost') up.effect *= 1.09;
         
         log('UPGRADED: ' + up.name);
         update();
@@ -309,42 +309,42 @@ document.getElementById('mine-btn').addEventListener('click', () => {
         log('CRITICAL HIT! +' + fmt(gain));
     }
     
-    game.benis += gain;
+    game.bits += gain;
     game.totalMined += gain;
     game.clicks++;
     update();
 });
 
 // Convert bits to energy
-document.getElementById('conv-karma').addEventListener('click', () => {
+document.getElementById('convert-energy').addEventListener('click', () => {
     const costs = getConversionCosts();
-    if (game.benis >= costs.karma) {
-        game.karma++;
-        game.benis -= costs.karma;
+    if (game.bits >= costs.energy) {
+        game.energy++;
+        game.bits -= costs.energy;
         log('CONVERTED TO ENERGY: +1');
         update();
     }
 });
 
 // Convert bits to crystals
-document.getElementById('conv-salt').addEventListener('click', () => {
+document.getElementById('convert-crystals').addEventListener('click', () => {
     const costs = getConversionCosts();
-    if (game.benis >= costs.salt) {
-        game.salt++;
-        game.benis -= costs.salt;
+    if (game.bits >= costs.crystals) {
+        game.crystals++;
+        game.bits -= costs.crystals;
         log('CONVERTED TO CRYSTALS: +1');
         update();
     }
 });
 
 // Convert crystals to power
-document.getElementById('conv-rage').addEventListener('click', () => {
+document.getElementById('convert-power').addEventListener('click', () => {
     const costs = getConversionCosts();
-    if (game.salt >= costs.rage) {
-        game.rage++;
-        game.salt -= costs.rage;
+    if (game.crystals >= costs.power) {
+        game.power++;
+        game.crystals -= costs.power;
         log('CONVERTED TO POWER: +1');
-        notify('POWER +1 (x' + Math.pow(1.09, game.rage).toFixed(2) + ' MULTI)');
+        notify('POWER +1 (x' + Math.pow(1.09, game.power).toFixed(2) + ' MULTI)');
         update();
     }
 });
@@ -352,15 +352,15 @@ document.getElementById('conv-rage').addEventListener('click', () => {
 // Ascend (prestige) button
 document.getElementById('prestige-btn').addEventListener('click', () => {
     const req = 1000000 * Math.pow(10, game.prestige);
-    if (game.benis < req) return;
+    if (game.bits < req) return;
     if (!confirm('ASCEND: Reset everything for +5% permanent bonus?')) return;
     
     // Reset game state but keep ascension level
     game.prestige++;
-    game.benis = 0;
-    game.karma = 0;
-    game.salt = 0;
-    game.rage = 0;
+    game.bits = 0;
+    game.energy = 0;
+    game.crystals = 0;
+    game.power = 0;
     game.totalMined = 0;
     game.clickPower = 1;
     game.clicks = 0;
@@ -410,10 +410,10 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     localStorage.removeItem('bitminer');
     
     // Reset game completely
-    game.benis = 0;
-    game.karma = 0;
-    game.salt = 0;
-    game.rage = 0;
+    game.bits = 0;
+    game.energy = 0;
+    game.crystals = 0;
+    game.power = 0;
     game.totalMined = 0;
     game.clickPower = 1;
     game.clicks = 0;
@@ -454,7 +454,7 @@ document.getElementById('clear-log').addEventListener('click', () => {
 setInterval(() => {
     const gain = getWorkerRate() / 10;
     if (gain > 0) {
-        game.benis += gain;
+        game.bits += gain;
         game.totalMined += gain;
     }
 }, 100);
