@@ -1,4 +1,4 @@
-// Game state object containing all variables - CLEAN VERSION
+// Game state object containing all variables
 const game = {
     bits: 0,
     energy: 0,
@@ -26,7 +26,7 @@ const game = {
     log: []
 };
 
-// Rank definitions with names, requirements, and colors
+// Rank definitions
 const ranks = [
     {name: 'Initiate', req: 0, color: '#444'},
     {name: 'Apprentice', req: 10000, color: '#6c432b'},
@@ -38,7 +38,7 @@ const ranks = [
     {name: 'Titan', req: 200000000, color: '#ff9900'}
 ];
 
-// Format large numbers with suffixes (K, M, B, T)
+// Format large numbers
 function fmt(n) {
     if (n < 1e6) return Math.floor(n).toLocaleString('en');
     if (n < 1e9) return (n/1e6).toFixed(2) + 'M';
@@ -46,7 +46,7 @@ function fmt(n) {
     return (n/1e12).toFixed(2) + 'T';
 }
 
-// Format seconds into readable time (hours, minutes, seconds)
+// Format seconds into readable time
 function fmtTime(s) {
     const h = Math.floor(s/3600);
     const m = Math.floor((s%3600)/60);
@@ -54,14 +54,14 @@ function fmtTime(s) {
     return h > 0 ? `${h}h ${m}m` : m > 0 ? `${m}m ${sec}s` : `${sec}s`;
 }
 
-// Calculate total multiplier from all sources - BALANCED VERSION
+// Calculate total multiplier from all sources
 function getMulti() {
     let m = game.multi;
     
-    // ENERGY: Logarithmic scaling to prevent OP early game
+    // ENERGY: Logarithmic scaling
     m *= 1 + (Math.log10(game.energy + 1) * 0.25);
     
-    // POWER: Slightly reduced from 1.12 to 1.09
+    // POWER: Slightly reduced
     m *= Math.pow(1.09, game.power);
     
     // Ascension bonus
@@ -156,7 +156,7 @@ function update() {
     document.getElementById('convert-power').innerHTML = 
         'CONVERT TO POWER <span class="cost">' + fmt(costs.power) + ' Crystals → 1 Power</span>';
 
-    // Update Statistics Box with new formulas
+    // Update Statistics Box
     document.getElementById('stat-energy-mult').textContent = 'x' + (1 + (Math.log10(game.energy + 1) * 0.25)).toFixed(2);
     document.getElementById('stat-power-mult').textContent = 'x' + Math.pow(1.09, game.power).toFixed(2);
     document.getElementById('stat-prestige-mult').textContent = 'x' + (1 + (game.prestige * 0.05)).toFixed(2);
