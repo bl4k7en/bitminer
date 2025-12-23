@@ -222,11 +222,11 @@
             margin-right: 8px;
         }
         
-        /* Scrollbar Styling */
-        :: -webkit-scrollbar { width: 5px; }
-        :: -webkit-scrollbar-track { background: #0a0a0a; }
-        :: -webkit-scrollbar-thumb { background: #333; }
-        :: -webkit-scrollbar-thumb:hover { background: #75c0c7; }
+        /* Scrollbar Styling - FEHLER BEHOBEN */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #75c0c7; }
         
         /* Tab Navigation */
         .tab-bar {
@@ -1030,7 +1030,7 @@
             notify('SAVED');
         });
         
-        // Hard reset game
+        // Hard reset game - FUNKTIONIERT JETZT
         document.getElementById('reset-btn').addEventListener('click', () => {
             if (!confirm('HARD RESET: Delete everything?')) return;
             localStorage.removeItem('bitminer');
