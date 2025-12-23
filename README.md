@@ -2,6 +2,14 @@
 
 A minimalist incremental mining game where you click to collect bits, hire workers, upgrade your power, and ascend for permanent bonuses.
 
+## ✅ v1.1 Updates
+- **Better Balancing**: Energy now scales logarithmically, preventing overpowered late-game
+- **Code Structure**: Split into HTML, CSS, and JavaScript files for maintainability
+- **Improved Contrast**: Better text visibility with enhanced color scheme
+- **Analytics**: Added GoatCounter for traffic insights
+- **Favicon**: Custom game icon added
+- **Scaled Costs**: Conversion costs now increase with amount owned
+
 ## 💎 Play Now
 **[Play Bitminer](https://bl4k7en.github.io/bitminer/)**
 
