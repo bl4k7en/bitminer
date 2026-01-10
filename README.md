@@ -5,6 +5,22 @@ A minimalist incremental mining game where you click to collect bits, hire worke
 ## 💎 Play Now
 **[Play Bitminer](https://bl4k7en.github.io/bitminer/)**
 
+Update v1.1: Achievements, Ranks & Visual Enhancements
+
+💎 New Features
+46 Achievements (17 new)
+
+💎 Progress & Stats
+Rank Progress Bar with live % display and smooth gradient animation
+
+💎 Visual Improvements
+Themes and Themed Background Animations
+
+💎 Data Management (WiP)
+Import/Export System using Base64 encoding
+Automatic clipboard copy on export
+Import validation for saved codes
+
 ## 💎 Features
 Click Mining with satisfying visual feedback
 Automated Workers to generate passive income
