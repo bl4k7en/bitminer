@@ -1,5 +1,7 @@
 # Bitminer 💎
 
+FOR 1.1 STARTING A NEW GAME IS ADVICED
+
 A minimalist incremental mining game where you click to collect bits, hire workers, upgrade your power, and ascend for permanent bonuses.
 
 ## 💎 Play Now
