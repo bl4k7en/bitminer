@@ -3,42 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitminer</title>
+    <title>Bitminer v1.1</title>
     <link rel="icon" href="artworks/favicon.ico" type="image/x-icon">
     <meta name="google" content="notranslate">
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="Content-Language" content="en">
     <link rel="stylesheet" href="css/style.css">
-    <!-- GoatCounter Analytics -->
-    <script data-goatcounter="https://bl4k7en.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
-    <!-- Main Game Container -->
+    <div id="bit-explosion" class="bit-explosion-container"></div>
+    <div id="firework-container" class="firework-container"></div>
+    
     <div class="main">
-        <!-- Left Panel: Resources & Workers -->
         <div class="center-panel">
-            <div class="panel">
-                <div class="title">▬ RESOURCES</div>
-                <div class="resource">
-                    <span class="resource-name">BITS</span>
-                    <span class="resource-val" id="bits">0</span>
-                </div>
-                <div class="resource">
-                    <span class="resource-name">ENERGY</span>
-                    <span class="resource-val" id="energy">0</span>
-                </div>
-                <div class="resource">
-                    <span class="resource-name">CRYSTALS</span>
-                    <span class="resource-val" id="crystals">0</span>
-                </div>
-                <div class="resource">
-                    <span class="resource-name">POWER</span>
-                    <span class="resource-val" id="power">0</span>
-                </div>
-                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222; font-size: 11px;">
-                    <div style="color: #666;">BITS/s: <span id="bits-rate" style="color: #75c0c7;">0</span></div>
-                    <div style="color: #666;">MULTIPLIER: <span id="multi" style="color: #f7c516;">x1.0</span></div>
-                </div>
+            <div class="panel bits-dominant">
+                <div class="bits-big" id="bits-big">0</div>
+                <div class="bits-label">BITS</div>
             </div>
             
             <div class="panel" style="margin-top: 12px;">
@@ -46,56 +26,44 @@
                 <div id="workers"></div>
             </div>
             
-            <!-- STATISTICS BOX between Workers and Save Game -->
             <div class="panel" style="margin-top: 12px;">
-                <div class="title">▬ STATISTICS</div>
-                <div style="color: #666; font-size: 11px; margin-bottom: 8px;">TOTAL MULTIPLIERS</div>
+                <div class="title">▬ RARE BITS</div>
+                <div class="collection-grid" id="rare-bits-collection"></div>
+            </div>
+            
+            <div class="panel" style="margin-top: 12px;">
+                <div class="title">▬ ADDITIVE BONUSES</div>
+                <div style="color: #666; font-size: 11px; margin-bottom: 8px;">Boni</div>
                 <div class="stat-item">
-                    <span>Energy Boost:</span>
-                    <span style="color: #75c0c7;" id="stat-energy-mult">x1.00</span>
+                    <span>Ascension:</span>
+                    <span style="color: #75c0c7;" id="stat-prestige-mult">+0%</span>
                 </div>
                 <div class="stat-item">
-                    <span>Power Multi:</span>
-                    <span style="color: #75c0c7;" id="stat-power-mult">x1.00</span>
+                    <span>Rank:</span>
+                    <span style="color: #75c0c7;" id="stat-rank-mult">+0%</span>
                 </div>
                 <div class="stat-item">
-                    <span>Ascension Bonus:</span>
-                    <span style="color: #75c0c7;" id="stat-prestige-mult">x1.00</span>
+                    <span>Achievements:</span>
+                    <span style="color: #f7c516;" id="stat-achievement-mult">+0%</span>
                 </div>
                 <div class="stat-item">
-                    <span>Rank Bonus:</span>
-                    <span style="color: #75c0c7;" id="stat-rank-mult">x1.00</span>
+                    <span>Rare Bits:</span>
+                    <span style="color: #f0f;" id="stat-rare-mult">+0%</span>
                 </div>
                 <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #222;">
-                    <div style="color: #888; font-size: 11px;">UPGRADE VALUES</div>
-                    <div class="stat-item">
-                        <span>Mining Power:</span>
-                        <span style="color: #f7c516;" id="stat-upgrade-power">1.00</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>Critical Hit:</span>
-                        <span style="color: #f7c516;" id="stat-upgrade-crit">0.0%</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>Worker Efficiency:</span>
-                        <span style="color: #f7c516;" id="stat-upgrade-eff">1.00</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>Energy Boost:</span>
-                        <span style="color: #f7c516;" id="stat-upgrade-energy">1.00</span>
-                    </div>
+                    <div style="color: #888; font-size: 11px;">TOTAL MULTIPLIER</div>
+                    <div style="text-align: center; font-size: 20px; font-weight: bold; color: #f7c516; margin-top: 5px;" id="multi-display">x1</div>
                 </div>
             </div>
             
             <div class="panel" style="margin-top: 12px;">
-                <button class="btn" id="save-btn">▶ SAVE GAME</button>
-                <button class="btn" id="reset-btn" style="border-color: #d23c22; color: #d23c22;">▶ HARD RESET</button>
+                <div class="title">▬ THEMES</div>
+                <div class="theme-selector" id="theme-selector"></div>
             </div>
         </div>
         
-        <!-- Center Panel: Mining & Upgrades -->
         <div class="center-panel">
-            <div class="panel rank-display">
+            <div class="panel rank-display" id="rank-display">
                 <div style="color: #666; font-size: 11px; margin-bottom: 5px;">CURRENT RANK</div>
                 <span id="rank-name" style="color: #ccc; font-weight: bold;">INITIATE</span>
                 <span class="rank-badge" id="rank-badge">0</span>
@@ -105,69 +73,51 @@
             </div>
             
             <div class="panel" style="margin-top: 12px;">
+                <div class="title">▬ CLICK SKINS</div>
+                <div class="skin-selector" id="skin-selector"></div>
+            </div>
+            
+            <div class="panel" style="margin-top: 12px;">
                 <div class="mine-zone">
                     <button class="mine-btn" id="mine-btn">
-                        💎
+                        <span id="mine-icon">💎</span>
                         <span class="mine-rate" id="mine-rate">+1</span>
                     </button>
                     <div class="mine-info">
                         TOTAL MINED: <span id="total-mined" style="color: #75c0c7;">0</span> BITS
                     </div>
+                    <div class="mine-info" style="margin-top: 5px;">
+                        BITS/s: <span id="bits-rate" style="color: #75c0c7;">0</span> | 
+                        MULTI: <span id="multi" style="color: #f7c516;">x1</span>
+                    </div>
                 </div>
             </div>
             
             <div class="panel" style="margin-top: 12px;">
-                <div class="tab-bar">
-                    <button class="tab active" data-tab="power">POWER</button>
-                    <button class="tab" data-tab="convert">CONVERT</button>
-                    <button class="tab" data-tab="prestige">ASCEND</button>
+                <div class="title">▬ ASCENSION</div>
+                <div style="color: #666; font-size: 11px; margin-bottom: 10px;">Reset for permanent bonuses</div>
+                <div style="margin: 10px 0; padding: 10px; background: #1a1a1a; border: 1px solid #333;">
+                    <div style="color: #888; font-size: 12px;">ASCENSION BONUS</div>
+                    <div style="color: #f7c516; font-weight: bold;">+<span id="prestige-bonus">0</span>% ADDITIVE</div>
                 </div>
-                
-                <!-- FIXED TAB-CONTAINER -->
-                <div class="tab-container">
-                    <div class="tab-content active" id="tab-power">
-                        <div id="power-upgrades"></div>
-                    </div>
-                    
-                    <div class="tab-content" id="tab-convert">
-                        <div style="color: #666; font-size: 11px; margin-bottom: 10px;">CONVERT BITS TO OTHER RESOURCES</div>
-                        <button class="btn" id="convert-energy">
-                            CONVERT TO ENERGY
-                            <span class="cost">1000 Bits → 1 Energy</span>
-                        </button>
-                        <button class="btn" id="convert-crystals">
-                            CONVERT TO CRYSTALS
-                            <span class="cost">5000 Bits → 1 Crystal</span>
-                        </button>
-                        <button class="btn" id="convert-power">
-                            CONVERT TO POWER
-                            <span class="cost">50 Crystals → 1 Power</span>
-                        </button>
-                        <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #222;">
-                            <div style="color: #666; font-size: 11px; margin-bottom: 8px;">ENERGY BOOSTS BITS GAIN</div>
-                            <div style="color: #666; font-size: 11px; margin-bottom: 8px;">CRYSTALS UNLOCK WORKERS</div>
-                            <div style="color: #666; font-size: 11px;">POWER MULTIPLIES EVERYTHING</div>
-                        </div>
-                    </div>
-                    
-                    <div class="tab-content" id="tab-prestige">
-                        <div style="color: #666; font-size: 11px; margin-bottom: 10px;">ASCEND FOR PERMANENT BONUSES</div>
-                        <div style="margin: 10px 0; padding: 10px; background: #1a1a1a; border: 1px solid #333;">
-                            <div style="color: #888; font-size: 12px;">ASCENSION BONUS</div>
-                            <div style="color: #f7c516; font-weight: bold;">+<span id="prestige-bonus">0</span>% ALL GAIN</div>
-                        </div>
-                        <div style="color: #888; font-size: 11px; margin: 10px 0;">
-                            REQUIRES: <span id="prestige-req" style="color: #75c0c7; font-weight: bold;">1,000,000</span> BITS
-                        </div>
-                        <button class="btn" id="prestige-btn" style="border-color: #d23c22;">
-                            ▶ ASCEND NOW
-                        </button>
-                    </div>
+                <div style="color: #888; font-size: 11px; margin: 10px 0;">
+                    REQUIRES: <span id="prestige-req" style="color: #75c0c7; font-weight: bold;">1,000,000</span> TOTAL MINED
                 </div>
+                <button class="btn" id="prestige-btn" style="border-color: #d23c22;">▶ ASCEND NOW</button>
+            </div>
+            
+            <div class="panel" style="margin-top: 12px;">
+                <button class="btn" id="save-btn">▶ SAVE GAME</button>
+                <button class="btn" id="reset-btn" style="border-color: #d23c22; color: #d23c22;">▶ HARD RESET</button>
+            </div>
+			    <div class="panel" style="margin-top: 12px;">
+                <div class="title">▬ SAVE MANAGEMENT</div>
+                <button class="btn" id="export-btn">▶ EXPORT SAVE</button>
+                <button class="btn" id="import-btn">▶ IMPORT SAVE</button>
+                <textarea id="save-code" style="width: 100%; height: 60px; background: #0a0a0a; border: 1px solid #333; color: #75c0c7; font-family: 'Courier New', monospace; font-size: 10px; padding: 5px; margin-top: 5px; resize: none;" placeholder="Paste save code here..."></textarea>
             </div>
         </div>
         
-        <!-- Right Panel: Log & Info -->
         <div class="center-panel">
             <div class="panel">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -186,7 +136,14 @@
                 <div class="title">▬ RANKS</div>
                 <div id="ranks" style="font-size: 11px;"></div>
                 
-                <!-- Stats moved here under RANKS -->
+                <div style="margin-top: 10px;">
+                    <div style="color: #666; font-size: 10px; margin-bottom: 3px;">NEXT RANK PROGRESS</div>
+                    <div class="rank-progress-bar">
+                        <div class="rank-progress-fill" id="rank-progress"></div>
+                    </div>
+                    <div style="color: #888; font-size: 10px; margin-top: 3px; text-align: center;" id="rank-progress-text">0%</div>
+                </div>
+                
                 <div class="stat-row" style="margin-top: 15px;">
                     <div class="stat">
                         <div class="stat-val" id="stat-clicks">0</div>
@@ -199,26 +156,53 @@
                 </div>
             </div>
             
-            <!-- NEW ACHIEVEMENTS PANEL -->
             <div class="panel" style="margin-top: 12px;">
+                <div class="title">▬ STATISTICS</div>
+                <div id="statistics-grid" style="font-size: 11px;">
+                    <div class="stat-line">
+                        <span>Total Clicks:</span>
+                        <span id="stats-total-clicks">0</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Biggest Gain:</span>
+                        <span id="stats-biggest-gain">0</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Peak Rate:</span>
+                        <span id="stats-peak-rate">0/s</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Total Workers:</span>
+                        <span id="stats-total-workers">0</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Times Prestiged:</span>
+                        <span id="stats-prestige-count">0</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Total Playtime:</span>
+                        <span id="stats-total-time">0s</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel panel-extended" style="margin-top: 12px;">
                 <div class="title">▬ ACHIEVEMENTS</div>
                 <div style="color: #666; font-size: 11px; margin-bottom: 10px;">
-                    <span id="achievement-count">0</span>/10 UNLOCKED
+                    <span id="achievement-count">0</span>/<span id="achievement-total">46</span> UNLOCKED
                 </div>
-                <div id="achievements" style="max-height: 300px; overflow-y: auto;"></div>
+                <div id="achievements" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
     
-    <!-- Notification Container -->
     <div id="notifications"></div>
     
-    <!-- Game Footer with External Links -->
-    <footer class="game-footer">
+    <footer class="game-footer" id="footer">
         <div class="footer-content">
             <p class="footer-version">Bitminer v1.1</p>
             <div class="footer-links">
-                <a href="https://github.com/bl4k7en" target="_blank" rel="noopener noreferrer" class="link-btn github-btn">
+                <a href="https://github.com/bl4k7en/bitminer" target="_blank" rel="noopener noreferrer" class="link-btn github-btn">
                     <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true">
                         <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
                     </svg>
@@ -234,7 +218,6 @@
         </div>
     </footer>
     
-    <!-- Game JavaScript -->
     <script src="js/game.js"></script>
 </body>
 </html>
