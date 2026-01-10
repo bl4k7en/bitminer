@@ -1,5 +1,14 @@
-/* Reset and Base Styles */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ==================== BITMINER v1.1 CSS ==================== */
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 body {
     font-family: 'Courier New', monospace;
@@ -11,6 +20,103 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+    transition: all 0.3s;
+}
+
+/* Theme Variations */
+body.matrix {
+    background: #000;
+    color: #0f0;
+}
+
+body.matrix::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="10" y="20" font-family="monospace" font-size="14" fill="%230f0" opacity="0.1">1 0 1</text><text x="30" y="50" font-family="monospace" font-size="14" fill="%230f0" opacity="0.1">0 1 0</text><text x="50" y="80" font-family="monospace" font-size="14" fill="%230f0" opacity="0.1">1 1 0</text></svg>');
+    animation: matrix-fall 20s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes matrix-fall {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 1000px; }
+}
+
+body.matrix .panel {
+    background: #001a00;
+    border-color: #0f0;
+}
+
+body.matrix .title {
+    color: #0f0;
+}
+
+body.neon {
+    background: #0a0014;
+    color: #ff00ff;
+}
+
+body.neon::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(255,0,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(0,255,255,0.1) 0%, transparent 50%);
+    animation: neon-pulse 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes neon-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+body.neon .panel {
+    background: #1a0028;
+    border-color: #ff00ff;
+}
+
+body.retro {
+    background: #222;
+    color: #fff;
+    font-family: monospace;
+}
+
+body.retro::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+        radial-gradient(2px 2px at 60px 70px, #fff, transparent),
+        radial-gradient(1px 1px at 50px 50px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+        radial-gradient(2px 2px at 90px 10px, #fff, transparent);
+    background-size: 200px 200px;
+    background-repeat: repeat;
+    animation: retro-scroll 60s linear infinite;
+    pointer-events: none;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+@keyframes retro-scroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 -2000px; }
 }
 
 .main {
@@ -20,22 +126,27 @@ body {
     grid-template-columns: 320px 1fr 320px;
     gap: 12px;
     flex-grow: 1;
+    position: relative;
+    z-index: 100;
 }
 
 @media (max-width: 1100px) {
     .main { grid-template-columns: 1fr; }
 }
 
-/* All panels same width */
 .panel {
     background: #151515;
     border: 1px solid #222;
     padding: 12px;
     border-radius: 0;
     width: 100%;
+    transition: all 0.3s;
 }
 
-/* Center panels - same width as left/right */
+.panel-extended {
+    min-height: 450px;
+}
+
 .center-panel {
     width: 100%;
 }
@@ -49,17 +160,28 @@ body {
     letter-spacing: 1px;
 }
 
-/* Resource Display */
-.resource {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    border-bottom: 1px solid #1a1a1a;
-    font-size: 12px;
+/* DOMINANT BITS DISPLAY */
+.bits-dominant {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    border: 2px solid #75c0c7;
 }
 
-.resource-name { color: #aaa; }
-.resource-val { color: #75c0c7; font-weight: bold; }
+.bits-big {
+    font-size: 46px;
+    font-weight: bold;
+    color: #75c0c7;
+    text-shadow: 0 0 20px rgba(117, 192, 199, 0.5);
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+.bits-label {
+    font-size: 14px;
+    color: #888;
+    letter-spacing: 3px;
+}
 
 /* Button Styles */
 .btn {
@@ -86,16 +208,6 @@ body {
 .btn:disabled {
     opacity: 0.3;
     cursor: not-allowed;
-}
-
-.btn-active {
-    border-color: #d23c22;
-    background: #1a0f0f;
-}
-
-.cost {
-    color: #f7c516;
-    float: right;
 }
 
 /* Mining Zone */
@@ -130,6 +242,10 @@ body {
     background: #0a0a0a;
 }
 
+.mine-btn.rainbow {
+    animation: rainbow 2s infinite;
+}
+
 .mine-rate {
     position: absolute;
     top: -8px;
@@ -149,81 +265,22 @@ body {
     color: #aaa;
 }
 
-/* Upgrade Panels */
-.upgrade {
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    padding: 9px;
-    margin: 5px 0;
-    border-radius: 0;
-}
-
-.upgrade-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-}
-
-.upgrade-name {
-    color: #ddd;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-.upgrade-level {
-    color: #aaa;
-    font-size: 11px;
-}
-
-.upgrade-desc {
-    color: #aaa;
-    font-size: 11px;
-    margin-bottom: 8px;
-}
-
-/* Progress Bar */
-.progress {
-    height: 4px;
-    background: #0f0f0f;
-    margin: 5px 0;
-    border: 1px solid #222;
-    border-radius: 0;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    background: #75c0c7;
-    transition: width 0.3s;
-}
-
-/* Log Section - FIXED HEIGHT */
+/* Log Section */
 .log {
-    height: 120px; /* Feste Höhe für 5 Einträge */
+    height: 90px;
     overflow-y: auto;
     font-size: 11px;
-    border: 1px solid #222;
-    background: #0f0f0f;
 }
 
 .log-entry {
-    padding: 4px 6px;
+    padding: 4px 0;
     border-bottom: 1px solid #1a1a1a;
     color: #aaa;
-    min-height: 20px; /* Konsistente Höhe pro Eintrag */
-    display: flex;
-    align-items: center;
-}
-
-.log-entry:last-child {
-    border-bottom: none;
 }
 
 .log-time {
     color: #888;
     margin-right: 8px;
-    min-width: 65px; /* Feste Breite für Zeitstempel */
-    flex-shrink: 0;
 }
 
 /* Scrollbar Styling */
@@ -231,54 +288,6 @@ body {
 ::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb { background: #333; }
 ::-webkit-scrollbar-thumb:hover { background: #75c0c7; }
-
-/* Tab Navigation */
-.tab-bar {
-    display: flex;
-    gap: 3px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #222;
-}
-
-.tab {
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    color: #aaa;
-    padding: 7px 12px;
-    cursor: pointer;
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-}
-
-.tab:hover { color: #ccc; }
-.tab.active {
-    color: #75c0c7;
-    border-bottom-color: #75c0c7;
-}
-
-/* FIXED TAB CONTAINER */
-.tab-container {
-    position: relative;
-    min-height: 320px;
-    width: 100%;
-    overflow: hidden;
-}
-
-.tab-content { 
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-}
-
-.tab-content.active { 
-    display: block;
-}
 
 /* Worker Cards */
 .worker {
@@ -290,6 +299,17 @@ body {
     margin: 4px 0;
     font-size: 12px;
     border-radius: 0;
+    cursor: pointer;
+}
+
+.worker:hover {
+    border-color: #444;
+    background: #1f1f1f;
+}
+
+.worker.secret {
+    border-color: #f0f;
+    animation: glow 2s infinite;
 }
 
 .worker-icon {
@@ -309,7 +329,7 @@ body {
 .worker-rate { color: #aaa; font-size: 11px; }
 .worker-count { color: #75c0c7; font-weight: bold; margin-left: 10px; }
 
-/* Critical Hit Animation - ENHANCED */
+/* Critical Hit Animation */
 .crit { 
     animation: crit 0.2s;
     box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
@@ -334,11 +354,25 @@ body {
     }
 }
 
-/* Screen Shake Effect */
 @keyframes shake {
     0%, 100% { transform: translate(0, 0); }
     10%, 30%, 50%, 70%, 90% { transform: translate(-2px, 2px); }
     20%, 40%, 60%, 80% { transform: translate(2px, -2px); }
+}
+
+@keyframes rainbow {
+    0% { border-color: #ff0000; }
+    16% { border-color: #ff9900; }
+    33% { border-color: #ffff00; }
+    50% { border-color: #00ff00; }
+    66% { border-color: #0000ff; }
+    83% { border-color: #9900ff; }
+    100% { border-color: #ff0000; }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px #f0f; }
+    50% { box-shadow: 0 0 20px #f0f; }
 }
 
 /* Floating Numbers */
@@ -363,6 +397,13 @@ body {
         3px 3px 6px rgba(0, 0, 0, 0.9),
         0 0 20px rgba(255, 0, 0, 0.8),
         0 0 30px rgba(255, 0, 0, 0.6);
+    animation: float-up-crit 1.2s ease-out forwards;
+}
+
+.floating-number.golden {
+    font-size: 40px;
+    color: #ffd700;
+    text-shadow: 0 0 30px #ffd700;
     animation: float-up-crit 1.2s ease-out forwards;
 }
 
@@ -403,6 +444,38 @@ body {
     z-index: 1000;
     animation: notif 0.3s, notif-out 0.3s 2.5s;
     border-radius: 0;
+    font-size: 12px;
+}
+
+.notification.unlock {
+    border-color: #75c0c7;
+    background: #0f1f1f;
+}
+
+.notification.achievement {
+    border-color: #f7c516;
+    background: #1f1a0f;
+}
+
+.notification.secret {
+    border-color: #f0f;
+    background: #1f0f1f;
+    animation: notif 0.3s, glow 2s infinite;
+}
+
+.notification.rank {
+    border-color: #ff9900;
+    background: #1f150f;
+}
+
+.notification.offline {
+    border-color: #1cb992;
+    background: #0f1f1a;
+}
+
+.notification.ascension {
+    border-color: #ff00ff;
+    background: #1f0f1f;
 }
 
 @keyframes notif { from { transform: translateX(300px); opacity: 0; } }
@@ -417,6 +490,7 @@ body {
     margin-bottom: 12px;
     border-radius: 0;
     width: 100%;
+    cursor: pointer;
 }
 
 .rank-badge {
@@ -428,6 +502,10 @@ body {
     font-size: 12px;
     margin: 5px;
     border-radius: 0;
+}
+
+.rank-badge.rainbow {
+    animation: rainbow 3s infinite;
 }
 
 /* Stats Display */
@@ -457,7 +535,6 @@ body {
     text-transform: uppercase;
 }
 
-/* Statistics Item Styling */
 .stat-item {
     display: flex;
     justify-content: space-between;
@@ -477,11 +554,23 @@ body {
     border: 1px solid #2a2a2a;
     border-radius: 0;
     transition: all 0.2s;
+    cursor: help;
 }
 
 .achievement.unlocked {
     border-color: #f7c516;
     background: #1a1505;
+}
+
+.achievement.secret {
+    border-color: #f0f;
+    background: #1a0528;
+}
+
+.achievement.unlocked:hover {
+    border-color: #f7c516;
+    background: #1f1a08;
+    transform: translateX(2px);
 }
 
 .achievement.locked {
@@ -506,6 +595,11 @@ body {
     border: 1px solid #f7c516;
 }
 
+.achievement.secret .achievement-icon {
+    background: #2a0628;
+    border: 1px solid #f0f;
+}
+
 .achievement-info {
     flex: 1;
 }
@@ -521,6 +615,10 @@ body {
     color: #f7c516;
 }
 
+.achievement.secret .achievement-name {
+    color: #f0f;
+}
+
 .achievement-desc {
     color: #888;
     font-size: 10px;
@@ -531,6 +629,249 @@ body {
     color: #75c0c7;
     font-size: 11px;
     font-weight: bold;
+}
+
+/* ==================== BIT EXPLOSION ==================== */
+.bit-explosion-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9000;
+}
+
+.falling-bit {
+    position: absolute;
+    pointer-events: none;
+    animation: fall 2s ease-in forwards;
+    opacity: 1;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ==================== GOLDEN BIT ==================== */
+.golden-bit {
+    position: fixed;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 9500;
+    animation: golden-float 3s ease-in-out;
+    pointer-events: all;
+    text-shadow: 0 0 30px #ffd700;
+    transition: transform 0.1s;
+}
+
+.golden-bit:hover {
+    transform: scale(1.3);
+}
+
+@keyframes golden-float {
+    0% {
+        left: -50px;
+        top: 50%;
+    }
+    100% {
+        left: 110%;
+        top: 50%;
+    }
+}
+
+/* ==================== RARE BITS ==================== */
+.rare-bit {
+    position: fixed;
+    font-size: 24px;
+    pointer-events: all;
+    cursor: pointer;
+    z-index: 9500;
+    animation: rare-fall 3s ease-in forwards;
+    transition: transform 0.1s;
+}
+
+.rare-bit:hover {
+    transform: scale(1.2);
+}
+
+@keyframes rare-fall {
+    0% {
+        top: -50px;
+        opacity: 1;
+    }
+    100% {
+        top: 110%;
+        opacity: 0.5;
+    }
+}
+
+/* ==================== THEME SELECTOR ==================== */
+.theme-selector {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.theme-btn {
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 10px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.theme-btn:hover {
+    border-color: #75c0c7;
+}
+
+.theme-btn.active {
+    border-color: #f7c516;
+    background: #2a2206;
+}
+
+.theme-btn.locked {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ==================== SKIN SELECTOR ==================== */
+.skin-selector {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.skin-btn {
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    cursor: pointer;
+    font-size: 24px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.skin-btn:hover:not(.locked) {
+    border-color: #75c0c7;
+    transform: scale(1.1);
+}
+
+.skin-btn.active {
+    border-color: #f7c516;
+    background: #2a2206;
+}
+
+.skin-btn.locked {
+    opacity: 0.3;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+}
+
+/* ==================== COLLECTION GRID ==================== */
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.collection-item {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    padding: 10px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.collection-icon {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.collection-count {
+    font-size: 11px;
+    color: #888;
+}
+
+.collection-bonus {
+    font-size: 10px;
+    color: #75c0c7;
+    margin-top: 3px;
+}
+
+/* ==================== RANK PROGRESS BAR ==================== */
+.rank-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #0a0a0a;
+    border: 1px solid #333;
+    overflow: hidden;
+    position: relative;
+}
+
+.rank-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #d23c22 0%, #f7c516 50%, #75c0c7 100%);
+    transition: width 0.3s ease-out;
+    width: 0%;
+}
+
+/* ==================== STATISTICS ==================== */
+.stat-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #1a1a1a;
+    color: #aaa;
+}
+
+.stat-line span:last-child {
+    color: #75c0c7;
+    font-weight: bold;
+}
+
+/* ==================== FIREWORKS ==================== */
+.firework-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+.firework {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+@keyframes firework-explode {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty));
+        opacity: 0;
+    }
 }
 
 /* Footer Styles */
@@ -547,6 +888,8 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    position: relative;
+    z-index: 100;
 }
 
 .footer-content {
@@ -597,7 +940,6 @@ body {
     fill: currentColor;
 }
 
-/* GitHub Button */
 .github-btn {
     border-color: #444;
 }
@@ -608,7 +950,6 @@ body {
     color: #fff;
 }
 
-/* Ko-fi Button with new logo */
 .kofi-btn {
     background: #1a1a1a;
     border-color: #29abe0;
@@ -631,7 +972,6 @@ body {
     filter: brightness(0) saturate(100%) invert(48%) sepia(98%) saturate(2426%) hue-rotate(326deg) brightness(101%) contrast(101%);
 }
 
-/* Responsive Footer */
 @media (max-width: 600px) {
     .footer-links {
         flex-direction: column;
