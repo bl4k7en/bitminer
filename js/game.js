@@ -1,4 +1,4 @@
-// ==================== BITMINER v1.1 ====================
+// ==================== BITMINER v1.2 ====================
 
 document.addEventListener('selectstart', e => e.preventDefault());
 document.addEventListener('contextmenu', e => e.preventDefault());
@@ -27,14 +27,15 @@ const defaultGame = {
     timesPrestiged: 0,
     rarestBitFound: '',
     workers: {
-        bot: {name: 'Mining Bot', icon: '⚙️', count: 0, baseCost: 50, rate: 1, costMult: 1.15},
-        coder: {name: 'Code Monkey', icon: '🐵', count: 0, baseCost: 500, rate: 5, costMult: 1.15},
-        script: {name: 'Auto Script', icon: '📜', count: 0, baseCost: 5000, rate: 25, costMult: 1.15},
-        farm: {name: 'Click Farm', icon: '🏭', count: 0, baseCost: 50000, rate: 120, costMult: 1.15},
-        factory: {name: 'Bit Factory', icon: '🏢', count: 0, baseCost: 500000, rate: 600, costMult: 1.15},
-        mine: {name: 'Deep Mine', icon: '⛏️', count: 0, baseCost: 5000000, rate: 3000, costMult: 1.15},
-        rig: {name: 'Mega Rig', icon: '🔧', count: 0, baseCost: 50000000, rate: 15000, costMult: 1.15},
-        ai: {name: 'AI Miner', icon: '🤖', count: 0, baseCost: 500000000, rate: 75000, costMult: 1.15}
+        // EARLY GAME REBALANCED: ~2.5x slower progression
+        bot: {name: 'Mining Bot', icon: '⚙️', count: 0, baseCost: 125, rate: 1, costMult: 1.15},
+        coder: {name: 'Code Monkey', icon: '🐵', count: 0, baseCost: 1250, rate: 5, costMult: 1.15},
+        script: {name: 'Auto Script', icon: '📜', count: 0, baseCost: 12500, rate: 25, costMult: 1.15},
+        farm: {name: 'Click Farm', icon: '🏭', count: 0, baseCost: 125000, rate: 120, costMult: 1.15},
+        factory: {name: 'Bit Factory', icon: '🏢', count: 0, baseCost: 1250000, rate: 600, costMult: 1.15},
+        mine: {name: 'Deep Mine', icon: '⛏️', count: 0, baseCost: 12500000, rate: 3000, costMult: 1.15},
+        rig: {name: 'Mega Rig', icon: '🔧', count: 0, baseCost: 125000000, rate: 15000, costMult: 1.15},
+        ai: {name: 'AI Miner', icon: '🤖', count: 0, baseCost: 1250000000, rate: 75000, costMult: 1.15}
     },
     secretWorkers: {
         mystery: {name: '??? Worker', icon: '❓', count: 0, baseCost: 5000000000, rate: 100000, costMult: 1.2, unlocked: false},
@@ -174,16 +175,16 @@ const themes = [
     {id: 'retro', name: 'Retro', locked: true, unlockAchievement: 'transcended'}
 ];
 
-// Click Skins (rebalanced)
+// Click Skins WITH BONUSES! (+10% to +400%) - SLOW PROGRESSION, HIGH REWARDS
 const clickSkins = [
-    {icon: '💎', name: 'Diamond', locked: false},
-    {icon: '🔷', name: 'Blue Gem', locked: true, requirement: 50000},
-    {icon: '🔶', name: 'Orange Gem', locked: true, requirement: 500000},
-    {icon: '💠', name: 'Crystal', locked: true, requirement: 5000000},
-    {icon: '✨', name: 'Sparkle', locked: true, requirement: 50000000},
-    {icon: '⭐', name: 'Star', locked: true, requirement: 500000000},
-    {icon: '🌟', name: 'Glowing Star', locked: true, requirement: 5000000000},
-    {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000}
+    {icon: '💎', name: 'Diamond', locked: false, bonus: 0},
+    {icon: '🔷', name: 'Blue Gem', locked: true, requirement: 250000, bonus: 10},          // 250K → +10%
+    {icon: '🔶', name: 'Orange Gem', locked: true, requirement: 5000000, bonus: 30},      // 5M → +30%
+    {icon: '💠', name: 'Crystal', locked: true, requirement: 100000000, bonus: 60},       // 100M → +60%
+    {icon: '✨', name: 'Sparkle', locked: true, requirement: 2500000000, bonus: 100},     // 2.5B → +100%
+    {icon: '⭐', name: 'Star', locked: true, requirement: 50000000000, bonus: 150},       // 50B → +150%
+    {icon: '🌟', name: 'Glowing Star', locked: true, requirement: 1000000000000, bonus: 250},  // 1T → +250%
+    {icon: '💫', name: 'Dizzy', locked: true, requirement: 25000000000000, bonus: 400}   // 25T → +400%
 ];
 
 // Rare Bits
@@ -397,11 +398,17 @@ function getRankBonus() {
     return ranks[game.rankIndex]?.bonus || 0;
 }
 
+function getSkinBonus() {
+    const currentSkin = clickSkins.find(s => s.icon === game.clickSkin);
+    return currentSkin?.bonus || 0;
+}
+
 function getMulti() {
     let bonusPercent = 0;
     bonusPercent += getAchievementBonus();
     bonusPercent += getRankBonus();
     bonusPercent += getRareBitsBonus();
+    bonusPercent += getSkinBonus(); // NEW: Skin bonuses!
     bonusPercent += game.prestige * 10;
     
     const hour = new Date().getHours();
@@ -451,14 +458,22 @@ function notify(msg, type = 'info') {
     div.className = 'notification ' + type;
     div.textContent = msg;
     const container = document.getElementById('notifications');
-    if (container) container.appendChild(div);
+    if (container) {
+        // Stack notifications by calculating offset based on existing ones
+        const existingNotifs = container.querySelectorAll('.notification');
+        const offset = existingNotifs.length * 75; // 75px spacing per notification
+        div.style.top = (10 + offset) + 'px';
+        
+        container.appendChild(div);
+    }
     setTimeout(() => div.remove(), 3000);
 }
 
-function showFloatingNumber(amount, x, y, isCrit = false, isGolden = false) {
+function showFloatingNumber(amount, x, y, isCrit = false, isGolden = false, isText = false) {
     const div = document.createElement('div');
     div.className = 'floating-number' + (isCrit ? ' crit' : '') + (isGolden ? ' golden' : '');
-    div.textContent = '+' + fmt(amount);
+    // If isText is true, don't format - just show the text as-is
+    div.textContent = isText ? amount : ('+' + fmt(amount));
     div.style.left = x + 'px';
     div.style.top = y + 'px';
     document.body.appendChild(div);
@@ -538,13 +553,18 @@ function updateSkinSelector() {
         const div = document.createElement('div');
         div.className = 'skin-btn' + (game.clickSkin === skin.icon ? ' active' : '') + (unlocked ? '' : ' locked');
         div.textContent = skin.icon;
-        div.title = skin.name + (unlocked ? '' : `\nUnlock at ${fmt(skin.requirement)} total`);
+        
+        // Show bonus in tooltip
+        const bonusText = skin.bonus > 0 ? ` (+${skin.bonus}% bonus)` : '';
+        div.title = skin.name + bonusText + (unlocked ? '' : `\nUnlock at ${fmt(skin.requirement)} total`);
         
         if (unlocked) {
             div.onclick = () => {
                 game.clickSkin = skin.icon;
                 document.getElementById('mine-icon').textContent = skin.icon;
                 updateSkinSelector();
+                update(); // Update to recalculate multiplier
+                log(`🎨 ${skin.name} equipped!${bonusText}`);
             };
         }
         
@@ -641,6 +661,7 @@ function update() {
         if (document.getElementById('stat-rank-mult')) document.getElementById('stat-rank-mult').textContent = '+' + getRankBonus() + '%';
         if (document.getElementById('stat-achievement-mult')) document.getElementById('stat-achievement-mult').textContent = '+' + getAchievementBonus() + '%';
         if (document.getElementById('stat-rare-mult')) document.getElementById('stat-rare-mult').textContent = '+' + getRareBitsBonus() + '%';
+        if (document.getElementById('stat-skin-mult')) document.getElementById('stat-skin-mult').textContent = '+' + getSkinBonus() + '%';
         
         updateRanks();
         updateWorkers();
@@ -895,12 +916,39 @@ if (mineBtn) {
             game.highestBitsWithoutBuying = game.bits;
         }
         
+        // Golden Bit spawn
         if (Math.random() < 0.001) {
             spawnGoldenBit();
         }
         
+        // Regular Rare Bit spawn
         if (Math.random() < 0.05) {
             spawnRareBit();
+        }
+        
+        // NEW: Rare Bit from clicking - 0.1% chance!
+        if (Math.random() < 0.001) {
+            // Weighted selection: 70% Diamond, 20% Ruby, 8% Emerald, 2% Rainbow
+            const rand = Math.random();
+            let selectedType = null;
+            
+            if (rand < 0.70 && game.rareBits.diamond < 100) {
+                selectedType = rareBitTypes[0]; // Diamond
+            } else if (rand < 0.90 && game.rareBits.ruby < 50) {
+                selectedType = rareBitTypes[1]; // Ruby
+            } else if (rand < 0.98 && game.rareBits.emerald < 10) {
+                selectedType = rareBitTypes[2]; // Emerald
+            } else if (game.rareBits.rainbow < 1) {
+                selectedType = rareBitTypes[3]; // Rainbow
+            }
+            
+            if (selectedType) {
+                game.rareBits[selectedType.name]++;
+                log(`${selectedType.icon} ${selectedType.name.toUpperCase()} from click!`);
+                notify(`${selectedType.name.toUpperCase()} Bit from click!`, 'secret');
+                showFloatingNumber(`${selectedType.icon} RARE!`, e.clientX, e.clientY + 40, false, true, true);
+                updateRareBitsDisplay();
+            }
         }
         
         update();
@@ -981,19 +1029,26 @@ if (clearLogBtn) {
     });
 }
 
-// Import/Export
+// Import/Export - FIXED for Unicode!
 const exportBtn = document.getElementById('export-btn');
 if (exportBtn) {
     exportBtn.addEventListener('click', () => {
-        const saveData = JSON.stringify(game);
-        const encoded = btoa(saveData);
-        const textarea = document.getElementById('save-code');
-        if (textarea) {
-            textarea.value = encoded;
-            textarea.select();
-            document.execCommand('copy');
-            notify('Save code copied to clipboard!', 'info');
-            log('📋 EXPORTED');
+        try {
+            const saveData = JSON.stringify(game);
+            // UNICODE-SAFE ENCODING
+            const encoded = btoa(unescape(encodeURIComponent(saveData)));
+            const textarea = document.getElementById('save-code');
+            if (textarea) {
+                textarea.value = encoded;
+                textarea.select();
+                document.execCommand('copy');
+                notify('Save code copied to clipboard!', 'info');
+                log('📋 EXPORTED');
+            }
+        } catch (e) {
+            console.error('Export error:', e);
+            notify('Export failed!', 'info');
+            log('❌ EXPORT FAILED');
         }
     });
 }
@@ -1008,7 +1063,8 @@ if (importBtn) {
         }
         
         try {
-            const decoded = atob(textarea.value.trim());
+            // UNICODE-SAFE DECODING
+            const decoded = decodeURIComponent(escape(atob(textarea.value.trim())));
             const loaded = JSON.parse(decoded);
             const merged = mergeSaveWithDefaults(loaded, defaultGame);
             Object.assign(game, merged);
@@ -1129,8 +1185,3 @@ updateThemeSelector();
 updateSkinSelector();
 updateStatistics();
 checkNewYearFireworks();
-
-window.addEventListener('beforeunload', () => {
-    game.lastSaveTime = Date.now();
-    localStorage.setItem('bitminer', JSON.stringify(game));
-});
