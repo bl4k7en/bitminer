@@ -27,7 +27,7 @@ const defaultGame = {
     timesPrestiged: 0,
     rarestBitFound: '',
     workers: {
-        // EARLY GAME REBALANCED: ~2.5x slower progression
+        // EA
         bot: {name: 'Mining Bot', icon: '⚙️', count: 0, baseCost: 125, rate: 1, costMult: 1.15},
         coder: {name: 'Code Monkey', icon: '🐵', count: 0, baseCost: 1250, rate: 5, costMult: 1.15},
         script: {name: 'Auto Script', icon: '📜', count: 0, baseCost: 12500, rate: 25, costMult: 1.15},
@@ -175,7 +175,7 @@ const themes = [
     {id: 'retro', name: 'Retro', locked: true, unlockAchievement: 'transcended'}
 ];
 
-// Click Skins WITH BONUSES! (+10% to +400%) - SLOW PROGRESSION, HIGH REWARDS
+// Click Skins
 const clickSkins = [
     {icon: '💎', name: 'Diamond', locked: false, bonus: 0},
     {icon: '🔷', name: 'Blue Gem', locked: true, requirement: 250000, bonus: 10},          // 250K → +10%
@@ -359,11 +359,11 @@ function mergeSaveWithDefaults(loaded, defaults) {
 }
 
 function fmt(n) {
-    // Below 1 Million: whole numbers only with thousand separators
+    // Below 1 Million
     if (n < 1e6) {
         return Math.floor(n).toLocaleString('en');
     }
-    // 1 Million and above: with decimals
+    // 1 Million and above
     if (n < 1e9) return (n/1e6).toFixed(3).replace(/\.?0+$/, '') + 'M';
     if (n < 1e12) return (n/1e9).toFixed(3).replace(/\.?0+$/, '') + 'B';
     if (n < 1e15) return (n/1e12).toFixed(3).replace(/\.?0+$/, '') + 'T';
@@ -461,7 +461,7 @@ function notify(msg, type = 'info') {
     if (container) {
         // Stack notifications by calculating offset based on existing ones
         const existingNotifs = container.querySelectorAll('.notification');
-        const offset = existingNotifs.length * 75; // 75px spacing per notification
+        const offset = existingNotifs.length * 75;
         div.style.top = (10 + offset) + 'px';
         
         container.appendChild(div);
@@ -563,7 +563,7 @@ function updateSkinSelector() {
                 game.clickSkin = skin.icon;
                 document.getElementById('mine-icon').textContent = skin.icon;
                 updateSkinSelector();
-                update(); // Update to recalculate multiplier
+                update();
                 log(`🎨 ${skin.name} equipped!${bonusText}`);
             };
         }
@@ -926,9 +926,8 @@ if (mineBtn) {
             spawnRareBit();
         }
         
-        // NEW: Rare Bit from clicking - 0.1% chance!
+        // Rare Bit
         if (Math.random() < 0.001) {
-            // Weighted selection: 70% Diamond, 20% Ruby, 8% Emerald, 2% Rainbow
             const rand = Math.random();
             let selectedType = null;
             
@@ -1029,13 +1028,12 @@ if (clearLogBtn) {
     });
 }
 
-// Import/Export - FIXED for Unicode!
+// Import/Export
 const exportBtn = document.getElementById('export-btn');
 if (exportBtn) {
     exportBtn.addEventListener('click', () => {
         try {
             const saveData = JSON.stringify(game);
-            // UNICODE-SAFE ENCODING
             const encoded = btoa(unescape(encodeURIComponent(saveData)));
             const textarea = document.getElementById('save-code');
             if (textarea) {
