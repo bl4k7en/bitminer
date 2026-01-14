@@ -1,6 +1,6 @@
-## Bitminer 💎
+# Bitminer 💎
 
-[![PLAY BITMINER NOW](https://bl4k7en.github.io/bitminer/)
+[PLAY BITMINER NOW](https://bl4k7en.github.io/bitminer/)
 
 Bitminer is a minimalist, idle clicker game where you mine digital "Bits" by clicking, hire automated workers, and upgrade your mining operation.
 The core loop involves progressing through ranks, achieving milestones, and performing "Ascensions" to gain permanent bonuses for faster progress in new games.
