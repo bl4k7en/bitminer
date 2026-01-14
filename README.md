@@ -1,49 +1,33 @@
-# Bitminer 💎
+## Bitminer 💎
 
-FOR 1.1 STARTING A NEW GAME IS ADVICED
+[![PLAY BITMINER NOW](https://bl4k7en.github.io/bitminer/)
 
-A minimalist incremental mining game where you click to collect bits, hire workers, upgrade your power, and ascend for permanent bonuses.
+Bitminer is a minimalist, idle clicker game where you mine digital "Bits" by clicking, hire automated workers, and upgrade your mining operation.
+The core loop involves progressing through ranks, achieving milestones, and performing "Ascensions" to gain permanent bonuses for faster progress in new games.
 
-## 💎 Play Now
-**[Play Bitminer](https://bl4k7en.github.io/bitminer/)**
+Recent Updates (v1.1 & v1.2):
+v1.2: Introduced mineable "Rare Bits," rebalanced clicker skins with bonuses, fixed achievements and the Import/Export function. (Note: A new game is advised for this update).
 
-Update v1.1: Achievements, Ranks & Visual Enhancements
+v1.1: Added the achievement and rank system, visual themes with background animations, and a working Import/Export save system.
 
-💎 New Features
-46 Achievements (17 new)
 
-💎 Progress & Stats
-Rank Progress Bar with live % display and smooth gradient animation
 
-💎 Visual Improvements
-Themes and Themed Background Animations
+Core Gameplay & Features:
+Click to Mine: Manually collect Bits with satisfying visual feedback.
 
-💎 Data Management (WiP)
-Import/Export System using Base64 encoding
-Automatic clipboard copy on export
-Import validation for saved codes
+Automation: Hire workers to generate passive income.
 
-## 💎 Features
-Click Mining with satisfying visual feedback
-Automated Workers to generate passive income
-Resource Conversion between Bits, Energy, Crystals, and Power
-Upgrade System for mining power, critical hits, and efficiency
-Ascension Mechanics with permanent bonuses
-Rank Progression from Initiate to Titan
-Achievements with multiplier rewards
-Auto-save with localStorage
+Progression: Ascend for permanent boosts and climb the ranks.
 
-## 💎 Technologies
-- Pure HTML, CSS, and JavaScript
-- Local Storage for saves
-- Fully responsive design
-- No external dependencies
+Achievements: Unlock 45 achievements to earn multiplier rewards.
 
-## 💎 Compatibility
-Works on all modern browsers (desktop and mobile) and functions offline.
 
-## 💎 Contributing
-Issues and pull requests are welcome for improvements.
+Technical Details:
+Built with pure HTML, CSS, and JavaScript.
+
+No external libraries; saves locally in your browser.
+
+Fully responsive and works on desktop and mobile browsers, even offline.
 
 ## 💎 Support
 If you enjoy the game:  
