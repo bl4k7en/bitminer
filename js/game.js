@@ -191,10 +191,10 @@ const clickSkins = [
 
 // Rare Bits - Balanced Drop Rates
 const rareBitTypes = [
-    {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.015, max: 100, bonus: 5},
-    {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.007, max: 50, bonus: 10},
-    {name: 'emerald', icon: '💚', color: '#00ff00', dropRate: 0.002, max: 10, bonus: 25},
-    {name: 'rainbow', icon: '🌈', color: '#ff00ff', dropRate: 0.0005, max: 1, bonus: 100}
+    {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.15, max: 100, bonus: 5},
+    {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.07, max: 50, bonus: 10},
+    {name: 'emerald', icon: '💚', color: '#00ff00', dropRate: 0.02, max: 10, bonus: 25},
+    {name: 'rainbow', icon: '🌈', color: '#ff00ff', dropRate: 0.005, max: 1, bonus: 100}
 ];
 
 let goldenBitActive = false;
