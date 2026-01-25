@@ -292,7 +292,26 @@ function spawnRareBit() {
         update();
     });
 }
-
+// ==================== RARE BIT FROM CLICK ====================
+function spawnRareBitFromClick() {
+    const type = rareBitTypes.find(t => {
+        if (game.rareBits[t.name] >= t.max) return false;
+        return Math.random() < t.dropRate;
+    });
+    
+    if (!type) return false;
+    
+    game.rareBits[type.name]++;
+    
+    if (!game.rarestBitFound || rareBitTypes.find(t => t.name === type.name).dropRate < rareBitTypes.find(t => t.name === game.rarestBitFound)?.dropRate || 1) {
+        game.rarestBitFound = type.name;
+    }
+    
+    log(`${type.icon} ${type.name.toUpperCase()} BIT (CLICKED)!`);
+    notify(`${type.name.toUpperCase()} Bit collected by clicking!`, 'secret');
+    updateRareBitsDisplay();
+    return true;
+}
 function updateRareBitsDisplay() {
     const container = document.getElementById('rare-bits-collection');
     if (!container) return;
@@ -977,6 +996,10 @@ function handleClick(e, isSpacebar = false) {
     
     if (Math.random() < 0.01) {
         spawnRareBit();
+    }
+    
+    if (Math.random() < 0.01) {
+    spawnRareBitFromClick();
     }
     
     update();
