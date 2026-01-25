@@ -57,6 +57,18 @@ const game = JSON.parse(JSON.stringify(defaultGame));
 
 // Achievements
 const achievements = {
+    diamondCollector: {name: 'Diamond Collector', desc: 'Collect 50 Diamond Bits', icon: '💎', requirement: () => game.rareBits.diamond >= 50, reward: 25, secret: false},
+    diamondKing: {name: 'Diamond King', desc: 'Collect 250 Diamond Bits', icon: '👑', requirement: () => game.rareBits.diamond >= 250, reward: 50, secret: true},
+    diamondMaster: {name: 'Diamond Master', desc: 'Collect 500 Diamond Bits (MAX)', icon: '💠', requirement: () => game.rareBits.diamond >= 500, reward: 100, secret: true},
+    rubyCollector: {name: 'Ruby Collector', desc: 'Collect 25 Ruby Bits', icon: '♦️', requirement: () => game.rareBits.ruby >= 25, reward: 30, secret: false},
+    rubyKing: {name: 'Ruby King', desc: 'Collect 75 Ruby Bits', icon: '👑', requirement: () => game.rareBits.ruby >= 75, reward: 60, secret: true},
+    rubyMaster: {name: 'Ruby Master', desc: 'Collect 100 Ruby Bits (MAX)', icon: '❤️', requirement: () => game.rareBits.ruby >= 100, reward: 120, secret: true},
+    emeraldCollector: {name: 'Emerald Collector', desc: 'Collect 15 Emerald Bits', icon: '💚', requirement: () => game.rareBits.emerald >= 15, reward: 50, secret: false},
+    emeraldKing: {name: 'Emerald King', desc: 'Collect 35 Emerald Bits', icon: '👑', requirement: () => game.rareBits.emerald >= 35, reward: 100, secret: true},
+    emeraldMaster: {name: 'Emerald Master', desc: 'Collect 50 Emerald Bits (MAX)', icon: '🔋', requirement: () => game.rareBits.emerald >= 50, reward: 200, secret: true},
+    rainbowCollector: {name: 'Rainbow Collector', desc: 'Collect 1 Rainbow Bit', icon: '🌈', requirement: () => game.rareBits.rainbow >= 1, reward: 150, secret: false},
+    rainbowMaster: {name: 'Rainbow Master', desc: 'Collect 3 Rainbow Bits', icon: '🏳️‍🌈', requirement: () => game.rareBits.rainbow >= 3, reward: 300, secret: true},
+    rainbowGod: {name: 'Rainbow God', desc: 'Collect 5 Rainbow Bits (MAX)', icon: '🔮', requirement: () => game.rareBits.rainbow >= 5, reward: 500, secret: true},
     firstClick: {name: 'First Steps', desc: 'Click 1 time', icon: '👆', requirement: () => game.clicks >= 1, reward: 5},
     clicker: {name: 'Clicker', desc: 'Click 100 times', icon: '🖱️', requirement: () => game.clicks >= 100, reward: 5},
     clickMaster: {name: 'Click Master', desc: 'Click 1,000 times', icon: '⚡', requirement: () => game.clicks >= 1000, reward: 10},
@@ -174,7 +186,12 @@ const themes = [
     {id: 'default', name: 'Default', locked: false},
     {id: 'matrix', name: 'Matrix', locked: true, unlockAchievement: 'theGlitch'},
     {id: 'neon', name: 'Neon', locked: true, unlockAchievement: 'trueMiner'},
-    {id: 'retro', name: 'Retro', locked: true, unlockAchievement: 'transcended'}
+    {id: 'retro', name: 'Retro', locked: true, unlockAchievement: 'transcended'},
+    {id: 'diamond', name: 'Diamond', locked: true, unlockRequirement: () => game.rareBits.diamond >= 500},
+    {id: 'ruby', name: 'Ruby', locked: true, unlockRequirement: () => game.rareBits.ruby >= 100},
+    {id: 'emerald', name: 'Emerald', locked: true, unlockRequirement: () => game.rareBits.emerald >= 50},
+    {id: 'rainbow', name: 'Rainbow', locked: true, unlockRequirement: () => game.rareBits.rainbow >= 5},
+    {id: 'ultrarare', name: 'Ultra Rare', locked: true, unlockRequirement: () => game.rareBits.diamond >= 500 && game.rareBits.ruby >= 100 && game.rareBits.emerald >= 50 && game.rareBits.rainbow >= 5}
 ];
 
 // Click Skins
@@ -186,15 +203,21 @@ const clickSkins = [
     {icon: '✨', name: 'Sparkle', locked: true, requirement: 50000000},
     {icon: '⭐', name: 'Star', locked: true, requirement: 500000000},
     {icon: '🌟', name: 'Glowing Star', locked: true, requirement: 5000000000},
-    {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000}
+    {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000},
+    {icon: '💎', name: 'Pure Diamond', locked: true, requirement: () => game.rareBits.diamond >= 100},
+    {icon: '♦️', name: 'Ruby Heart', locked: true, requirement: () => game.rareBits.ruby >= 50},
+    {icon: '💚', name: 'Emerald Power', locked: true, requirement: () => game.rareBits.emerald >= 25},
+    {icon: '🌈', name: 'Rainbow Magic', locked: true, requirement: () => game.rareBits.rainbow >= 1},
+    {icon: '🔮', name: 'Rainbow Crystal', locked: true, requirement: () => game.rareBits.rainbow >= 3},
+    {icon: '👑', name: 'Rainbow Crown', locked: true, requirement: () => game.rareBits.rainbow >= 5}
 ];
 
 // Rare Bits - Balanced Drop Rates
 const rareBitTypes = [
-    {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.15, max: 100, bonus: 5},
-    {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.07, max: 50, bonus: 10},
-    {name: 'emerald', icon: '💚', color: '#00ff00', dropRate: 0.02, max: 10, bonus: 25},
-    {name: 'rainbow', icon: '🌈', color: '#ff00ff', dropRate: 0.005, max: 1, bonus: 100}
+    {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.15, max: 500, bonus: 5},
+    {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.07, max: 100, bonus: 10},
+    {name: 'emerald', icon: '💚', color: '#00ff00', dropRate: 0.02, max: 50, bonus: 25},
+    {name: 'rainbow', icon: '🌈', color: '#ff00ff', dropRate: 0.005, max: 5, bonus: 100}
 ];
 
 let goldenBitActive = false;
@@ -525,10 +548,18 @@ function unlockTheme(themeId) {
     }
 }
 
-function applyTheme(themeId) {
-    game.theme = themeId;
-    document.body.className = themeId;
-    updateThemeSelector();
+function checkThemeUnlocks() {
+    themes.forEach(theme => {
+        if (theme.unlockRequirement && typeof theme.unlockRequirement === 'function') {
+            if (theme.unlockRequirement() && !game.unlockedThemes.includes(theme.id)) {
+                unlockTheme(theme.id);
+            }
+        } else if (theme.unlockAchievement && game.achievements[theme.unlockAchievement]) {
+            if (!game.unlockedThemes.includes(theme.id)) {
+                unlockTheme(theme.id);
+            }
+        }
+    });
 }
 
 function updateThemeSelector() {
@@ -543,6 +574,8 @@ function updateThemeSelector() {
         div.textContent = theme.name;
         if (unlocked) {
             div.onclick = () => applyTheme(theme.id);
+        } else {
+            div.title = 'Locked\nComplete requirements to unlock';
         }
         container.appendChild(div);
     });
@@ -554,9 +587,16 @@ function updateSkinSelector() {
     
     container.innerHTML = '';
     clickSkins.forEach(skin => {
-        const unlocked = game.unlockedSkins.includes(skin.icon) || (skin.requirement && game.totalMined >= skin.requirement);
+        const unlockedByRareBits = skin.requirement && typeof skin.requirement === 'function' ? skin.requirement() : false;
+        const unlockedByMined = skin.requirement && typeof skin.requirement === 'number' ? game.totalMined >= skin.requirement : false;
+        const unlocked = game.unlockedSkins.includes(skin.icon) || unlockedByRareBits || unlockedByMined;
         
-        if (skin.requirement && !game.unlockedSkins.includes(skin.icon) && game.totalMined >= skin.requirement) {
+        if (unlockedByRareBits && !game.unlockedSkins.includes(skin.icon)) {
+            game.unlockedSkins.push(skin.icon);
+            notify(`Click skin unlocked: ${skin.name}!`, 'secret');
+        }
+        
+        if (unlockedByMined && !game.unlockedSkins.includes(skin.icon)) {
             game.unlockedSkins.push(skin.icon);
             notify(`Click skin unlocked: ${skin.name}!`, 'secret');
         }
@@ -564,7 +604,16 @@ function updateSkinSelector() {
         const div = document.createElement('div');
         div.className = 'skin-btn' + (game.clickSkin === skin.icon ? ' active' : '') + (unlocked ? '' : ' locked');
         div.textContent = skin.icon;
-        div.title = skin.name + (unlocked ? '' : `\nUnlock at ${fmt(skin.requirement)} total`);
+        
+        let tooltip = skin.name;
+        if (!unlocked) {
+            if (skin.requirement && typeof skin.requirement === 'function') {
+                tooltip += '\nCollect rare bits to unlock';
+            } else if (skin.requirement) {
+                tooltip += `\nUnlock at ${fmt(skin.requirement)} total`;
+            }
+        }
+        div.title = tooltip;
         
         if (unlocked) {
             div.onclick = () => {
@@ -752,6 +801,7 @@ function update() {
         updateSkinSelector();
         updateStatistics();
         checkAchievements();
+        checkThemeUnlocks();
         
         const currentRate = getWorkerRate();
         if (currentRate > game.peakBitsPerSecond) {
