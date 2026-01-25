@@ -9,6 +9,7 @@ const defaultGame = {
     totalMined: 0,
     clickPower: 1,
     clicks: 0,
+    spacebarClicks: 0,
     time: 0,
     prestige: 0,
     lastSaveTime: Date.now(),
@@ -27,15 +28,14 @@ const defaultGame = {
     timesPrestiged: 0,
     rarestBitFound: '',
     workers: {
-        // EA
-        bot: {name: 'Mining Bot', icon: '⚙️', count: 0, baseCost: 125, rate: 1, costMult: 1.15},
-        coder: {name: 'Code Monkey', icon: '🐵', count: 0, baseCost: 1250, rate: 5, costMult: 1.15},
-        script: {name: 'Auto Script', icon: '📜', count: 0, baseCost: 12500, rate: 25, costMult: 1.15},
-        farm: {name: 'Click Farm', icon: '🏭', count: 0, baseCost: 125000, rate: 120, costMult: 1.15},
-        factory: {name: 'Bit Factory', icon: '🏢', count: 0, baseCost: 1250000, rate: 600, costMult: 1.15},
-        mine: {name: 'Deep Mine', icon: '⛏️', count: 0, baseCost: 12500000, rate: 3000, costMult: 1.15},
-        rig: {name: 'Mega Rig', icon: '🔧', count: 0, baseCost: 125000000, rate: 15000, costMult: 1.15},
-        ai: {name: 'AI Miner', icon: '🤖', count: 0, baseCost: 1250000000, rate: 75000, costMult: 1.15}
+        bot: {name: 'Mining Bot', icon: '⚙️', count: 0, baseCost: 50, rate: 1, costMult: 1.15},
+        coder: {name: 'Code Monkey', icon: '🐵', count: 0, baseCost: 500, rate: 5, costMult: 1.15},
+        script: {name: 'Auto Script', icon: '📜', count: 0, baseCost: 5000, rate: 25, costMult: 1.15},
+        farm: {name: 'Click Farm', icon: '🏭', count: 0, baseCost: 50000, rate: 120, costMult: 1.15},
+        factory: {name: 'Bit Factory', icon: '🏢', count: 0, baseCost: 500000, rate: 600, costMult: 1.15},
+        mine: {name: 'Deep Mine', icon: '⛏️', count: 0, baseCost: 5000000, rate: 3000, costMult: 1.15},
+        rig: {name: 'Mega Rig', icon: '🔧', count: 0, baseCost: 50000000, rate: 15000, costMult: 1.15},
+        ai: {name: 'AI Miner', icon: '🤖', count: 0, baseCost: 500000000, rate: 75000, costMult: 1.15}
     },
     secretWorkers: {
         mystery: {name: '??? Worker', icon: '❓', count: 0, baseCost: 5000000000, rate: 100000, costMult: 1.2, unlocked: false},
@@ -61,6 +61,7 @@ const achievements = {
     clicker: {name: 'Clicker', desc: 'Click 100 times', icon: '🖱️', requirement: () => game.clicks >= 100, reward: 5},
     clickMaster: {name: 'Click Master', desc: 'Click 1,000 times', icon: '⚡', requirement: () => game.clicks >= 1000, reward: 10},
     clickGod: {name: 'Click God', desc: 'Click 10,000 times', icon: '👑', requirement: () => game.clicks >= 10000, reward: 15},
+    spacebarWarrior: {name: 'Spacebar Warrior', desc: 'Farm 1,000 bits with spacebar', icon: '⌨️', requirement: () => game.spacebarClicks >= 1000, reward: 50},
     firstWorker: {name: 'Hired Help', desc: 'Hire your first worker', icon: '⚙️', requirement: () => Object.values(game.workers).some(w => w.count > 0), reward: 5},
     automation: {name: 'Automation', desc: 'Have 10 total workers', icon: '🤖', requirement: () => Object.values(game.workers).reduce((s, w) => s + w.count, 0) >= 10, reward: 10},
     workforce: {name: 'Workforce', desc: 'Have 50 total workers', icon: '🏭', requirement: () => Object.values(game.workers).reduce((s, w) => s + w.count, 0) >= 50, reward: 15},
@@ -79,6 +80,7 @@ const achievements = {
     trueMiner: {name: 'True Miner', desc: 'Reach God Rank', icon: '🏆', requirement: () => game.rankIndex >= 9, reward: 500},
     speedrunner: {name: 'Speedrunner', desc: 'Get 1M bits in under 5 min', icon: '⚡', requirement: () => game.totalMined >= 1000000 && game.time <= 300, reward: 100, secret: true},
     idleLegend: {name: 'Idle Legend', desc: 'Get 1M bits without clicking', icon: '😴', requirement: () => game.totalMined >= 1000000 && game.clicks === 0, reward: 150, secret: true},
+    starCatcher: {name: 'Star Catcher', desc: 'Catch a golden star', icon: '⭐', requirement: () => false, reward: 75, secret: true},
     nightOwl: {name: 'Night Owl', desc: 'Play between 2-4 AM', icon: '🦉', requirement: () => {
         const h = new Date().getHours();
         return h >= 2 && h < 4;
@@ -177,22 +179,22 @@ const themes = [
 
 // Click Skins
 const clickSkins = [
-    {icon: '💎', name: 'Diamond', locked: false, bonus: 0},
-    {icon: '🔷', name: 'Blue Gem', locked: true, requirement: 250000, bonus: 10},          // 250K → +10%
-    {icon: '🔶', name: 'Orange Gem', locked: true, requirement: 5000000, bonus: 30},      // 5M → +30%
-    {icon: '💠', name: 'Crystal', locked: true, requirement: 100000000, bonus: 60},       // 100M → +60%
-    {icon: '✨', name: 'Sparkle', locked: true, requirement: 2500000000, bonus: 100},     // 2.5B → +100%
-    {icon: '⭐', name: 'Star', locked: true, requirement: 50000000000, bonus: 150},       // 50B → +150%
-    {icon: '🌟', name: 'Glowing Star', locked: true, requirement: 1000000000000, bonus: 250},  // 1T → +250%
-    {icon: '💫', name: 'Dizzy', locked: true, requirement: 25000000000000, bonus: 400}   // 25T → +400%
+    {icon: '💎', name: 'Diamond', locked: false},
+    {icon: '🔷', name: 'Blue Gem', locked: true, requirement: 50000},
+    {icon: '🔶', name: 'Orange Gem', locked: true, requirement: 500000},
+    {icon: '💠', name: 'Crystal', locked: true, requirement: 5000000},
+    {icon: '✨', name: 'Sparkle', locked: true, requirement: 50000000},
+    {icon: '⭐', name: 'Star', locked: true, requirement: 500000000},
+    {icon: '🌟', name: 'Glowing Star', locked: true, requirement: 5000000000},
+    {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000}
 ];
 
-// Rare Bits
+// Rare Bits - Balanced Drop Rates
 const rareBitTypes = [
-    {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.01, max: 100, bonus: 5},
-    {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.005, max: 50, bonus: 10},
-    {name: 'emerald', icon: '💚', color: '#00ff00', dropRate: 0.001, max: 10, bonus: 25},
-    {name: 'rainbow', icon: '🌈', color: '#ff00ff', dropRate: 0.0001, max: 1, bonus: 100}
+    {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.015, max: 100, bonus: 5},
+    {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.007, max: 50, bonus: 10},
+    {name: 'emerald', icon: '💚', color: '#00ff00', dropRate: 0.002, max: 10, bonus: 25},
+    {name: 'rainbow', icon: '🌈', color: '#ff00ff', dropRate: 0.0005, max: 1, bonus: 100}
 ];
 
 let goldenBitActive = false;
@@ -241,6 +243,15 @@ function spawnGoldenBit() {
         showFloatingNumber(gain, window.innerWidth / 2, window.innerHeight / 2, false, true);
         log('✨ GOLDEN BIT! +' + fmt(gain));
         notify('GOLDEN BIT CAUGHT!', 'secret');
+        
+        // Star Catcher Achievement
+        if (!game.achievements.starCatcher) {
+            game.achievements.starCatcher = true;
+            log('🏆 Star Catcher');
+            notify('🏆 Star Catcher (+75%)', 'secret');
+            updateAchievements();
+        }
+        
         golden.remove();
         goldenBitActive = false;
     });
@@ -270,7 +281,6 @@ function spawnRareBit() {
         clearTimeout(timeout);
         game.rareBits[type.name]++;
         
-        // Track rarest bit found
         if (!game.rarestBitFound || rareBitTypes.find(t => t.name === type.name).dropRate < rareBitTypes.find(t => t.name === game.rarestBitFound)?.dropRate || 1) {
             game.rarestBitFound = type.name;
         }
@@ -359,11 +369,9 @@ function mergeSaveWithDefaults(loaded, defaults) {
 }
 
 function fmt(n) {
-    // Below 1 Million
     if (n < 1e6) {
         return Math.floor(n).toLocaleString('en');
     }
-    // 1 Million and above
     if (n < 1e9) return (n/1e6).toFixed(3).replace(/\.?0+$/, '') + 'M';
     if (n < 1e12) return (n/1e9).toFixed(3).replace(/\.?0+$/, '') + 'B';
     if (n < 1e15) return (n/1e12).toFixed(3).replace(/\.?0+$/, '') + 'T';
@@ -398,17 +406,11 @@ function getRankBonus() {
     return ranks[game.rankIndex]?.bonus || 0;
 }
 
-function getSkinBonus() {
-    const currentSkin = clickSkins.find(s => s.icon === game.clickSkin);
-    return currentSkin?.bonus || 0;
-}
-
 function getMulti() {
     let bonusPercent = 0;
     bonusPercent += getAchievementBonus();
     bonusPercent += getRankBonus();
     bonusPercent += getRareBitsBonus();
-    bonusPercent += getSkinBonus(); // NEW: Skin bonuses!
     bonusPercent += game.prestige * 10;
     
     const hour = new Date().getHours();
@@ -458,22 +460,14 @@ function notify(msg, type = 'info') {
     div.className = 'notification ' + type;
     div.textContent = msg;
     const container = document.getElementById('notifications');
-    if (container) {
-        // Stack notifications by calculating offset based on existing ones
-        const existingNotifs = container.querySelectorAll('.notification');
-        const offset = existingNotifs.length * 75;
-        div.style.top = (10 + offset) + 'px';
-        
-        container.appendChild(div);
-    }
+    if (container) container.appendChild(div);
     setTimeout(() => div.remove(), 3000);
 }
 
-function showFloatingNumber(amount, x, y, isCrit = false, isGolden = false, isText = false) {
+function showFloatingNumber(amount, x, y, isCrit = false, isGolden = false) {
     const div = document.createElement('div');
     div.className = 'floating-number' + (isCrit ? ' crit' : '') + (isGolden ? ' golden' : '');
-    // If isText is true, don't format - just show the text as-is
-    div.textContent = isText ? amount : ('+' + fmt(amount));
+    div.textContent = '+' + fmt(amount);
     div.style.left = x + 'px';
     div.style.top = y + 'px';
     document.body.appendChild(div);
@@ -504,7 +498,6 @@ function checkAchievements() {
     });
 }
 
-// ==================== THEME SYSTEM ====================
 function unlockTheme(themeId) {
     if (!game.unlockedThemes.includes(themeId)) {
         game.unlockedThemes.push(themeId);
@@ -536,7 +529,6 @@ function updateThemeSelector() {
     });
 }
 
-// ==================== SKIN SYSTEM ====================
 function updateSkinSelector() {
     const container = document.getElementById('skin-selector');
     if (!container) return;
@@ -553,18 +545,13 @@ function updateSkinSelector() {
         const div = document.createElement('div');
         div.className = 'skin-btn' + (game.clickSkin === skin.icon ? ' active' : '') + (unlocked ? '' : ' locked');
         div.textContent = skin.icon;
-        
-        // Show bonus in tooltip
-        const bonusText = skin.bonus > 0 ? ` (+${skin.bonus}% bonus)` : '';
-        div.title = skin.name + bonusText + (unlocked ? '' : `\nUnlock at ${fmt(skin.requirement)} total`);
+        div.title = skin.name + (unlocked ? '' : `\nUnlock at ${fmt(skin.requirement)} total`);
         
         if (unlocked) {
             div.onclick = () => {
                 game.clickSkin = skin.icon;
                 document.getElementById('mine-icon').textContent = skin.icon;
                 updateSkinSelector();
-                update();
-                log(`🎨 ${skin.name} equipped!${bonusText}`);
             };
         }
         
@@ -572,7 +559,6 @@ function updateSkinSelector() {
     });
 }
 
-// ==================== UPDATE FUNCTIONS ====================
 function updateLog() {
     const el = document.getElementById('log');
     if (!el) return;
@@ -587,37 +573,116 @@ function updateLog() {
 }
 
 function updateAchievements() {
-    const list = document.getElementById('achievements');
-    const countEl = document.getElementById('achievement-count');
-    const totalEl = document.getElementById('achievement-total');
-    if (!list) return;
+    const container = document.getElementById('achievements');
+    if (!container) return;
     
     if (!game.achievements) game.achievements = {};
     
-    const unlockedCount = Object.keys(game.achievements).length;
-    const totalCount = Object.keys(achievements).length;
-    if (countEl) countEl.textContent = unlockedCount;
-    if (totalEl) totalEl.textContent = totalCount;
-    
-    list.innerHTML = '';
+    // Separate normal and secret achievements
+    const normalAchs = [];
+    const secretAchs = [];
     
     Object.entries(achievements).forEach(([key, ach]) => {
         const unlocked = game.achievements[key];
-        const div = document.createElement('div');
-        div.className = 'achievement' + (unlocked ? ' unlocked' : ' locked') + (ach.secret ? ' secret' : '');
-        div.title = unlocked ? `${ach.desc}\n+${ach.reward}%` : (ach.secret ? 'Secret Achievement' : 'Locked');
-        
-        div.innerHTML = `
-            <div class="achievement-icon">${unlocked ? ach.icon : '🔒'}</div>
-            <div class="achievement-info">
-                <div class="achievement-name">${unlocked ? ach.name : (ach.secret ? '???' : '???')}</div>
-                <div class="achievement-desc">${unlocked ? ach.desc : (ach.secret ? 'Secret' : 'Locked')}</div>
-                ${unlocked ? '<div class="achievement-reward">+' + ach.reward + '%</div>' : ''}
+        if (ach.secret) {
+            secretAchs.push({key, ach, unlocked});
+        } else {
+            normalAchs.push({key, ach, unlocked});
+        }
+    });
+    
+    const unlockedCount = Object.keys(game.achievements).length;
+    const totalCount = Object.keys(achievements).length;
+    
+    // Update counter in header
+    const countEl = document.getElementById('achievement-count');
+    const totalEl = document.getElementById('achievement-total');
+    if (countEl) countEl.textContent = unlockedCount;
+    if (totalEl) totalEl.textContent = totalCount;
+    
+    // Check if container is already initialized
+    if (!container.querySelector('.achievement-tabs')) {
+        // First time initialization
+        container.innerHTML = `
+            <div class="achievement-tabs">
+                <div class="achievement-tab active" data-tab="normal">
+                    NORMAL (${normalAchs.filter(a => a.unlocked).length}/${normalAchs.length})
+                </div>
+                <div class="achievement-tab" data-tab="secret">
+                    SECRET (${secretAchs.filter(a => a.unlocked).length}/${secretAchs.length})
+                </div>
+            </div>
+            <div class="achievement-content">
+                <div class="achievement-list active" data-content="normal"></div>
+                <div class="achievement-list" data-content="secret"></div>
             </div>
         `;
         
-        list.appendChild(div);
-    });
+        // Tab switching logic
+        const tabs = container.querySelectorAll('.achievement-tab');
+        const contents = container.querySelectorAll('.achievement-list');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                container.querySelector(`[data-content="${tabName}"]`).classList.add('active');
+            });
+        });
+    }
+    
+    // Update tab counts without rebuilding
+    const normalTab = container.querySelector('[data-tab="normal"]');
+    const secretTab = container.querySelector('[data-tab="secret"]');
+    if (normalTab) normalTab.textContent = `NORMAL (${normalAchs.filter(a => a.unlocked).length}/${normalAchs.length})`;
+    if (secretTab) secretTab.textContent = `SECRET (${secretAchs.filter(a => a.unlocked).length}/${secretAchs.length})`;
+    
+    // Update achievement lists only if needed
+    const normalList = container.querySelector('[data-content="normal"]');
+    const secretList = container.querySelector('[data-content="secret"]');
+    
+    // Only rebuild if achievement count changed
+    if (normalList && normalList.children.length !== normalAchs.length) {
+        normalList.innerHTML = '';
+        normalAchs.forEach(({key, ach, unlocked}) => {
+            const div = document.createElement('div');
+            div.className = 'achievement' + (unlocked ? ' unlocked' : ' locked');
+            div.title = unlocked ? `${ach.desc}\n+${ach.reward}%` : 'Locked';
+            
+            div.innerHTML = `
+                <div class="achievement-icon">${unlocked ? ach.icon : '🔒'}</div>
+                <div class="achievement-info">
+                    <div class="achievement-name">${unlocked ? ach.name : '???'}</div>
+                    <div class="achievement-desc">${unlocked ? ach.desc : 'Locked'}</div>
+                    ${unlocked ? '<div class="achievement-reward">+' + ach.reward + '%</div>' : ''}
+                </div>
+            `;
+            normalList.appendChild(div);
+        });
+    }
+    
+    if (secretList && secretList.children.length !== secretAchs.length) {
+        secretList.innerHTML = '';
+        secretAchs.forEach(({key, ach, unlocked}) => {
+            const div = document.createElement('div');
+            div.className = 'achievement secret' + (unlocked ? ' unlocked' : ' locked');
+            div.title = unlocked ? `${ach.desc}\n+${ach.reward}%` : 'Secret Achievement';
+            
+            div.innerHTML = `
+                <div class="achievement-icon">${unlocked ? ach.icon : '🔒'}</div>
+                <div class="achievement-info">
+                    <div class="achievement-name">${unlocked ? ach.name : '???'}</div>
+                    <div class="achievement-desc">${unlocked ? ach.desc : 'Secret'}</div>
+                    ${unlocked ? '<div class="achievement-reward">+' + ach.reward + '%</div>' : ''}
+                </div>
+            `;
+            secretList.appendChild(div);
+        });
+    }
 }
 
 function updateStatistics() {
@@ -661,7 +726,6 @@ function update() {
         if (document.getElementById('stat-rank-mult')) document.getElementById('stat-rank-mult').textContent = '+' + getRankBonus() + '%';
         if (document.getElementById('stat-achievement-mult')) document.getElementById('stat-achievement-mult').textContent = '+' + getAchievementBonus() + '%';
         if (document.getElementById('stat-rare-mult')) document.getElementById('stat-rare-mult').textContent = '+' + getRareBitsBonus() + '%';
-        if (document.getElementById('stat-skin-mult')) document.getElementById('stat-skin-mult').textContent = '+' + getSkinBonus() + '%';
         
         updateRanks();
         updateWorkers();
@@ -670,13 +734,11 @@ function update() {
         updateStatistics();
         checkAchievements();
         
-        // Track peak bits per second
         const currentRate = getWorkerRate();
         if (currentRate > game.peakBitsPerSecond) {
             game.peakBitsPerSecond = currentRate;
         }
         
-        // Track broke again achievement
         if (game.bits === 0 && game.totalMined >= 1000000 && !game.achievements.brokeAgain) {
             game.achievements.brokeAgain = true;
             log('🏆 Broke Again');
@@ -733,7 +795,6 @@ function updateRanks() {
             }
         }
         
-        // Update rank progress bar
         const progressBar = document.getElementById('rank-progress');
         const progressText = document.getElementById('rank-progress-text');
         if (progressBar && progressText) {
@@ -858,6 +919,69 @@ function buySecretWorker(key) {
     }
 }
 
+// Click Handler Function
+function handleClick(e, isSpacebar = false) {
+    let gain = Math.floor(game.clickPower * getMulti());
+    let isCrit = false;
+    
+    if (Math.random() < 0.01) {
+        gain *= 2;
+        isCrit = true;
+        const mineBtn = document.getElementById('mine-btn');
+        if (mineBtn) {
+            mineBtn.classList.add('crit');
+            setTimeout(() => mineBtn.classList.remove('crit'), 200);
+        }
+        if (gain > 100) screenShake();
+        log('💥 CRIT! +' + fmt(gain));
+    }
+    
+    if (gain > game.biggestSingleGain) {
+        game.biggestSingleGain = gain;
+    }
+    
+    // Position für floating number - bei Spacebar am Button, sonst am Mauszeiger
+    let x, y;
+    if (isSpacebar) {
+        const mineBtn = document.getElementById('mine-btn');
+        if (mineBtn) {
+            const rect = mineBtn.getBoundingClientRect();
+            x = rect.left + rect.width / 2;
+            y = rect.top + rect.height / 2;
+        } else {
+            x = window.innerWidth / 2;
+            y = window.innerHeight / 2;
+        }
+    } else {
+        x = e ? e.clientX : window.innerWidth / 2;
+        y = e ? e.clientY : window.innerHeight / 2;
+    }
+    
+    showFloatingNumber(gain, x, y, isCrit);
+    
+    game.bits += gain;
+    game.totalMined += gain;
+    game.clicks++;
+    if (isSpacebar) game.spacebarClicks += gain;
+    
+    game.clickTimes.push(Date.now());
+    if (game.clickTimes.length > 100) game.clickTimes.shift();
+    
+    if (game.totalWorkersBought === 0 && game.bits > game.highestBitsWithoutBuying) {
+        game.highestBitsWithoutBuying = game.bits;
+    }
+    
+    if (Math.random() < 0.001) {
+        spawnGoldenBit();
+    }
+    
+    if (Math.random() < 0.05) {
+        spawnRareBit();
+    }
+    
+    update();
+}
+
 // ==================== EVENT LISTENERS ====================
 const mineBtn = document.getElementById('mine-btn');
 if (mineBtn) {
@@ -866,6 +990,7 @@ if (mineBtn) {
     
     mineBtn.addEventListener('mousedown', () => {
         mouseDown = true;
+        game.holdStart = Date.now();
         holdTimer = setTimeout(() => {
             if (mouseDown && !game.achievements.patience) {
                 game.achievements.patience = true;
@@ -887,72 +1012,44 @@ if (mineBtn) {
     });
     
     mineBtn.addEventListener('click', (e) => {
-        let gain = Math.floor(game.clickPower * getMulti());
-        let isCrit = false;
-        
-        if (Math.random() < 0.01) {
-            gain *= 2;
-            isCrit = true;
-            mineBtn.classList.add('crit');
-            setTimeout(() => mineBtn.classList.remove('crit'), 200);
-            if (gain > 100) screenShake();
-            log('💥 CRIT! +' + fmt(gain));
-        }
-        
-        // Track biggest single gain
-        if (gain > game.biggestSingleGain) {
-            game.biggestSingleGain = gain;
-        }
-        
-        showFloatingNumber(gain, e.clientX, e.clientY, isCrit);
-        game.bits += gain;
-        game.totalMined += gain;
-        game.clicks++;
-        
-        game.clickTimes.push(Date.now());
-        if (game.clickTimes.length > 100) game.clickTimes.shift();
-        
-        if (game.totalWorkersBought === 0 && game.bits > game.highestBitsWithoutBuying) {
-            game.highestBitsWithoutBuying = game.bits;
-        }
-        
-        // Golden Bit spawn
-        if (Math.random() < 0.001) {
-            spawnGoldenBit();
-        }
-        
-        // Regular Rare Bit spawn
-        if (Math.random() < 0.05) {
-            spawnRareBit();
-        }
-        
-        // Rare Bit
-        if (Math.random() < 0.001) {
-            const rand = Math.random();
-            let selectedType = null;
-            
-            if (rand < 0.70 && game.rareBits.diamond < 100) {
-                selectedType = rareBitTypes[0]; // Diamond
-            } else if (rand < 0.90 && game.rareBits.ruby < 50) {
-                selectedType = rareBitTypes[1]; // Ruby
-            } else if (rand < 0.98 && game.rareBits.emerald < 10) {
-                selectedType = rareBitTypes[2]; // Emerald
-            } else if (game.rareBits.rainbow < 1) {
-                selectedType = rareBitTypes[3]; // Rainbow
-            }
-            
-            if (selectedType) {
-                game.rareBits[selectedType.name]++;
-                log(`${selectedType.icon} ${selectedType.name.toUpperCase()} from click!`);
-                notify(`${selectedType.name.toUpperCase()} Bit from click!`, 'secret');
-                showFloatingNumber(`${selectedType.icon} RARE!`, e.clientX, e.clientY + 40, false, true, true);
-                updateRareBitsDisplay();
-            }
-        }
-        
-        update();
+        handleClick(e, false);
     });
 }
+
+// Spacebar Support - mit Rate Limiting
+let spacebarHeld = false;
+let lastSpacebarClick = 0;
+const SPACEBAR_COOLDOWN = 150; // 150ms zwischen Clicks = ~6.6 Clicks/Sekunde
+
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+        e.preventDefault(); // Verhindert Scrollen
+        
+        if (!spacebarHeld) {
+            spacebarHeld = true;
+            // Erster Click sofort
+            handleClick(null, true);
+            lastSpacebarClick = Date.now();
+        }
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') {
+        spacebarHeld = false;
+    }
+});
+
+// Spacebar Hold Handler - läuft kontinuierlich wenn gehalten
+setInterval(() => {
+    if (spacebarHeld) {
+        const now = Date.now();
+        if (now - lastSpacebarClick >= SPACEBAR_COOLDOWN) {
+            handleClick(null, true);
+            lastSpacebarClick = now;
+        }
+    }
+}, 50); // Check alle 50ms
 
 const prestigeBtn = document.getElementById('prestige-btn');
 if (prestigeBtn) {
@@ -974,6 +1071,7 @@ if (prestigeBtn) {
         game.totalMined = 0;
         game.clickPower = 1;
         game.clicks = 0;
+        game.spacebarClicks = 0;
         game.rankIndex = 0;
         game.achievements = keepAchievements;
         game.rareBits = keepRareBits;
@@ -1028,25 +1126,18 @@ if (clearLogBtn) {
     });
 }
 
-// Import/Export
 const exportBtn = document.getElementById('export-btn');
 if (exportBtn) {
     exportBtn.addEventListener('click', () => {
-        try {
-            const saveData = JSON.stringify(game);
-            const encoded = btoa(unescape(encodeURIComponent(saveData)));
-            const textarea = document.getElementById('save-code');
-            if (textarea) {
-                textarea.value = encoded;
-                textarea.select();
-                document.execCommand('copy');
-                notify('Save code copied to clipboard!', 'info');
-                log('📋 EXPORTED');
-            }
-        } catch (e) {
-            console.error('Export error:', e);
-            notify('Export failed!', 'info');
-            log('❌ EXPORT FAILED');
+        const saveData = JSON.stringify(game);
+        const encoded = btoa(saveData);
+        const textarea = document.getElementById('save-code');
+        if (textarea) {
+            textarea.value = encoded;
+            textarea.select();
+            document.execCommand('copy');
+            notify('Save code copied to clipboard!', 'info');
+            log('📋 EXPORTED');
         }
     });
 }
@@ -1061,8 +1152,7 @@ if (importBtn) {
         }
         
         try {
-            // UNICODE-SAFE DECODING
-            const decoded = decodeURIComponent(escape(atob(textarea.value.trim())));
+            const decoded = atob(textarea.value.trim());
             const loaded = JSON.parse(decoded);
             const merged = mergeSaveWithDefaults(loaded, defaultGame);
             Object.assign(game, merged);
@@ -1084,7 +1174,6 @@ if (importBtn) {
     });
 }
 
-// Easter Eggs
 const footer = document.getElementById('footer');
 if (footer) {
     footer.addEventListener('click', () => {
@@ -1124,7 +1213,6 @@ setInterval(() => {
         }
     }
     
-    // Update display in real-time
     const multi = getMulti();
     if (document.getElementById('bits-big')) document.getElementById('bits-big').textContent = fmt(game.bits);
     if (document.getElementById('bits-rate')) document.getElementById('bits-rate').textContent = fmt(getWorkerRate());
@@ -1183,3 +1271,8 @@ updateThemeSelector();
 updateSkinSelector();
 updateStatistics();
 checkNewYearFireworks();
+
+window.addEventListener('beforeunload', () => {
+    game.lastSaveTime = Date.now();
+    localStorage.setItem('bitminer', JSON.stringify(game));
+});
