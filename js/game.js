@@ -940,7 +940,7 @@ function handleClick(e, isSpacebar = false) {
         game.biggestSingleGain = gain;
     }
     
-    // Position für floating number - bei Spacebar am Button, sonst am Mauszeiger
+    // Spacebar
     let x, y;
     if (isSpacebar) {
         const mineBtn = document.getElementById('mine-btn');
@@ -1016,18 +1016,17 @@ if (mineBtn) {
     });
 }
 
-// Spacebar Support - mit Rate Limiting
+// Spacebar Support
 let spacebarHeld = false;
 let lastSpacebarClick = 0;
-const SPACEBAR_COOLDOWN = 150; // 150ms zwischen Clicks = ~6.6 Clicks/Sekunde
+const SPACEBAR_COOLDOWN = 150;
 
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
-        e.preventDefault(); // Verhindert Scrollen
+        e.preventDefault();
         
         if (!spacebarHeld) {
             spacebarHeld = true;
-            // Erster Click sofort
             handleClick(null, true);
             lastSpacebarClick = Date.now();
         }
@@ -1040,7 +1039,7 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
-// Spacebar Hold Handler - läuft kontinuierlich wenn gehalten
+// Spacebar Hold Handler
 setInterval(() => {
     if (spacebarHeld) {
         const now = Date.now();
@@ -1049,7 +1048,7 @@ setInterval(() => {
             lastSpacebarClick = now;
         }
     }
-}, 50); // Check alle 50ms
+}, 50);
 
 const prestigeBtn = document.getElementById('prestige-btn');
 if (prestigeBtn) {
