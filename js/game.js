@@ -975,7 +975,7 @@ function handleClick(e, isSpacebar = false) {
         spawnGoldenBit();
     }
     
-    if (Math.random() < 0.05) {
+    if (Math.random() < 0.25) {
         spawnRareBit();
     }
     
