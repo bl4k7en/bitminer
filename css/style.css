@@ -1,4 +1,4 @@
-/* ==================== BITMINER v1.1 CSS ==================== */
+/* ==================== BITMINER v1.2 CSS ==================== */
 
 * { 
     margin: 0; 
@@ -145,6 +145,19 @@ body.retro::before {
 
 .panel-extended {
     min-height: 450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-extended > .title {
+    flex-shrink: 0;
+}
+
+.panel-extended > div:not(.title) {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .center-panel {
@@ -283,11 +296,36 @@ body.retro::before {
     margin-right: 8px;
 }
 
-/* Scrollbar Styling */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
-::-webkit-scrollbar-thumb { background: #333; }
-::-webkit-scrollbar-thumb:hover { background: #75c0c7; }
+/* Scrollbar Styling - Unsichtbar aber funktionell */
+::-webkit-scrollbar { 
+    width: 0px;
+    height: 0px;
+}
+
+/* Erlaube scrollen in scrollbaren Elementen */
+.achievement-list,
+.log,
+#workers,
+#ranks {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Firefox */
+.achievement-list,
+.log,
+#workers,
+#ranks {
+    scrollbar-width: none;
+}
+
+/* IE and Edge */
+.achievement-list,
+.log,
+#workers,
+#ranks {
+    -ms-overflow-style: none;
+}
 
 /* Worker Cards */
 .worker {
@@ -544,6 +582,62 @@ body.retro::before {
     border-bottom: 1px solid #1a1a1a;
 }
 
+/* ==================== ACHIEVEMENT TABS ==================== */
+.achievement-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+    margin-top: 0;
+}
+
+.achievement-tab {
+    flex: 1;
+    padding: 10px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    text-align: center;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    transition: all 0.2s;
+    color: #888;
+}
+
+.achievement-tab:hover {
+    background: #222;
+    border-color: #444;
+}
+
+.achievement-tab.active {
+    background: #2a2206;
+    border-color: #f7c516;
+    color: #f7c516;
+}
+
+.achievement-content {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.achievement-list {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+}
+
+.achievement-list.active {
+    display: block;
+}
+
 /* Achievement Styles */
 .achievement {
     display: flex;
@@ -562,7 +656,7 @@ body.retro::before {
     background: #1a1505;
 }
 
-.achievement.secret {
+.achievement.secret.unlocked {
     border-color: #f0f;
     background: #1a0528;
 }
@@ -571,6 +665,11 @@ body.retro::before {
     border-color: #f7c516;
     background: #1f1a08;
     transform: translateX(2px);
+}
+
+.achievement.secret.unlocked:hover {
+    border-color: #f0f;
+    background: #1f0a2a;
 }
 
 .achievement.locked {
@@ -595,7 +694,7 @@ body.retro::before {
     border: 1px solid #f7c516;
 }
 
-.achievement.secret .achievement-icon {
+.achievement.secret.unlocked .achievement-icon {
     background: #2a0628;
     border: 1px solid #f0f;
 }
@@ -615,7 +714,7 @@ body.retro::before {
     color: #f7c516;
 }
 
-.achievement.secret .achievement-name {
+.achievement.secret.unlocked .achievement-name {
     color: #f0f;
 }
 
