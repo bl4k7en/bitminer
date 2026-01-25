@@ -1,5 +1,3 @@
-<center>
-
 # Bitminer 💎
 
 [PLAY BITMINER NOW](https://bl4k7en.github.io/bitminer/)
@@ -14,17 +12,11 @@ v1.2: Introduced mineable "Rare Bits," rebalanced clicker skins with bonuses, fi
 
 v1.1: Added the achievement and rank system, visual themes with background animations, and a working Import/Export save system.
 
-
-
 Core Gameplay & Features:
 Click to Mine: Manually collect Bits with satisfying visual feedback.
-
 Automation: Hire workers to generate passive income.
-
 Progression: Ascend for permanent boosts and climb the ranks.
-
 Achievements: Unlock 45 achievements to earn multiplier rewards.
-
 
 Technical Details:
 Built with pure HTML, CSS, and JavaScript.
@@ -36,5 +28,3 @@ Fully responsive and works on desktop and mobile browsers, even offline.
 ## 💎 Support
 If you enjoy the game:  
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-orange?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/bl4k_7en)
-
-</center>
