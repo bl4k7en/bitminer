@@ -856,8 +856,9 @@ function updateWorkers() {
                     </div>
                 </div>
             `;
-            div.onclick = () => buyWorker(key);
+            div.onclick = (e) => buyWorker(key, e);
             div.style.opacity = game.bits >= cost ? '1' : '0.4';
+            div.title = 'Click: Buy 1\nAlt+Click: Buy 10\nShift+Click: Buy Max';
             list.appendChild(div);
         });
         
@@ -883,8 +884,9 @@ function updateWorkers() {
                     </div>
                 </div>
             `;
-            div.onclick = () => buySecretWorker(key);
+            div.onclick = (e) => buySecretWorker(key, e);
             div.style.opacity = game.bits >= cost ? '1' : '0.4';
+            div.title = 'Click: Buy 1\nAlt+Click: Buy 10\nShift+Click: Buy Max';
             list.appendChild(div);
         });
     } catch (e) {
@@ -892,29 +894,91 @@ function updateWorkers() {
     }
 }
 
-function buyWorker(key) {
+function buyWorker(key, event = null) {
     if (!game.workers || !game.workers[key]) return;
     const w = game.workers[key];
-    const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count));
-    if (game.bits >= cost) {
-        game.bits -= cost;
-        w.count++;
-        game.totalWorkersBought++;
-        log('✓ ' + w.name);
+    
+    // Bestimme Kaufmenge basierend auf gedrückten Tasten
+    let buyAmount = 1;
+    if (event) {
+        if (event.shiftKey) {
+            // SHIFT: Kaufe Maximum
+            buyAmount = Infinity;
+        } else if (event.altKey) {
+            // ALT: Kaufe 10x
+            buyAmount = 10;
+        }
+    }
+    
+    let bought = 0;
+    let totalCost = 0;
+    
+    // Berechne wie viele wir kaufen können
+    for (let i = 0; i < buyAmount; i++) {
+        const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count + i));
+        if (game.bits >= totalCost + cost) {
+            totalCost += cost;
+            bought++;
+        } else {
+            break;
+        }
+    }
+    
+    if (bought > 0) {
+        game.bits -= totalCost;
+        w.count += bought;
+        game.totalWorkersBought += bought;
+        
+        if (bought === 1) {
+            log('✓ ' + w.name);
+        } else {
+            log(`✓ ${bought}x ${w.name}`);
+        }
         update();
     }
 }
 
-function buySecretWorker(key) {
+function buySecretWorker(key, event = null) {
     if (!game.secretWorkers || !game.secretWorkers[key]) return;
     const w = game.secretWorkers[key];
     if (!w.unlocked) return;
-    const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count));
-    if (game.bits >= cost) {
-        game.bits -= cost;
-        w.count++;
-        game.totalWorkersBought++;
-        log('✓ ' + w.name);
+    
+    // Bestimme Kaufmenge basierend auf gedrückten Tasten
+    let buyAmount = 1;
+    if (event) {
+        if (event.shiftKey) {
+            // SHIFT: Kaufe Maximum
+            buyAmount = Infinity;
+        } else if (event.altKey) {
+            // ALT: Kaufe 10x
+            buyAmount = 10;
+        }
+    }
+    
+    let bought = 0;
+    let totalCost = 0;
+    
+    // Berechne wie viele wir kaufen können
+    for (let i = 0; i < buyAmount; i++) {
+        const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count + i));
+        if (game.bits >= totalCost + cost) {
+            totalCost += cost;
+            bought++;
+        } else {
+            break;
+        }
+    }
+    
+    if (bought > 0) {
+        game.bits -= totalCost;
+        w.count += bought;
+        game.totalWorkersBought += bought;
+        
+        if (bought === 1) {
+            log('✓ ' + w.name);
+        } else {
+            log(`✓ ${bought}x ${w.name}`);
+        }
         update();
     }
 }
