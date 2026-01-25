@@ -1,4 +1,4 @@
-# Bitminer 💎
+<p align="center"># Bitminer 💎
 
 [PLAY BITMINER NOW](https://bl4k7en.github.io/bitminer/)
 
@@ -34,3 +34,4 @@ Fully responsive and works on desktop and mobile browsers, even offline.
 ## 💎 Support
 If you enjoy the game:  
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-orange?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/bl4k_7en)
+</p>
