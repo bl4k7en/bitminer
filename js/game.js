@@ -57,18 +57,6 @@ const game = JSON.parse(JSON.stringify(defaultGame));
 
 // Achievements
 const achievements = {
-    diamondCollector: {name: 'Diamond Collector', desc: 'Collect 50 Diamond Bits', icon: '💎', requirement: () => game.rareBits.diamond >= 50, reward: 25, secret: false},
-    diamondKing: {name: 'Diamond King', desc: 'Collect 250 Diamond Bits', icon: '👑', requirement: () => game.rareBits.diamond >= 250, reward: 50, secret: true},
-    diamondMaster: {name: 'Diamond Master', desc: 'Collect 500 Diamond Bits (MAX)', icon: '💠', requirement: () => game.rareBits.diamond >= 500, reward: 100, secret: true},
-    rubyCollector: {name: 'Ruby Collector', desc: 'Collect 25 Ruby Bits', icon: '♦️', requirement: () => game.rareBits.ruby >= 25, reward: 30, secret: false},
-    rubyKing: {name: 'Ruby King', desc: 'Collect 75 Ruby Bits', icon: '👑', requirement: () => game.rareBits.ruby >= 75, reward: 60, secret: true},
-    rubyMaster: {name: 'Ruby Master', desc: 'Collect 100 Ruby Bits (MAX)', icon: '❤️', requirement: () => game.rareBits.ruby >= 100, reward: 120, secret: true},
-    emeraldCollector: {name: 'Emerald Collector', desc: 'Collect 15 Emerald Bits', icon: '💚', requirement: () => game.rareBits.emerald >= 15, reward: 50, secret: false},
-    emeraldKing: {name: 'Emerald King', desc: 'Collect 35 Emerald Bits', icon: '👑', requirement: () => game.rareBits.emerald >= 35, reward: 100, secret: true},
-    emeraldMaster: {name: 'Emerald Master', desc: 'Collect 50 Emerald Bits (MAX)', icon: '🔋', requirement: () => game.rareBits.emerald >= 50, reward: 200, secret: true},
-    rainbowCollector: {name: 'Rainbow Collector', desc: 'Collect 1 Rainbow Bit', icon: '🌈', requirement: () => game.rareBits.rainbow >= 1, reward: 150, secret: false},
-    rainbowMaster: {name: 'Rainbow Master', desc: 'Collect 3 Rainbow Bits', icon: '🏳️‍🌈', requirement: () => game.rareBits.rainbow >= 3, reward: 300, secret: true},
-    rainbowGod: {name: 'Rainbow God', desc: 'Collect 5 Rainbow Bits (MAX)', icon: '🔮', requirement: () => game.rareBits.rainbow >= 5, reward: 500, secret: true},
     firstClick: {name: 'First Steps', desc: 'Click 1 time', icon: '👆', requirement: () => game.clicks >= 1, reward: 5},
     clicker: {name: 'Clicker', desc: 'Click 100 times', icon: '🖱️', requirement: () => game.clicks >= 100, reward: 5},
     clickMaster: {name: 'Click Master', desc: 'Click 1,000 times', icon: '⚡', requirement: () => game.clicks >= 1000, reward: 10},
@@ -186,12 +174,7 @@ const themes = [
     {id: 'default', name: 'Default', locked: false},
     {id: 'matrix', name: 'Matrix', locked: true, unlockAchievement: 'theGlitch'},
     {id: 'neon', name: 'Neon', locked: true, unlockAchievement: 'trueMiner'},
-    {id: 'retro', name: 'Retro', locked: true, unlockAchievement: 'transcended'},
-    {id: 'diamond', name: 'Diamond', locked: true, unlockRequirement: () => game.rareBits.diamond >= 500},
-    {id: 'ruby', name: 'Ruby', locked: true, unlockRequirement: () => game.rareBits.ruby >= 100},
-    {id: 'emerald', name: 'Emerald', locked: true, unlockRequirement: () => game.rareBits.emerald >= 50},
-    {id: 'rainbow', name: 'Rainbow', locked: true, unlockRequirement: () => game.rareBits.rainbow >= 5},
-    {id: 'ultrarare', name: 'Ultra Rare', locked: true, unlockRequirement: () => game.rareBits.diamond >= 500 && game.rareBits.ruby >= 100 && game.rareBits.emerald >= 50 && game.rareBits.rainbow >= 5}
+    {id: 'retro', name: 'Retro', locked: true, unlockAchievement: 'transcended'}
 ];
 
 // Click Skins
@@ -203,21 +186,15 @@ const clickSkins = [
     {icon: '✨', name: 'Sparkle', locked: true, requirement: 50000000},
     {icon: '⭐', name: 'Star', locked: true, requirement: 500000000},
     {icon: '🌟', name: 'Glowing Star', locked: true, requirement: 5000000000},
-    {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000},
-    {icon: '💎', name: 'Pure Diamond', locked: true, requirement: () => game.rareBits.diamond >= 100},
-    {icon: '♦️', name: 'Ruby Heart', locked: true, requirement: () => game.rareBits.ruby >= 50},
-    {icon: '💚', name: 'Emerald Power', locked: true, requirement: () => game.rareBits.emerald >= 25},
-    {icon: '🌈', name: 'Rainbow Magic', locked: true, requirement: () => game.rareBits.rainbow >= 1},
-    {icon: '🔮', name: 'Rainbow Crystal', locked: true, requirement: () => game.rareBits.rainbow >= 3},
-    {icon: '👑', name: 'Rainbow Crown', locked: true, requirement: () => game.rareBits.rainbow >= 5}
+    {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000}
 ];
 
 // Rare Bits - Balanced Drop Rates
 const rareBitTypes = [
-    {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.15, max: 500, bonus: 5},
-    {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.07, max: 100, bonus: 10},
-    {name: 'emerald', icon: '💚', color: '#00ff00', dropRate: 0.02, max: 50, bonus: 25},
-    {name: 'rainbow', icon: '🌈', color: '#ff00ff', dropRate: 0.005, max: 5, bonus: 100}
+    {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.015, max: 100, bonus: 5},
+    {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.007, max: 50, bonus: 10},
+    {name: 'emerald', icon: '💚', color: '#00ff00', dropRate: 0.002, max: 10, bonus: 25},
+    {name: 'rainbow', icon: '🌈', color: '#ff00ff', dropRate: 0.0005, max: 1, bonus: 100}
 ];
 
 let goldenBitActive = false;
@@ -315,26 +292,7 @@ function spawnRareBit() {
         update();
     });
 }
-// ==================== RARE BIT FROM CLICK ====================
-function spawnRareBitFromClick() {
-    const type = rareBitTypes.find(t => {
-        if (game.rareBits[t.name] >= t.max) return false;
-        return Math.random() < t.dropRate;
-    });
-    
-    if (!type) return false;
-    
-    game.rareBits[type.name]++;
-    
-    if (!game.rarestBitFound || rareBitTypes.find(t => t.name === type.name).dropRate < rareBitTypes.find(t => t.name === game.rarestBitFound)?.dropRate || 1) {
-        game.rarestBitFound = type.name;
-    }
-    
-    log(`${type.icon} ${type.name.toUpperCase()} BIT (CLICKED)!`);
-    notify(`${type.name.toUpperCase()} Bit collected by clicking!`, 'secret');
-    updateRareBitsDisplay();
-    return true;
-}
+
 function updateRareBitsDisplay() {
     const container = document.getElementById('rare-bits-collection');
     if (!container) return;
@@ -548,18 +506,10 @@ function unlockTheme(themeId) {
     }
 }
 
-function checkThemeUnlocks() {
-    themes.forEach(theme => {
-        if (theme.unlockRequirement && typeof theme.unlockRequirement === 'function') {
-            if (theme.unlockRequirement() && !game.unlockedThemes.includes(theme.id)) {
-                unlockTheme(theme.id);
-            }
-        } else if (theme.unlockAchievement && game.achievements[theme.unlockAchievement]) {
-            if (!game.unlockedThemes.includes(theme.id)) {
-                unlockTheme(theme.id);
-            }
-        }
-    });
+function applyTheme(themeId) {
+    game.theme = themeId;
+    document.body.className = themeId;
+    updateThemeSelector();
 }
 
 function updateThemeSelector() {
@@ -574,8 +524,6 @@ function updateThemeSelector() {
         div.textContent = theme.name;
         if (unlocked) {
             div.onclick = () => applyTheme(theme.id);
-        } else {
-            div.title = 'Locked\nComplete requirements to unlock';
         }
         container.appendChild(div);
     });
@@ -587,16 +535,9 @@ function updateSkinSelector() {
     
     container.innerHTML = '';
     clickSkins.forEach(skin => {
-        const unlockedByRareBits = skin.requirement && typeof skin.requirement === 'function' ? skin.requirement() : false;
-        const unlockedByMined = skin.requirement && typeof skin.requirement === 'number' ? game.totalMined >= skin.requirement : false;
-        const unlocked = game.unlockedSkins.includes(skin.icon) || unlockedByRareBits || unlockedByMined;
+        const unlocked = game.unlockedSkins.includes(skin.icon) || (skin.requirement && game.totalMined >= skin.requirement);
         
-        if (unlockedByRareBits && !game.unlockedSkins.includes(skin.icon)) {
-            game.unlockedSkins.push(skin.icon);
-            notify(`Click skin unlocked: ${skin.name}!`, 'secret');
-        }
-        
-        if (unlockedByMined && !game.unlockedSkins.includes(skin.icon)) {
+        if (skin.requirement && !game.unlockedSkins.includes(skin.icon) && game.totalMined >= skin.requirement) {
             game.unlockedSkins.push(skin.icon);
             notify(`Click skin unlocked: ${skin.name}!`, 'secret');
         }
@@ -604,16 +545,7 @@ function updateSkinSelector() {
         const div = document.createElement('div');
         div.className = 'skin-btn' + (game.clickSkin === skin.icon ? ' active' : '') + (unlocked ? '' : ' locked');
         div.textContent = skin.icon;
-        
-        let tooltip = skin.name;
-        if (!unlocked) {
-            if (skin.requirement && typeof skin.requirement === 'function') {
-                tooltip += '\nCollect rare bits to unlock';
-            } else if (skin.requirement) {
-                tooltip += `\nUnlock at ${fmt(skin.requirement)} total`;
-            }
-        }
-        div.title = tooltip;
+        div.title = skin.name + (unlocked ? '' : `\nUnlock at ${fmt(skin.requirement)} total`);
         
         if (unlocked) {
             div.onclick = () => {
@@ -801,7 +733,6 @@ function update() {
         updateSkinSelector();
         updateStatistics();
         checkAchievements();
-        checkThemeUnlocks();
         
         const currentRate = getWorkerRate();
         if (currentRate > game.peakBitsPerSecond) {
@@ -925,8 +856,9 @@ function updateWorkers() {
                     </div>
                 </div>
             `;
-            div.onclick = () => buyWorker(key);
+            div.onclick = (e) => buyWorker(key, e);
             div.style.opacity = game.bits >= cost ? '1' : '0.4';
+            div.title = 'Click: Buy 1\nAlt+Click: Buy 10\nShift+Click: Buy Max';
             list.appendChild(div);
         });
         
@@ -952,8 +884,9 @@ function updateWorkers() {
                     </div>
                 </div>
             `;
-            div.onclick = () => buySecretWorker(key);
+            div.onclick = (e) => buySecretWorker(key, e);
             div.style.opacity = game.bits >= cost ? '1' : '0.4';
+            div.title = 'Click: Buy 1\nAlt+Click: Buy 10\nShift+Click: Buy Max';
             list.appendChild(div);
         });
     } catch (e) {
@@ -961,29 +894,91 @@ function updateWorkers() {
     }
 }
 
-function buyWorker(key) {
+function buyWorker(key, event = null) {
     if (!game.workers || !game.workers[key]) return;
     const w = game.workers[key];
-    const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count));
-    if (game.bits >= cost) {
-        game.bits -= cost;
-        w.count++;
-        game.totalWorkersBought++;
-        log('✓ ' + w.name);
+    
+    // Bestimme Kaufmenge basierend auf gedrückten Tasten
+    let buyAmount = 1;
+    if (event) {
+        if (event.shiftKey) {
+            // SHIFT: Kaufe Maximum
+            buyAmount = Infinity;
+        } else if (event.altKey) {
+            // ALT: Kaufe 10x
+            buyAmount = 10;
+        }
+    }
+    
+    let bought = 0;
+    let totalCost = 0;
+    
+    // Berechne wie viele wir kaufen können
+    for (let i = 0; i < buyAmount; i++) {
+        const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count + i));
+        if (game.bits >= totalCost + cost) {
+            totalCost += cost;
+            bought++;
+        } else {
+            break;
+        }
+    }
+    
+    if (bought > 0) {
+        game.bits -= totalCost;
+        w.count += bought;
+        game.totalWorkersBought += bought;
+        
+        if (bought === 1) {
+            log('✓ ' + w.name);
+        } else {
+            log(`✓ ${bought}x ${w.name}`);
+        }
         update();
     }
 }
 
-function buySecretWorker(key) {
+function buySecretWorker(key, event = null) {
     if (!game.secretWorkers || !game.secretWorkers[key]) return;
     const w = game.secretWorkers[key];
     if (!w.unlocked) return;
-    const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count));
-    if (game.bits >= cost) {
-        game.bits -= cost;
-        w.count++;
-        game.totalWorkersBought++;
-        log('✓ ' + w.name);
+    
+    // Bestimme Kaufmenge basierend auf gedrückten Tasten
+    let buyAmount = 1;
+    if (event) {
+        if (event.shiftKey) {
+            // SHIFT: Kaufe Maximum
+            buyAmount = Infinity;
+        } else if (event.altKey) {
+            // ALT: Kaufe 10x
+            buyAmount = 10;
+        }
+    }
+    
+    let bought = 0;
+    let totalCost = 0;
+    
+    // Berechne wie viele wir kaufen können
+    for (let i = 0; i < buyAmount; i++) {
+        const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count + i));
+        if (game.bits >= totalCost + cost) {
+            totalCost += cost;
+            bought++;
+        } else {
+            break;
+        }
+    }
+    
+    if (bought > 0) {
+        game.bits -= totalCost;
+        w.count += bought;
+        game.totalWorkersBought += bought;
+        
+        if (bought === 1) {
+            log('✓ ' + w.name);
+        } else {
+            log(`✓ ${bought}x ${w.name}`);
+        }
         update();
     }
 }
@@ -1009,7 +1004,7 @@ function handleClick(e, isSpacebar = false) {
         game.biggestSingleGain = gain;
     }
     
-    // Spacebar
+    // Position für floating number - bei Spacebar am Button, sonst am Mauszeiger
     let x, y;
     if (isSpacebar) {
         const mineBtn = document.getElementById('mine-btn');
@@ -1044,12 +1039,8 @@ function handleClick(e, isSpacebar = false) {
         spawnGoldenBit();
     }
     
-    if (Math.random() < 0.01) {
+    if (Math.random() < 0.05) {
         spawnRareBit();
-    }
-    
-    if (Math.random() < 0.01) {
-    spawnRareBitFromClick();
     }
     
     update();
@@ -1089,17 +1080,18 @@ if (mineBtn) {
     });
 }
 
-// Spacebar Support
+// Spacebar Support - mit Rate Limiting
 let spacebarHeld = false;
 let lastSpacebarClick = 0;
-const SPACEBAR_COOLDOWN = 150;
+const SPACEBAR_COOLDOWN = 150; // 150ms zwischen Clicks = ~6.6 Clicks/Sekunde
 
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
-        e.preventDefault();
+        e.preventDefault(); // Verhindert Scrollen
         
         if (!spacebarHeld) {
             spacebarHeld = true;
+            // Erster Click sofort
             handleClick(null, true);
             lastSpacebarClick = Date.now();
         }
@@ -1112,7 +1104,7 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
-// Spacebar Hold Handler
+// Spacebar Hold Handler - läuft kontinuierlich wenn gehalten
 setInterval(() => {
     if (spacebarHeld) {
         const now = Date.now();
@@ -1121,7 +1113,7 @@ setInterval(() => {
             lastSpacebarClick = now;
         }
     }
-}, 50);
+}, 50); // Check alle 50ms
 
 const prestigeBtn = document.getElementById('prestige-btn');
 if (prestigeBtn) {
