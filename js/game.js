@@ -9,7 +9,9 @@ const defaultGame = {
     totalMined: 0,
     clickPower: 1,
     clicks: 0,
+    totalClicks: 0,
     spacebarClicks: 0,
+    totalSpacebarClicks: 0,
     time: 0,
     prestige: 0,
     lastSaveTime: Date.now(),
@@ -55,18 +57,35 @@ const defaultGame = {
 
 const game = JSON.parse(JSON.stringify(defaultGame));
 
+// Update flags um unnötige Re-Renders zu vermeiden
+let needsAchievementUpdate = true;
+let needsSkinUpdate = true;
+let lastAchievementCount = 0;
+
 // Achievements
 const achievements = {
-    firstClick: {name: 'First Steps', desc: 'Click 1 time', icon: '👆', requirement: () => game.clicks >= 1, reward: 5},
-    clicker: {name: 'Clicker', desc: 'Click 100 times', icon: '🖱️', requirement: () => game.clicks >= 100, reward: 5},
-    clickMaster: {name: 'Click Master', desc: 'Click 1,000 times', icon: '⚡', requirement: () => game.clicks >= 1000, reward: 10},
-    clickGod: {name: 'Click God', desc: 'Click 10,000 times', icon: '👑', requirement: () => game.clicks >= 10000, reward: 15},
-    spacebarWarrior: {name: 'Spacebar Warrior', desc: 'Farm 1,000 bits with spacebar', icon: '⌨️', requirement: () => game.spacebarClicks >= 1000, reward: 50},
+    firstClick: {name: 'First Steps', desc: 'Click 1 time', icon: '👆', requirement: () => game.totalClicks >= 1, reward: 5},
+    clicker: {name: 'Clicker', desc: 'Click 100 times', icon: '🖱️', requirement: () => game.totalClicks >= 100, reward: 5},
+    clickMaster: {name: 'Click Master', desc: 'Click 1,000 times', icon: '⚡', requirement: () => game.totalClicks >= 1000, reward: 10},
+    clickGod: {name: 'Click God', desc: 'Click 10,000 times', icon: '👑', requirement: () => game.totalClicks >= 10000, reward: 15},
+    spacebarWarrior: {name: 'Spacebar Warrior', desc: 'Click 1,000 times with spacebar', icon: '⌨️', requirement: () => game.totalSpacebarClicks >= 1000, reward: 50},
     firstWorker: {name: 'Hired Help', desc: 'Hire your first worker', icon: '⚙️', requirement: () => Object.values(game.workers).some(w => w.count > 0), reward: 5},
-    automation: {name: 'Automation', desc: 'Have 10 total workers', icon: '🤖', requirement: () => Object.values(game.workers).reduce((s, w) => s + w.count, 0) >= 10, reward: 10},
-    workforce: {name: 'Workforce', desc: 'Have 50 total workers', icon: '🏭', requirement: () => Object.values(game.workers).reduce((s, w) => s + w.count, 0) >= 50, reward: 15},
-    empire: {name: 'Empire', desc: 'Have 100 total workers', icon: '🌐', requirement: () => Object.values(game.workers).reduce((s, w) => s + w.count, 0) >= 100, reward: 25},
-    megaCorp: {name: 'Mega Corp', desc: 'Have 500 total workers', icon: '🏰', requirement: () => Object.values(game.workers).reduce((s, w) => s + w.count, 0) >= 500, reward: 50},
+    automation: {name: 'Automation', desc: 'Have 10 total workers', icon: '🤖', requirement: () => {
+        const total = Object.values(game.workers).reduce((s, w) => s + w.count, 0);
+        return total >= 10;
+    }, reward: 10},
+    workforce: {name: 'Workforce', desc: 'Have 50 total workers', icon: '🏭', requirement: () => {
+        const total = Object.values(game.workers).reduce((s, w) => s + w.count, 0);
+        return total >= 50;
+    }, reward: 15},
+    empire: {name: 'Empire', desc: 'Have 100 total workers', icon: '🌐', requirement: () => {
+        const total = Object.values(game.workers).reduce((s, w) => s + w.count, 0);
+        return total >= 100;
+    }, reward: 25},
+    megaCorp: {name: 'Mega Corp', desc: 'Have 500 total workers', icon: '🏰', requirement: () => {
+        const total = Object.values(game.workers).reduce((s, w) => s + w.count, 0);
+        return total >= 500;
+    }, reward: 50},
     earlyMiner: {name: 'Early Miner', desc: 'Mine 10K Bits', icon: '⛏️', requirement: () => game.totalMined >= 10000, reward: 5},
     miner: {name: 'Miner', desc: 'Mine 100K Bits', icon: '💎', requirement: () => game.totalMined >= 100000, reward: 10},
     millionaire: {name: 'Millionaire', desc: 'Mine 1M Bits', icon: '💰', requirement: () => game.totalMined >= 1000000, reward: 20},
@@ -174,19 +193,21 @@ const themes = [
     {id: 'default', name: 'Default', locked: false},
     {id: 'matrix', name: 'Matrix', locked: true, unlockAchievement: 'theGlitch'},
     {id: 'neon', name: 'Neon', locked: true, unlockAchievement: 'trueMiner'},
-    {id: 'retro', name: 'Retro', locked: true, unlockAchievement: 'transcended'}
+    {id: 'retro', name: 'Retro', locked: true, unlockAchievement: 'transcended'},
+    {id: 'craftsman', name: 'Craftsman', locked: true, unlockAchievement: 'workforce'},
+    {id: 'gaming', name: 'Gaming', locked: true, unlockAchievement: 'trillionaire'}
 ];
 
-// Click Skins
+// Click Skins - NUR HIER WURDE POWERBONUS HINZUGEFÜGT
 const clickSkins = [
-    {icon: '💎', name: 'Diamond', locked: false},
-    {icon: '🔷', name: 'Blue Gem', locked: true, requirement: 50000},
-    {icon: '🔶', name: 'Orange Gem', locked: true, requirement: 500000},
-    {icon: '💠', name: 'Crystal', locked: true, requirement: 5000000},
-    {icon: '✨', name: 'Sparkle', locked: true, requirement: 50000000},
-    {icon: '⭐', name: 'Star', locked: true, requirement: 500000000},
-    {icon: '🌟', name: 'Glowing Star', locked: true, requirement: 5000000000},
-    {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000}
+    {icon: '💎', name: 'Diamond', locked: false, requirement: 0, powerBonus: 0},
+    {icon: '🔷', name: 'Blue Gem', locked: true, requirement: 50000, powerBonus: 0.5},
+    {icon: '🔶', name: 'Orange Gem', locked: true, requirement: 500000, powerBonus: 1},
+    {icon: '💠', name: 'Crystal', locked: true, requirement: 5000000, powerBonus: 2},
+    {icon: '✨', name: 'Sparkle', locked: true, requirement: 50000000, powerBonus: 5},
+    {icon: '⭐', name: 'Star', locked: true, requirement: 500000000, powerBonus: 10},
+    {icon: '🌟', name: 'Glowing Star', locked: true, requirement: 5000000000, powerBonus: 20},
+    {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000, powerBonus: 50}
 ];
 
 // Rare Bits - Balanced Drop Rates
@@ -411,7 +432,8 @@ function getMulti() {
     bonusPercent += getAchievementBonus();
     bonusPercent += getRankBonus();
     bonusPercent += getRareBitsBonus();
-    bonusPercent += game.prestige * 10;
+    // Exponentieller Prestige Bonus: 10%, 25%, 45%, 70%, 100%, 135%, ...
+    bonusPercent += game.prestige > 0 ? (10 * game.prestige + 5 * game.prestige * (game.prestige - 1)) : 0;
     
     const hour = new Date().getHours();
     if (hour >= 2 && hour < 4 && game.achievements.nightOwl) {
@@ -485,6 +507,7 @@ function checkAchievements() {
     Object.entries(achievements).forEach(([key, ach]) => {
         if (!game.achievements[key] && ach.requirement()) {
             game.achievements[key] = true;
+            needsAchievementUpdate = true; // Flag setzen
             log('🏆 ' + ach.name);
             notify('🏆 ' + ach.name + ' (+' + ach.reward + '%)', ach.secret ? 'secret' : 'achievement');
             
@@ -530,33 +553,40 @@ function updateThemeSelector() {
 }
 
 function updateSkinSelector() {
+    if (!needsSkinUpdate) return; // Nur updaten wenn nötig
+    
     const container = document.getElementById('skin-selector');
     if (!container) return;
     
     container.innerHTML = '';
     clickSkins.forEach(skin => {
-        const unlocked = game.unlockedSkins.includes(skin.icon) || (skin.requirement && game.totalMined >= skin.requirement);
-        
-        if (skin.requirement && !game.unlockedSkins.includes(skin.icon) && game.totalMined >= skin.requirement) {
-            game.unlockedSkins.push(skin.icon);
-            notify(`Click skin unlocked: ${skin.name}!`, 'secret');
-        }
+        // Diamond (requirement === 0) ist immer unlocked
+        const unlocked = game.unlockedSkins.includes(skin.icon) || skin.requirement === 0;
         
         const div = document.createElement('div');
         div.className = 'skin-btn' + (game.clickSkin === skin.icon ? ' active' : '') + (unlocked ? '' : ' locked');
         div.textContent = skin.icon;
-        div.title = skin.name + (unlocked ? '' : `\nUnlock at ${fmt(skin.requirement)} total`);
+        
+        // Tooltip mit Bonus Info
+        const tooltipText = skin.name + 
+            (unlocked || skin.requirement === 0 ? '' : `\nUnlock at ${fmt(skin.requirement)} total`) + 
+            `\nClick Power: +${skin.powerBonus}`;
+        div.title = tooltipText;
         
         if (unlocked) {
             div.onclick = () => {
                 game.clickSkin = skin.icon;
                 document.getElementById('mine-icon').textContent = skin.icon;
+                needsSkinUpdate = true;
                 updateSkinSelector();
+                needsSkinUpdate = false;
             };
         }
         
         container.appendChild(div);
     });
+    
+    needsSkinUpdate = false;
 }
 
 function updateLog() {
@@ -577,6 +607,10 @@ function updateAchievements() {
     if (!container) return;
     
     if (!game.achievements) game.achievements = {};
+    
+    // Prüfe ob sich etwas geändert hat
+    const currentCount = Object.keys(game.achievements).length;
+    if (!needsAchievementUpdate && currentCount === lastAchievementCount) return;
     
     // Separate normal and secret achievements
     const normalAchs = [];
@@ -635,18 +669,17 @@ function updateAchievements() {
         });
     }
     
-    // Update tab counts without rebuilding
+    // Update tab counts
     const normalTab = container.querySelector('[data-tab="normal"]');
     const secretTab = container.querySelector('[data-tab="secret"]');
     if (normalTab) normalTab.textContent = `NORMAL (${normalAchs.filter(a => a.unlocked).length}/${normalAchs.length})`;
     if (secretTab) secretTab.textContent = `SECRET (${secretAchs.filter(a => a.unlocked).length}/${secretAchs.length})`;
     
-    // Update achievement lists only if needed
+    // Update achievement lists
     const normalList = container.querySelector('[data-content="normal"]');
     const secretList = container.querySelector('[data-content="secret"]');
     
-    // Only rebuild if achievement count changed
-    if (normalList && normalList.children.length !== normalAchs.length) {
+    if (normalList) {
         normalList.innerHTML = '';
         normalAchs.forEach(({key, ach, unlocked}) => {
             const div = document.createElement('div');
@@ -665,7 +698,7 @@ function updateAchievements() {
         });
     }
     
-    if (secretList && secretList.children.length !== secretAchs.length) {
+    if (secretList) {
         secretList.innerHTML = '';
         secretAchs.forEach(({key, ach, unlocked}) => {
             const div = document.createElement('div');
@@ -683,10 +716,14 @@ function updateAchievements() {
             secretList.appendChild(div);
         });
     }
+    
+    lastAchievementCount = currentCount;
+    needsAchievementUpdate = false;
 }
 
 function updateStatistics() {
-    if (document.getElementById('stats-total-clicks')) document.getElementById('stats-total-clicks').textContent = fmt(game.clicks);
+    if (document.getElementById('stats-total-clicks')) document.getElementById('stats-total-clicks').textContent = fmt(game.totalClicks);
+    if (document.getElementById('stats-total-spacebar')) document.getElementById('stats-total-spacebar').textContent = fmt(game.totalSpacebarClicks);
     if (document.getElementById('stats-biggest-gain')) document.getElementById('stats-biggest-gain').textContent = fmt(game.biggestSingleGain);
     if (document.getElementById('stats-peak-rate')) document.getElementById('stats-peak-rate').textContent = fmt(game.peakBitsPerSecond) + '/s';
     
@@ -700,18 +737,25 @@ function updateStatistics() {
 function update() {
     try {
         const multi = getMulti();
+        // HINZUGEFÜGT: Skin Bonus holen
+        const activeSkin = clickSkins.find(s => s.icon === game.clickSkin);
+        const skinBonus = activeSkin ? activeSkin.powerBonus : 0;
+        
         if (document.getElementById('bits-big')) document.getElementById('bits-big').textContent = fmt(game.bits);
         if (document.getElementById('bits-rate')) document.getElementById('bits-rate').textContent = fmt(getWorkerRate());
         if (document.getElementById('multi')) document.getElementById('multi').textContent = 'x' + fmt(multi);
         if (document.getElementById('multi-display')) document.getElementById('multi-display').textContent = 'x' + fmt(multi);
-        if (document.getElementById('mine-rate')) document.getElementById('mine-rate').textContent = '+' + Math.floor(game.clickPower * multi);
+        // GEÄNDERT: Skin Bonus hinzugefügt
+        if (document.getElementById('mine-rate')) document.getElementById('mine-rate').textContent = '+' + Math.floor((game.clickPower + skinBonus) * multi);
         if (document.getElementById('total-mined')) document.getElementById('total-mined').textContent = fmt(game.totalMined);
         
         if (document.getElementById('stat-clicks')) document.getElementById('stat-clicks').textContent = fmt(game.clicks);
+        if (document.getElementById('stat-spacebar')) document.getElementById('stat-spacebar').textContent = fmt(game.spacebarClicks);
         if (document.getElementById('stat-time')) document.getElementById('stat-time').textContent = fmtTime(game.time);
         
         if (document.getElementById('prestige')) document.getElementById('prestige').textContent = game.prestige;
-        if (document.getElementById('prestige-bonus')) document.getElementById('prestige-bonus').textContent = (game.prestige * 10);
+        const prestigeBonus = game.prestige > 0 ? (10 * game.prestige + 5 * game.prestige * (game.prestige - 1)) : 0;
+        if (document.getElementById('prestige-bonus')) document.getElementById('prestige-bonus').textContent = prestigeBonus;
         
         const prReq = 1000000 * Math.pow(10, game.prestige);
         if (document.getElementById('prestige-req')) document.getElementById('prestige-req').textContent = fmt(prReq);
@@ -722,15 +766,31 @@ function update() {
             else prestigeBtn.innerHTML = '▶ ASCEND NOW';
         }
 
-        if (document.getElementById('stat-prestige-mult')) document.getElementById('stat-prestige-mult').textContent = '+' + (game.prestige * 10) + '%';
+        if (document.getElementById('stat-prestige-mult')) document.getElementById('stat-prestige-mult').textContent = '+' + prestigeBonus + '%';
         if (document.getElementById('stat-rank-mult')) document.getElementById('stat-rank-mult').textContent = '+' + getRankBonus() + '%';
         if (document.getElementById('stat-achievement-mult')) document.getElementById('stat-achievement-mult').textContent = '+' + getAchievementBonus() + '%';
         if (document.getElementById('stat-rare-mult')) document.getElementById('stat-rare-mult').textContent = '+' + getRareBitsBonus() + '%';
+        if (document.getElementById('stat-skin-power')) document.getElementById('stat-skin-power').textContent = '+' + skinBonus;
         
         updateRanks();
         updateWorkers();
-        updateAchievements();
-        updateSkinSelector();
+        
+        // Check skin unlocks
+        clickSkins.forEach(skin => {
+            if (skin.requirement && !game.unlockedSkins.includes(skin.icon) && game.totalMined >= skin.requirement) {
+                game.unlockedSkins.push(skin.icon);
+                notify(`Click skin unlocked: ${skin.name}!`, 'secret');
+                needsSkinUpdate = true;
+            }
+        });
+        
+        // Achievement und Skin Updates nur wenn nötig
+        if (needsAchievementUpdate || lastAchievementCount !== Object.keys(game.achievements).length) {
+            updateAchievements();
+        }
+        if (needsSkinUpdate) {
+            updateSkinSelector();
+        }
         updateStatistics();
         checkAchievements();
         
@@ -985,7 +1045,10 @@ function buySecretWorker(key, event = null) {
 
 // Click Handler Function
 function handleClick(e, isSpacebar = false) {
-    let gain = Math.floor(game.clickPower * getMulti());
+    // HINZUGEFÜGT: Skin Bonus
+    const activeSkin = clickSkins.find(s => s.icon === game.clickSkin);
+    const skinBonus = activeSkin ? activeSkin.powerBonus : 0;
+    let gain = Math.floor((game.clickPower + skinBonus) * getMulti());
     let isCrit = false;
     
     if (Math.random() < 0.01) {
@@ -1025,8 +1088,13 @@ function handleClick(e, isSpacebar = false) {
     
     game.bits += gain;
     game.totalMined += gain;
-    game.clicks++;
-    if (isSpacebar) game.spacebarClicks += gain;
+    if (isSpacebar) {
+        game.spacebarClicks++;
+        game.totalSpacebarClicks++;
+    } else {
+        game.clicks++;
+        game.totalClicks++;
+    }
     
     game.clickTimes.push(Date.now());
     if (game.clickTimes.length > 100) game.clickTimes.shift();
@@ -1169,16 +1237,31 @@ if (resetBtn) {
     resetBtn.addEventListener('click', () => {
         if (!confirm('HARD RESET: Delete everything?')) return;
         localStorage.removeItem('bitminer');
+        // Komplett neues Game Object ohne Überbleibsel
+        Object.keys(game).forEach(key => delete game[key]);
         Object.assign(game, JSON.parse(JSON.stringify(defaultGame)));
         game.log = [{time: new Date().toLocaleTimeString('en-US', {hour12: false}), msg: '🔄 RESET'}];
         log('🔄 NEW GAME');
         notify('GAME RESET', 'info');
         applyTheme('default');
         document.getElementById('mine-icon').textContent = '💎';
+        
+        // Flags zurücksetzen
+        needsAchievementUpdate = true;
+        needsSkinUpdate = true;
+        lastAchievementCount = 0;
+        
+        // Achievement Container komplett neu aufbauen
+        const achievementContainer = document.getElementById('achievements');
+        if (achievementContainer) {
+            achievementContainer.innerHTML = '';
+        }
+        
         update();
         updateRareBitsDisplay();
         updateThemeSelector();
         updateSkinSelector();
+        updateAchievements();
     });
 }
 
@@ -1192,16 +1275,61 @@ if (clearLogBtn) {
 
 const exportBtn = document.getElementById('export-btn');
 if (exportBtn) {
-    exportBtn.addEventListener('click', () => {
-        const saveData = JSON.stringify(game);
-        const encoded = btoa(saveData);
+    exportBtn.addEventListener('click', function() {
+        try {
+            const saveData = JSON.stringify(game);
+            // Korrekte UTF-8 zu Base64 Konvertierung
+            const encoded = btoa(encodeURIComponent(saveData).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode(parseInt(p1, 16));
+            }));
+            const textarea = document.getElementById('save-code');
+            
+            if (textarea) {
+                textarea.value = encoded;
+                textarea.select();
+                
+                notify('Save code in textbox!', 'info');
+                log('📋 EXPORT READY');
+            }
+        } catch (error) {
+            console.error('Export error:', error);
+            notify('Export failed!', 'info');
+        }
+    });
+}
+
+const clearCodeBtn = document.getElementById('clear-code-btn');
+if (clearCodeBtn) {
+    clearCodeBtn.addEventListener('click', function() {
         const textarea = document.getElementById('save-code');
         if (textarea) {
-            textarea.value = encoded;
+            textarea.value = '';
+            notify('Textbox cleared', 'info');
+        }
+    });
+}
+
+const copyCodeBtn = document.getElementById('copy-code-btn');
+if (copyCodeBtn) {
+    copyCodeBtn.addEventListener('click', function() {
+        const textarea = document.getElementById('save-code');
+        if (textarea && textarea.value) {
             textarea.select();
-            document.execCommand('copy');
-            notify('Save code copied to clipboard!', 'info');
-            log('📋 EXPORTED');
+            textarea.focus();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    notify('Copied to clipboard!', 'info');
+                    log('📋 COPIED');
+                } else {
+                    notify('Copy failed - select and copy manually', 'info');
+                }
+            } catch (err) {
+                notify('Copy failed - select and copy manually', 'info');
+            }
+        } else {
+            notify('Nothing to copy!', 'info');
         }
     });
 }
@@ -1216,10 +1344,18 @@ if (importBtn) {
         }
         
         try {
-            const decoded = atob(textarea.value.trim());
+            // Korrekte Base64 zu UTF-8 Konvertierung
+            const decoded = decodeURIComponent(Array.prototype.map.call(atob(textarea.value.trim()), function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
             const loaded = JSON.parse(decoded);
             const merged = mergeSaveWithDefaults(loaded, defaultGame);
             Object.assign(game, merged);
+            
+            // Flags zurücksetzen für Updates
+            needsAchievementUpdate = true;
+            needsSkinUpdate = true;
+            lastAchievementCount = 0;
             
             log('✓ IMPORTED');
             notify('Save imported successfully!', 'info');
@@ -1229,6 +1365,7 @@ if (importBtn) {
             updateRareBitsDisplay();
             updateThemeSelector();
             updateSkinSelector();
+            updateAchievements();
             textarea.value = '';
         } catch (e) {
             console.error('Import error:', e);
@@ -1325,6 +1462,9 @@ if (saved) {
 
 game.sessionStart = Date.now();
 game.sessionPrestiges = 0;
+
+needsAchievementUpdate = true;
+needsSkinUpdate = true;
 
 applyTheme(game.theme || 'default');
 document.getElementById('mine-icon').textContent = game.clickSkin || '💎';
