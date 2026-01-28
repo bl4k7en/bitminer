@@ -88,8 +88,8 @@ body.neon .panel {
 }
 
 body.retro {
-    background: #222;
-    color: #fff;
+    background: #2d2520;
+    color: #a1d1cb;
     font-family: monospace;
 }
 
@@ -101,17 +101,185 @@ body.retro::before {
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
-        radial-gradient(2px 2px at 60px 70px, #fff, transparent),
-        radial-gradient(1px 1px at 50px 50px, #fff, transparent),
-        radial-gradient(1px 1px at 130px 80px, #fff, transparent),
-        radial-gradient(2px 2px at 90px 10px, #fff, transparent);
+        radial-gradient(2px 2px at 20px 30px, #f48b84, transparent),
+        radial-gradient(2px 2px at 60px 70px, #ff6f69, transparent),
+        radial-gradient(1px 1px at 50px 50px, #a1d1cb, transparent),
+        radial-gradient(1px 1px at 130px 80px, #f48b84, transparent),
+        radial-gradient(2px 2px at 90px 10px, #43ada5, transparent);
     background-size: 200px 200px;
     background-repeat: repeat;
     animation: retro-scroll 60s linear infinite;
     pointer-events: none;
     opacity: 0.3;
     z-index: 1;
+}
+
+@keyframes retro-scroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 -2000px; }
+}
+
+body.retro .panel {
+    background: #3d3530;
+    border-color: #ff6f69;
+}
+
+body.retro .title {
+    color: #ff6f69;
+}
+
+body.retro .btn {
+    border-color: #a1d1cb;
+    color: #a1d1cb;
+    background: #2d2520;
+}
+
+body.retro .btn:hover:not(:disabled) {
+    background: #43ada5;
+    border-color: #a1d1cb;
+    color: #fff;
+}
+
+body.retro .mine-btn {
+    border-color: #ff6f69;
+    background: linear-gradient(135deg, #3d3530 0%, #4d4540 100%);
+}
+
+body.retro .bits-big {
+    color: #ffe0ae;
+    text-shadow: 0 0 20px rgba(255, 224, 174, 0.4);
+}
+
+body.retro .bits-dominant {
+    border-color: #ff6f69;
+    background: linear-gradient(135deg, #3d3530 0%, #4d4540 100%);
+}
+
+body.retro .worker {
+    background: #3d3530;
+    border-color: #a1d1cb;
+}
+
+body.retro .worker:hover {
+    background: #4d4540;
+    border-color: #43ada5;
+}
+
+/* Craftsman Theme */
+body.craftsman {
+    background: #000;
+    color: #d7c797;
+    font-family: 'Georgia', serif;
+}
+
+body.craftsman .panel {
+    background: #1a1510;
+    border-color: #845422;
+}
+
+body.craftsman .title {
+    color: #ead61c;
+    font-weight: bold;
+}
+
+body.craftsman .btn {
+    border-color: #a47c48;
+    color: #d7c797;
+    background: #1a1510;
+}
+
+body.craftsman .btn:hover:not(:disabled) {
+    background: #845422;
+    border-color: #ead61c;
+    color: #ead61c;
+}
+
+body.craftsman .mine-btn {
+    border-color: #ead61c;
+    background: linear-gradient(135deg, #1a1510 0%, #845422 100%);
+}
+
+body.craftsman .bits-big {
+    color: #ead61c;
+    text-shadow: 0 0 20px rgba(234, 214, 28, 0.5);
+}
+
+body.craftsman .bits-dominant {
+    border-color: #ead61c;
+    background: linear-gradient(135deg, #1a1510 0%, #845422 100%);
+}
+
+body.craftsman .worker {
+    background: #1a1510;
+    border-color: #a47c48;
+}
+
+body.craftsman .worker:hover {
+    background: #2a2520;
+    border-color: #ead61c;
+}
+
+body.craftsman .achievement.unlocked {
+    border-color: #ead61c;
+}
+
+/* Gaming Theme */
+body.gaming {
+    background: #1c1919;
+    color: #d3cbbd;
+    font-family: 'Courier New', monospace;
+}
+
+body.gaming .panel {
+    background: #403d3c;
+    border-color: #eb5937;
+}
+
+body.gaming .title {
+    color: #eb5937;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+body.gaming .btn {
+    border-color: #456f74;
+    color: #d3cbbd;
+    background: #403d3c;
+}
+
+body.gaming .btn:hover:not(:disabled) {
+    background: #eb5937;
+    border-color: #eb5937;
+    color: #1c1919;
+}
+
+body.gaming .mine-btn {
+    border-color: #eb5937;
+    background: linear-gradient(135deg, #403d3c 0%, #456f74 100%);
+}
+
+body.gaming .bits-big {
+    color: #eb5937;
+    text-shadow: 0 0 20px rgba(235, 89, 55, 0.6);
+}
+
+body.gaming .bits-dominant {
+    border-color: #eb5937;
+    background: linear-gradient(135deg, #403d3c 0%, #456f74 100%);
+}
+
+body.gaming .worker {
+    background: #403d3c;
+    border-color: #456f74;
+}
+
+body.gaming .worker:hover {
+    background: #2c2a29;
+    border-color: #eb5937;
+}
+
+body.gaming .achievement.unlocked {
+    border-color: #eb5937;
 }
 
 @keyframes retro-scroll {
@@ -471,18 +639,26 @@ body.retro::before {
 }
 
 /* Notification Popups */
-.notification {
+#notifications {
     position: fixed;
     top: 10px;
     right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.notification {
     background: #1a1a1a;
     border: 2px solid #f7c516;
     padding: 12px;
     max-width: 280px;
-    z-index: 1000;
     animation: notif 0.3s, notif-out 0.3s 2.5s;
     border-radius: 0;
     font-size: 12px;
+    pointer-events: all;
 }
 
 .notification.unlock {
