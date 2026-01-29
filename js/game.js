@@ -57,7 +57,7 @@ const defaultGame = {
 
 const game = JSON.parse(JSON.stringify(defaultGame));
 
-// Update flags um unnötige Re-Renders zu vermeiden
+// Update flags
 let needsAchievementUpdate = true;
 let needsSkinUpdate = true;
 let lastAchievementCount = 0;
@@ -198,7 +198,7 @@ const themes = [
     {id: 'gaming', name: 'Gaming', locked: true, unlockAchievement: 'trillionaire'}
 ];
 
-// Click Skins - NUR HIER WURDE POWERBONUS HINZUGEFÜGT
+// Click Skins
 const clickSkins = [
     {icon: '💎', name: 'Diamond', locked: false, requirement: 0, powerBonus: 0},
     {icon: '🔷', name: 'Blue Gem', locked: true, requirement: 50000, powerBonus: 0.5},
@@ -210,7 +210,7 @@ const clickSkins = [
     {icon: '💫', name: 'Dizzy', locked: true, requirement: 50000000000, powerBonus: 50}
 ];
 
-// Rare Bits - Balanced Drop Rates
+// Rare Bits
 const rareBitTypes = [
     {name: 'diamond', icon: '💎', color: '#00ffff', dropRate: 0.015, max: 100, bonus: 5},
     {name: 'ruby', icon: '♦️', color: '#ff0000', dropRate: 0.007, max: 50, bonus: 10},
@@ -248,7 +248,7 @@ function spawnGoldenBit() {
     const golden = document.createElement('div');
     golden.className = 'golden-bit';
     golden.textContent = '✨';
-    golden.style.top = `${Math.random() * 50 + 10}%`; // Obere Hälfte nur
+    golden.style.top = `${Math.random() * 50 + 10}%`;
     golden.style.pointerEvents = 'auto';
     golden.style.cursor = 'pointer';
     golden.style.zIndex = '9999';
@@ -260,16 +260,19 @@ function spawnGoldenBit() {
     }, 3000);
     
     golden.addEventListener('click', (e) => {
-        e.stopPropagation(); // Verhindert dass Click durchgeht
+        e.stopPropagation();
         clearTimeout(timeout);
         const gain = Math.floor(game.clickPower * getMulti() * 1000);
         game.bits += gain;
         game.totalMined += gain;
-        showFloatingNumber(gain, window.innerWidth / 2, window.innerHeight / 2, false, true);
+        
+        const clickX = e.clientX;
+        const clickY = e.clientY;
+        
+        showFloatingNumber(gain, clickX, clickY, false, true);
         log('✨ GOLDEN BIT! +' + fmt(gain));
         notify('GOLDEN BIT CAUGHT!', 'secret');
         
-        // Star Catcher Achievement
         if (!game.achievements.starCatcher) {
             game.achievements.starCatcher = true;
             log('🏆 Star Catcher');
@@ -294,12 +297,11 @@ function spawnRareBit() {
     const rare = document.createElement('div');
     rare.className = 'rare-bit';
     rare.textContent = type.icon;
-    // Spawn nur in oberer Hälfte des Bildschirms (weg von Buttons)
-    rare.style.left = `${Math.random() * 70 + 15}%`; // 15-85% (nicht ganz am Rand)
-    rare.style.top = `${Math.random() * 40 + 10}%`; // 10-50% (obere Hälfte)
+    rare.style.left = `${Math.random() * 70 + 15}%`;
+    rare.style.top = `${Math.random() * 40 + 10}%`;
     rare.style.position = 'fixed';
     rare.style.color = type.color;
-    rare.style.pointerEvents = 'auto'; // Explizit clickable
+    rare.style.pointerEvents = 'auto';
     rare.style.cursor = 'pointer';
     rare.style.zIndex = '9999';
     document.body.appendChild(rare);
@@ -309,7 +311,7 @@ function spawnRareBit() {
     }, 3000);
     
     rare.addEventListener('click', (e) => {
-        e.stopPropagation(); // Verhindert dass Click durch rare bit durchgeht
+        e.stopPropagation();
         clearTimeout(timeout);
         game.rareBits[type.name]++;
         
@@ -443,7 +445,6 @@ function getMulti() {
     bonusPercent += getAchievementBonus();
     bonusPercent += getRankBonus();
     bonusPercent += getRareBitsBonus();
-    // Exponentieller Prestige Bonus: 10%, 25%, 45%, 70%, 100%, 135%, ...
     bonusPercent += game.prestige > 0 ? (10 * game.prestige + 5 * game.prestige * (game.prestige - 1)) : 0;
     
     const hour = new Date().getHours();
@@ -497,31 +498,50 @@ function notify(msg, type = 'info') {
     setTimeout(() => div.remove(), 3000);
 }
 
-function showFloatingNumber(amount, x, y, isCrit = false, isGolden = false, isSpacebar = false) {
+function showFloatingNumber(amount, posX, posY, isCrit = false, isGolden = false, isSpacebar = false) {
+    if (!isSpacebar && posX < 10 && posY < 10) {
+        return;
+    }
+    
     const div = document.createElement('div');
     div.className = 'floating-number' + (isCrit ? ' crit' : '') + (isGolden ? ' golden' : '');
     div.textContent = '+' + fmt(amount);
+
+    let finalX, finalY;
     
-    const mineBtn = document.getElementById('mine-btn');
-    if (mineBtn && isSpacebar) {
-        // Bei Spacebar: Zentral am Button
-        const parent = mineBtn.parentElement;
-        div.style.position = 'absolute';
-        div.style.left = '50%';
-        div.style.top = '50%';
-        div.style.transform = 'translate(-50%, -50%)';
-        parent.style.position = 'relative';
-        parent.appendChild(div);
+    if (isSpacebar) {
+        const mineBtn = document.getElementById('mine-btn');
+        if (mineBtn) {
+            const rect = mineBtn.getBoundingClientRect();
+            finalX = rect.left + rect.width / 2;
+            finalY = rect.top + rect.height / 2;
+        } else {
+            finalX = window.innerWidth / 2;
+            finalY = window.innerHeight / 2;
+        }
     } else {
-        // Bei Mausklick: An der Mausposition (fixed)
-        div.style.position = 'fixed';
-        div.style.left = x + 'px';
-        div.style.top = y + 'px';
-        div.style.transform = 'translate(-50%, -50%)'; // Zentriert auf Cursor
-        document.body.appendChild(div);
+        finalX = posX;
+        finalY = posY;
+        
+        finalX += (Math.random() - 0.5) * 20;
+        finalY += (Math.random() - 0.5) * 10;
     }
     
-    setTimeout(() => div.remove(), 1000);
+    div.style.left = finalX + 'px';
+    div.style.top = finalY + 'px';
+    
+    if (finalX < 20) div.style.left = '20px';
+    if (finalY < 20) div.style.top = '20px';
+    if (finalX > window.innerWidth - 40) div.style.left = (window.innerWidth - 40) + 'px';
+    if (finalY > window.innerHeight - 40) div.style.top = (window.innerHeight - 40) + 'px';
+    
+    document.body.appendChild(div);
+    
+    setTimeout(() => {
+        if (div.parentNode) {
+            div.parentNode.removeChild(div);
+        }
+    }, 1200);
 }
 
 function screenShake() {
@@ -535,7 +555,7 @@ function checkAchievements() {
     Object.entries(achievements).forEach(([key, ach]) => {
         if (!game.achievements[key] && ach.requirement()) {
             game.achievements[key] = true;
-            needsAchievementUpdate = true; // Flag setzen
+            needsAchievementUpdate = true;
             log('🏆 ' + ach.name);
             notify('🏆 ' + ach.name + ' (+' + ach.reward + '%)', ach.secret ? 'secret' : 'achievement');
             
@@ -581,21 +601,19 @@ function updateThemeSelector() {
 }
 
 function updateSkinSelector() {
-    if (!needsSkinUpdate) return; // Nur updaten wenn nötig
+    if (!needsSkinUpdate) return;
     
     const container = document.getElementById('skin-selector');
     if (!container) return;
     
     container.innerHTML = '';
     clickSkins.forEach(skin => {
-        // Diamond (requirement === 0) ist immer unlocked
         const unlocked = game.unlockedSkins.includes(skin.icon) || skin.requirement === 0;
         
         const div = document.createElement('div');
         div.className = 'skin-btn' + (game.clickSkin === skin.icon ? ' active' : '') + (unlocked ? '' : ' locked');
         div.textContent = skin.icon;
         
-        // Tooltip mit Bonus Info
         const tooltipText = skin.name + 
             (unlocked || skin.requirement === 0 ? '' : `\nUnlock at ${fmt(skin.requirement)} total`) + 
             `\nClick Power: +${skin.powerBonus}`;
@@ -636,11 +654,9 @@ function updateAchievements() {
     
     if (!game.achievements) game.achievements = {};
     
-    // Prüfe ob sich etwas geändert hat
     const currentCount = Object.keys(game.achievements).length;
     if (!needsAchievementUpdate && currentCount === lastAchievementCount) return;
     
-    // Separate normal and secret achievements
     const normalAchs = [];
     const secretAchs = [];
     
@@ -656,15 +672,12 @@ function updateAchievements() {
     const unlockedCount = Object.keys(game.achievements).length;
     const totalCount = Object.keys(achievements).length;
     
-    // Update counter in header
     const countEl = document.getElementById('achievement-count');
     const totalEl = document.getElementById('achievement-total');
     if (countEl) countEl.textContent = unlockedCount;
     if (totalEl) totalEl.textContent = totalCount;
     
-    // Check if container is already initialized
     if (!container.querySelector('.achievement-tabs')) {
-        // First time initialization
         container.innerHTML = `
             <div class="achievement-tabs">
                 <div class="achievement-tab active" data-tab="normal">
@@ -680,7 +693,6 @@ function updateAchievements() {
             </div>
         `;
         
-        // Tab switching logic
         const tabs = container.querySelectorAll('.achievement-tab');
         const contents = container.querySelectorAll('.achievement-list');
         
@@ -697,13 +709,11 @@ function updateAchievements() {
         });
     }
     
-    // Update tab counts
     const normalTab = container.querySelector('[data-tab="normal"]');
     const secretTab = container.querySelector('[data-tab="secret"]');
     if (normalTab) normalTab.textContent = `NORMAL (${normalAchs.filter(a => a.unlocked).length}/${normalAchs.length})`;
     if (secretTab) secretTab.textContent = `SECRET (${secretAchs.filter(a => a.unlocked).length}/${secretAchs.length})`;
     
-    // Update achievement lists
     const normalList = container.querySelector('[data-content="normal"]');
     const secretList = container.querySelector('[data-content="secret"]');
     
@@ -765,7 +775,6 @@ function updateStatistics() {
 function update() {
     try {
         const multi = getMulti();
-        // HINZUGEFÜGT: Skin Bonus holen
         const activeSkin = clickSkins.find(s => s.icon === game.clickSkin);
         const skinBonus = activeSkin ? activeSkin.powerBonus : 0;
         
@@ -773,7 +782,6 @@ function update() {
         if (document.getElementById('bits-rate')) document.getElementById('bits-rate').textContent = fmt(getWorkerRate());
         if (document.getElementById('multi')) document.getElementById('multi').textContent = 'x' + fmt(multi);
         if (document.getElementById('multi-display')) document.getElementById('multi-display').textContent = 'x' + fmt(multi);
-        // GEÄNDERT: Skin Bonus hinzugefügt
         if (document.getElementById('mine-rate')) document.getElementById('mine-rate').textContent = '+' + Math.floor((game.clickPower + skinBonus) * multi);
         if (document.getElementById('total-mined')) document.getElementById('total-mined').textContent = fmt(game.totalMined);
         
@@ -803,7 +811,6 @@ function update() {
         updateRanks();
         updateWorkers();
         
-        // Check skin unlocks
         clickSkins.forEach(skin => {
             if (skin.requirement && !game.unlockedSkins.includes(skin.icon) && game.totalMined >= skin.requirement) {
                 game.unlockedSkins.push(skin.icon);
@@ -812,7 +819,6 @@ function update() {
             }
         });
         
-        // Achievement und Skin Updates nur wenn nötig
         if (needsAchievementUpdate || lastAchievementCount !== Object.keys(game.achievements).length) {
             updateAchievements();
         }
@@ -982,13 +988,11 @@ function updateWorkers() {
     }
 }
 
-// Debounce für Worker-Käufe
 let lastWorkerBuy = {};
 
 function buyWorker(key, event = null) {
     if (!game.workers || !game.workers[key]) return;
     
-    // Debounce: Max 1 Kauf pro 150ms pro Worker
     const now = Date.now();
     if (lastWorkerBuy[key] && now - lastWorkerBuy[key] < 150) {
         return;
@@ -997,14 +1001,11 @@ function buyWorker(key, event = null) {
     
     const w = game.workers[key];
     
-    // Bestimme Kaufmenge basierend auf gedrückten Tasten
     let buyAmount = 1;
     if (event) {
         if (event.shiftKey) {
-            // SHIFT: Kaufe Maximum
             buyAmount = Infinity;
         } else if (event.altKey) {
-            // ALT: Kaufe 10x
             buyAmount = 10;
         }
     }
@@ -1012,7 +1013,6 @@ function buyWorker(key, event = null) {
     let bought = 0;
     let totalCost = 0;
     
-    // Berechne wie viele wir kaufen können
     for (let i = 0; i < buyAmount; i++) {
         const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count + i));
         if (game.bits >= totalCost + cost) {
@@ -1042,21 +1042,17 @@ function buySecretWorker(key, event = null) {
     const w = game.secretWorkers[key];
     if (!w.unlocked) return;
     
-    // Debounce: Max 1 Kauf pro 150ms pro Worker
     const now = Date.now();
     if (lastWorkerBuy['secret_' + key] && now - lastWorkerBuy['secret_' + key] < 150) {
         return;
     }
     lastWorkerBuy['secret_' + key] = now;
     
-    // Bestimme Kaufmenge basierend auf gedrückten Tasten
     let buyAmount = 1;
     if (event) {
         if (event.shiftKey) {
-            // SHIFT: Kaufe Maximum
             buyAmount = Infinity;
         } else if (event.altKey) {
-            // ALT: Kaufe 10x
             buyAmount = 10;
         }
     }
@@ -1064,7 +1060,6 @@ function buySecretWorker(key, event = null) {
     let bought = 0;
     let totalCost = 0;
     
-    // Berechne wie viele wir kaufen können
     for (let i = 0; i < buyAmount; i++) {
         const cost = Math.floor(w.baseCost * Math.pow(w.costMult, w.count + i));
         if (game.bits >= totalCost + cost) {
@@ -1089,9 +1084,7 @@ function buySecretWorker(key, event = null) {
     }
 }
 
-// Click Handler Function
 function handleClick(e, isSpacebar = false) {
-    // HINZUGEFÜGT: Skin Bonus
     const activeSkin = clickSkins.find(s => s.icon === game.clickSkin);
     const skinBonus = activeSkin ? activeSkin.powerBonus : 0;
     let gain = Math.floor((game.clickPower + skinBonus) * getMulti());
@@ -1113,7 +1106,6 @@ function handleClick(e, isSpacebar = false) {
         game.biggestSingleGain = gain;
     }
     
-    // Position für floating number - bei Spacebar am Button, sonst am Mauszeiger
     let x, y;
     if (isSpacebar) {
         const mineBtn = document.getElementById('mine-btn');
@@ -1166,7 +1158,6 @@ if (mineBtn) {
     let mouseDown = false;
     let holdTimer = null;
     
-    // Enter explizit blockieren am Button
     mineBtn.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.code === 'Enter' || e.keyCode === 13) {
             e.preventDefault();
@@ -1203,26 +1194,22 @@ if (mineBtn) {
     });
 }
 
-// Spacebar Support - mit Rate Limiting
 let spacebarHeld = false;
 let lastSpacebarClick = 0;
-const SPACEBAR_COOLDOWN = 150; // 150ms zwischen Clicks = ~6.6 Clicks/Sekunde
+const SPACEBAR_COOLDOWN = 150;
 
 document.addEventListener('keydown', (e) => {
-    // Enter komplett blockieren - darf NICHTS tun
     if (e.key === 'Enter' || e.code === 'Enter' || e.keyCode === 13) {
         e.preventDefault();
         e.stopPropagation();
         return false;
     }
     
-    // NUR Spacebar erlaubt für Mining
     if (e.code === 'Space') {
-        e.preventDefault(); // Verhindert Scrollen
+        e.preventDefault();
         
         if (!spacebarHeld) {
             spacebarHeld = true;
-            // Erster Click sofort
             handleClick(null, true);
             lastSpacebarClick = Date.now();
         }
@@ -1235,7 +1222,6 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
-// Spacebar Hold Handler - läuft kontinuierlich wenn gehalten
 setInterval(() => {
     if (spacebarHeld) {
         const now = Date.now();
@@ -1244,7 +1230,7 @@ setInterval(() => {
             lastSpacebarClick = now;
         }
     }
-}, 50); // Check alle 50ms
+}, 50);
 
 const prestigeBtn = document.getElementById('prestige-btn');
 if (prestigeBtn) {
@@ -1301,7 +1287,7 @@ if (resetBtn) {
     let resetTimeout = null;
     
     resetBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Verhindert dass Click durchgeht
+        e.stopPropagation();
         
         resetClicks++;
         
@@ -1310,7 +1296,6 @@ if (resetBtn) {
             resetBtn.style.background = '#f00';
             resetBtn.style.color = '#fff';
             
-            // Nach 3 Sekunden zurücksetzen
             resetTimeout = setTimeout(() => {
                 resetClicks = 0;
                 resetBtn.style.background = '';
@@ -1330,7 +1315,6 @@ if (resetBtn) {
             }
             
             localStorage.removeItem('bitminer');
-            // Komplett neues Game Object ohne Überbleibsel
             Object.keys(game).forEach(key => delete game[key]);
             Object.assign(game, JSON.parse(JSON.stringify(defaultGame)));
             game.log = [{time: new Date().toLocaleTimeString('en-US', {hour12: false}), msg: '🔄 RESET'}];
@@ -1339,12 +1323,10 @@ if (resetBtn) {
             applyTheme('default');
             document.getElementById('mine-icon').textContent = '💎';
             
-            // Flags zurücksetzen
             needsAchievementUpdate = true;
             needsSkinUpdate = true;
             lastAchievementCount = 0;
             
-            // Achievement Container komplett neu aufbauen
             const achievementContainer = document.getElementById('achievements');
             if (achievementContainer) {
                 achievementContainer.innerHTML = '';
@@ -1376,7 +1358,6 @@ if (exportBtn) {
     exportBtn.addEventListener('click', function() {
         try {
             const saveData = JSON.stringify(game);
-            // Korrekte UTF-8 zu Base64 Konvertierung
             const encoded = btoa(encodeURIComponent(saveData).replace(/%([0-9A-F]{2})/g, function(match, p1) {
                 return String.fromCharCode(parseInt(p1, 16));
             }));
@@ -1442,7 +1423,6 @@ if (importBtn) {
         }
         
         try {
-            // Korrekte Base64 zu UTF-8 Konvertierung
             const decoded = decodeURIComponent(Array.prototype.map.call(atob(textarea.value.trim()), function(c) {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
@@ -1450,7 +1430,6 @@ if (importBtn) {
             const merged = mergeSaveWithDefaults(loaded, defaultGame);
             Object.assign(game, merged);
             
-            // Flags zurücksetzen für Updates
             needsAchievementUpdate = true;
             needsSkinUpdate = true;
             lastAchievementCount = 0;
@@ -1500,7 +1479,6 @@ if (rankDisplay) {
     });
 }
 
-// Game Loop
 setInterval(() => {
     const gain = getWorkerRate() / 10;
     if (gain > 0) {
@@ -1524,20 +1502,17 @@ setInterval(() => {
     update();
 }, 1000);
 
-// Auto-Save alle 30 Sekunden mit Feedback
 let lastAutoSave = Date.now();
 setInterval(() => {
     game.lastSaveTime = Date.now();
     localStorage.setItem('bitminer', JSON.stringify(game));
     
-    // Kurze visuelle Bestätigung alle 2 Minuten
     if (Date.now() - lastAutoSave > 120000) {
         log('💾 AUTO-SAVED');
         lastAutoSave = Date.now();
     }
 }, 30000);
 
-// Load save
 const saved = localStorage.getItem('bitminer');
 if (saved) {
     try {
