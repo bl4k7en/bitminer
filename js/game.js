@@ -248,7 +248,10 @@ function spawnGoldenBit() {
     const golden = document.createElement('div');
     golden.className = 'golden-bit';
     golden.textContent = '✨';
-    golden.style.top = `${Math.random() * 80 + 10}%`;
+    golden.style.top = `${Math.random() * 50 + 10}%`; // Obere Hälfte nur
+    golden.style.pointerEvents = 'auto';
+    golden.style.cursor = 'pointer';
+    golden.style.zIndex = '9999';
     document.body.appendChild(golden);
     
     const timeout = setTimeout(() => {
@@ -256,7 +259,8 @@ function spawnGoldenBit() {
         goldenBitActive = false;
     }, 3000);
     
-    golden.addEventListener('click', () => {
+    golden.addEventListener('click', (e) => {
+        e.stopPropagation(); // Verhindert dass Click durchgeht
         clearTimeout(timeout);
         const gain = Math.floor(game.clickPower * getMulti() * 1000);
         game.bits += gain;
@@ -290,15 +294,22 @@ function spawnRareBit() {
     const rare = document.createElement('div');
     rare.className = 'rare-bit';
     rare.textContent = type.icon;
-    rare.style.left = `${Math.random() * 90 + 5}%`;
+    // Spawn nur in oberer Hälfte des Bildschirms (weg von Buttons)
+    rare.style.left = `${Math.random() * 70 + 15}%`; // 15-85% (nicht ganz am Rand)
+    rare.style.top = `${Math.random() * 40 + 10}%`; // 10-50% (obere Hälfte)
+    rare.style.position = 'fixed';
     rare.style.color = type.color;
+    rare.style.pointerEvents = 'auto'; // Explizit clickable
+    rare.style.cursor = 'pointer';
+    rare.style.zIndex = '9999';
     document.body.appendChild(rare);
     
     const timeout = setTimeout(() => {
         rare.remove();
     }, 3000);
     
-    rare.addEventListener('click', () => {
+    rare.addEventListener('click', (e) => {
+        e.stopPropagation(); // Verhindert dass Click durch rare bit durchgeht
         clearTimeout(timeout);
         game.rareBits[type.name]++;
         
@@ -486,13 +497,30 @@ function notify(msg, type = 'info') {
     setTimeout(() => div.remove(), 3000);
 }
 
-function showFloatingNumber(amount, x, y, isCrit = false, isGolden = false) {
+function showFloatingNumber(amount, x, y, isCrit = false, isGolden = false, isSpacebar = false) {
     const div = document.createElement('div');
     div.className = 'floating-number' + (isCrit ? ' crit' : '') + (isGolden ? ' golden' : '');
     div.textContent = '+' + fmt(amount);
-    div.style.left = x + 'px';
-    div.style.top = y + 'px';
-    document.body.appendChild(div);
+    
+    const mineBtn = document.getElementById('mine-btn');
+    if (mineBtn && isSpacebar) {
+        // Bei Spacebar: Zentral am Button
+        const parent = mineBtn.parentElement;
+        div.style.position = 'absolute';
+        div.style.left = '50%';
+        div.style.top = '50%';
+        div.style.transform = 'translate(-50%, -50%)';
+        parent.style.position = 'relative';
+        parent.appendChild(div);
+    } else {
+        // Bei Mausklick: An der Mausposition (fixed)
+        div.style.position = 'fixed';
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+        div.style.transform = 'translate(-50%, -50%)'; // Zentriert auf Cursor
+        document.body.appendChild(div);
+    }
+    
     setTimeout(() => div.remove(), 1000);
 }
 
@@ -954,8 +982,19 @@ function updateWorkers() {
     }
 }
 
+// Debounce für Worker-Käufe
+let lastWorkerBuy = {};
+
 function buyWorker(key, event = null) {
     if (!game.workers || !game.workers[key]) return;
+    
+    // Debounce: Max 1 Kauf pro 150ms pro Worker
+    const now = Date.now();
+    if (lastWorkerBuy[key] && now - lastWorkerBuy[key] < 150) {
+        return;
+    }
+    lastWorkerBuy[key] = now;
+    
     const w = game.workers[key];
     
     // Bestimme Kaufmenge basierend auf gedrückten Tasten
@@ -1002,6 +1041,13 @@ function buySecretWorker(key, event = null) {
     if (!game.secretWorkers || !game.secretWorkers[key]) return;
     const w = game.secretWorkers[key];
     if (!w.unlocked) return;
+    
+    // Debounce: Max 1 Kauf pro 150ms pro Worker
+    const now = Date.now();
+    if (lastWorkerBuy['secret_' + key] && now - lastWorkerBuy['secret_' + key] < 150) {
+        return;
+    }
+    lastWorkerBuy['secret_' + key] = now;
     
     // Bestimme Kaufmenge basierend auf gedrückten Tasten
     let buyAmount = 1;
@@ -1084,7 +1130,7 @@ function handleClick(e, isSpacebar = false) {
         y = e ? e.clientY : window.innerHeight / 2;
     }
     
-    showFloatingNumber(gain, x, y, isCrit);
+    showFloatingNumber(gain, x, y, isCrit, false, isSpacebar);
     
     game.bits += gain;
     game.totalMined += gain;
@@ -1120,6 +1166,15 @@ if (mineBtn) {
     let mouseDown = false;
     let holdTimer = null;
     
+    // Enter explizit blockieren am Button
+    mineBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.code === 'Enter' || e.keyCode === 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
+    
     mineBtn.addEventListener('mousedown', () => {
         mouseDown = true;
         game.holdStart = Date.now();
@@ -1154,6 +1209,14 @@ let lastSpacebarClick = 0;
 const SPACEBAR_COOLDOWN = 150; // 150ms zwischen Clicks = ~6.6 Clicks/Sekunde
 
 document.addEventListener('keydown', (e) => {
+    // Enter komplett blockieren - darf NICHTS tun
+    if (e.key === 'Enter' || e.code === 'Enter' || e.keyCode === 13) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }
+    
+    // NUR Spacebar erlaubt für Mining
     if (e.code === 'Space') {
         e.preventDefault(); // Verhindert Scrollen
         
@@ -1227,41 +1290,76 @@ if (saveBtn) {
     saveBtn.addEventListener('click', () => {
         game.lastSaveTime = Date.now();
         localStorage.setItem('bitminer', JSON.stringify(game));
-        log('💾 SAVED');
-        notify('SAVED', 'info');
+        log('💾 GAME SAVED');
+        notify('Game saved successfully!', 'info');
     });
 }
 
 const resetBtn = document.getElementById('reset-btn');
 if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-        if (!confirm('HARD RESET: Delete everything?')) return;
-        localStorage.removeItem('bitminer');
-        // Komplett neues Game Object ohne Überbleibsel
-        Object.keys(game).forEach(key => delete game[key]);
-        Object.assign(game, JSON.parse(JSON.stringify(defaultGame)));
-        game.log = [{time: new Date().toLocaleTimeString('en-US', {hour12: false}), msg: '🔄 RESET'}];
-        log('🔄 NEW GAME');
-        notify('GAME RESET', 'info');
-        applyTheme('default');
-        document.getElementById('mine-icon').textContent = '💎';
+    let resetClicks = 0;
+    let resetTimeout = null;
+    
+    resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Verhindert dass Click durchgeht
         
-        // Flags zurücksetzen
-        needsAchievementUpdate = true;
-        needsSkinUpdate = true;
-        lastAchievementCount = 0;
+        resetClicks++;
         
-        // Achievement Container komplett neu aufbauen
-        const achievementContainer = document.getElementById('achievements');
-        if (achievementContainer) {
-            achievementContainer.innerHTML = '';
+        if (resetClicks === 1) {
+            notify('Click HARD RESET again to confirm!', 'info');
+            resetBtn.style.background = '#f00';
+            resetBtn.style.color = '#fff';
+            
+            // Nach 3 Sekunden zurücksetzen
+            resetTimeout = setTimeout(() => {
+                resetClicks = 0;
+                resetBtn.style.background = '';
+                resetBtn.style.color = '';
+            }, 3000);
+            return;
         }
         
-        update();
-        updateRareBitsDisplay();
-        updateThemeSelector();
-        updateSkinSelector();
-        updateAchievements();
+        if (resetClicks >= 2) {
+            clearTimeout(resetTimeout);
+            
+            if (!confirm('FINAL WARNING: Delete EVERYTHING and start fresh? This cannot be undone!')) {
+                resetClicks = 0;
+                resetBtn.style.background = '';
+                resetBtn.style.color = '';
+                return;
+            }
+            
+            localStorage.removeItem('bitminer');
+            // Komplett neues Game Object ohne Überbleibsel
+            Object.keys(game).forEach(key => delete game[key]);
+            Object.assign(game, JSON.parse(JSON.stringify(defaultGame)));
+            game.log = [{time: new Date().toLocaleTimeString('en-US', {hour12: false}), msg: '🔄 RESET'}];
+            log('🔄 NEW GAME');
+            notify('GAME RESET', 'info');
+            applyTheme('default');
+            document.getElementById('mine-icon').textContent = '💎';
+            
+            // Flags zurücksetzen
+            needsAchievementUpdate = true;
+            needsSkinUpdate = true;
+            lastAchievementCount = 0;
+            
+            // Achievement Container komplett neu aufbauen
+            const achievementContainer = document.getElementById('achievements');
+            if (achievementContainer) {
+                achievementContainer.innerHTML = '';
+            }
+            
+            update();
+            updateRareBitsDisplay();
+            updateThemeSelector();
+            updateSkinSelector();
+            updateAchievements();
+            
+            resetClicks = 0;
+            resetBtn.style.background = '';
+            resetBtn.style.color = '';
+        }
     });
 }
 
@@ -1426,9 +1524,17 @@ setInterval(() => {
     update();
 }, 1000);
 
+// Auto-Save alle 30 Sekunden mit Feedback
+let lastAutoSave = Date.now();
 setInterval(() => {
     game.lastSaveTime = Date.now();
     localStorage.setItem('bitminer', JSON.stringify(game));
+    
+    // Kurze visuelle Bestätigung alle 2 Minuten
+    if (Date.now() - lastAutoSave > 120000) {
+        log('💾 AUTO-SAVED');
+        lastAutoSave = Date.now();
+    }
 }, 30000);
 
 // Load save
