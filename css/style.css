@@ -583,7 +583,6 @@ body.gaming .achievement.unlocked {
 
 /* Floating Numbers */
 .floating-number {
-    position: fixed;
     font-family: 'Courier New', monospace;
     font-weight: bold;
     font-size: 18px;
