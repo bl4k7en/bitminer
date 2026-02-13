@@ -10,6 +10,28 @@ Bitminer is a minimalist, idle clicker game where you mine digital "Bits" by cli
 The core loop involves progressing through ranks, achieving milestones, and performing "Ascensions" to gain permanent bonuses for faster progress in new games.
 
 
+Core Gameplay & Features:
+
+
+Click to Mine: Manually collect Bits with satisfying visual feedback.
+
+Automation: Hire workers to generate passive income.
+
+Progression: Ascend for permanent boosts and climb the ranks.
+
+Achievements: Unlock 45 achievements to earn multiplier rewards.
+
+
+
+Technical Details:
+
+Built with pure HTML, CSS, and JavaScript.
+
+No external libraries; saves locally in your browser.
+
+Fully responsive and works on desktop and mobile browsers, even offline.
+
+
 Bitminer v1.3 – Patch Notes
 
 
@@ -51,26 +73,7 @@ Panel scroll isolation — scrolling inside a panel no longer scrolls the page.
 Layout — right column now starts flush with the other columns. Achievements and Save Management panels extend to match the log panel height.
 
 
-Core Gameplay & Features:
 
-
-Click to Mine: Manually collect Bits with satisfying visual feedback.
-
-Automation: Hire workers to generate passive income.
-
-Progression: Ascend for permanent boosts and climb the ranks.
-
-Achievements: Unlock 45 achievements to earn multiplier rewards.
-
-
-
-Technical Details:
-
-Built with pure HTML, CSS, and JavaScript.
-
-No external libraries; saves locally in your browser.
-
-Fully responsive and works on desktop and mobile browsers, even offline.
 
 ## 💎 Support
 If you enjoy the game:  
