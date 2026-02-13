@@ -1,4 +1,4 @@
-/* ==================== BITMINER v1.2 CSS ==================== */
+/* ==================== BITMINER v1.3 CSS ==================== */
 
 * { 
     margin: 0; 
@@ -356,8 +356,17 @@ body.gaming .achievement.unlocked {
     font-weight: bold;
     color: #75c0c7;
     text-shadow: 0 0 20px rgba(117, 192, 199, 0.5);
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     letter-spacing: 2px;
+}
+
+.bits-sub {
+    font-size: 13px;
+    color: #4a8a90;
+    letter-spacing: 1px;
+    height: 16px;
+    margin-bottom: 4px;
+    font-family: 'Courier New', monospace;
 }
 
 .bits-label {
@@ -450,7 +459,7 @@ body.gaming .achievement.unlocked {
 
 /* Log Section */
 .log {
-    height: 90px;
+    height: 190px;
     overflow-y: auto;
     font-size: 11px;
 }
@@ -461,18 +470,43 @@ body.gaming .achievement.unlocked {
     color: #aaa;
 }
 
+/* ==================== SCROLL INDICATORS ==================== */
+.scroll-wrap {
+    position: relative;
+}
+
+.scroll-arrow {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: #555;
+    line-height: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+.scroll-arrow.visible {
+    opacity: 1;
+}
+
+.scroll-arrow.up { top: 2px; }
+.scroll-arrow.down { bottom: 2px; }
+
 .log-time {
     color: #888;
     margin-right: 8px;
 }
 
-/* Scrollbar Styling - Unsichtbar aber funktionell */
+/* Hidden scrollbars */
 ::-webkit-scrollbar { 
     width: 0px;
     height: 0px;
 }
 
-/* Erlaube scrollen in scrollbaren Elementen */
+/* Allow scrolling in scrollable elements */
 .achievement-list,
 .log,
 #workers,
@@ -489,7 +523,7 @@ body.gaming .achievement.unlocked {
     scrollbar-width: none;
 }
 
-/* IE and Edge */
+/* IE / Edge */
 .achievement-list,
 .log,
 #workers,
