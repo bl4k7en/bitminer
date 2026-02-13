@@ -14,21 +14,15 @@ Core Gameplay & Features:
 
 
 Click to Mine: Manually collect Bits with satisfying visual feedback.
-
 Automation: Hire workers to generate passive income.
-
 Progression: Ascend for permanent boosts and climb the ranks.
-
 Achievements: Unlock 45 achievements to earn multiplier rewards.
-
 
 
 Technical Details:
 
 Built with pure HTML, CSS, and JavaScript.
-
 No external libraries; saves locally in your browser.
-
 Fully responsive and works on desktop and mobile browsers, even offline.
 
 
