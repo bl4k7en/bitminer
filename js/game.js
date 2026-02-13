@@ -40,9 +40,9 @@ const defaultGame = {
         ai: {name: 'AI Miner', icon: '🤖', count: 0, baseCost: 500000000, rate: 75000, costMult: 1.15}
     },
     secretWorkers: {
-        mystery: {name: '??? Worker', icon: '❓', count: 0, baseCost: 5000000000, rate: 100000, costMult: 1.2, unlocked: false},
+        mystery: {name: '??? Worker', icon: '❓', count: 0, baseCost: 5000000000, rate: 2500000, costMult: 1.2, unlocked: false},
         developer: {name: 'The Developer', icon: '👨‍💻', count: 0, baseCost: 1000000000, rate: 1000000, costMult: 1.25, unlocked: false},
-        quantum: {name: 'Quantum Miner', icon: '⚛️', count: 0, baseCost: 10000000000, rate: 500000, costMult: 1.3, unlocked: false}
+        quantum: {name: 'Quantum Miner', icon: '⚛️', count: 0, baseCost: 10000000000, rate: 5000000, costMult: 1.3, unlocked: false}
     },
     achievements: {},
     rareBits: {diamond: 0, ruby: 0, emerald: 0, rainbow: 0},
