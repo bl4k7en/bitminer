@@ -1,4 +1,4 @@
-// ==================== BITMINER v1.2 ====================
+// ==================== BITMINER v1.3 ====================
 
 document.addEventListener('selectstart', e => e.preventDefault());
 document.addEventListener('contextmenu', e => e.preventDefault());
@@ -513,7 +513,7 @@ function log(msg) {
     const time = new Date().toLocaleTimeString('en-US', {hour12: false});
     if (!game.log) game.log = [];
     game.log.unshift({time, msg});
-    if (game.log.length > 5) game.log = game.log.slice(0, 5);
+    if (game.log.length > 9) game.log = game.log.slice(0, 9);
     updateLog();
 }
 
@@ -738,6 +738,23 @@ function updateAchievements() {
                 tab.classList.add('active');
                 container.querySelector(`[data-content="${tabName}"]`).classList.add('active');
             });
+        });
+
+        initScrollIndicator(container.querySelector('[data-content="normal"]'));
+        initScrollIndicator(container.querySelector('[data-content="secret"]'));
+
+        ['normal', 'secret'].forEach(tab => {
+            const el = container.querySelector(`[data-content="${tab}"]`);
+            if (!el) return;
+            el.addEventListener('wheel', (e) => {
+                const atTop    = el.scrollTop === 0;
+                const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+                if (!(atTop && e.deltaY < 0) && !(atBottom && e.deltaY > 0)) {
+                    e.stopPropagation();
+                }
+                e.preventDefault();
+                el.scrollTop += e.deltaY;
+            }, { passive: false });
         });
     }
     
@@ -1596,6 +1613,27 @@ setInterval(() => {
     
     const multi = getMulti();
     if (document.getElementById('bits-big')) document.getElementById('bits-big').textContent = fmt(game.bits);
+    const subEl = document.getElementById('bits-sub');
+    if (subEl) {
+        const n = game.bits;
+        let remainder = 0;
+        if      (n >= 1e33) remainder = n % 1e33;
+        else if (n >= 1e30) remainder = n % 1e30;
+        else if (n >= 1e27) remainder = n % 1e27;
+        else if (n >= 1e24) remainder = n % 1e24;
+        else if (n >= 1e21) remainder = n % 1e21;
+        else if (n >= 1e18) remainder = n % 1e18;
+        else if (n >= 1e15) remainder = n % 1e15;
+        else if (n >= 1e12) remainder = n % 1e12;
+        else if (n >= 1e9)  remainder = n % 1e9;
+        else if (n >= 1e6)  remainder = n % 1e6;
+
+        if (remainder > 0 && n >= 1e6) {
+            subEl.textContent = '+' + fmt(remainder);
+        } else {
+            subEl.textContent = '';
+        }
+    }
     if (document.getElementById('bits-rate')) document.getElementById('bits-rate').textContent = fmt(getWorkerRate());
     if (document.getElementById('total-mined')) document.getElementById('total-mined').textContent = fmt(game.totalMined);
     if (document.getElementById('multi')) document.getElementById('multi').textContent = 'x' + fmt(multi);
@@ -1658,3 +1696,48 @@ window.addEventListener('beforeunload', () => {
     game.lastSaveTime = Date.now();
     localStorage.setItem('bitminer', JSON.stringify(game));
 });
+
+// ==================== PREVENT PAGE SCROLL IN PANELS ====================
+['workers', 'log', 'achievements', 'ranks'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('wheel', (e) => {
+        const atTop    = el.scrollTop === 0;
+        const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+        if (!(atTop && e.deltaY < 0) && !(atBottom && e.deltaY > 0)) {
+            e.stopPropagation();
+        }
+        e.preventDefault();
+        el.scrollTop += e.deltaY;
+    }, { passive: false });
+});
+function initScrollIndicator(el) {
+    if (!el) return;
+
+    const wrap = el.parentNode;
+    wrap.classList.add('scroll-wrap');
+    wrap.style.position = 'relative';
+
+    const arrowUp   = document.createElement('div');
+    const arrowDown = document.createElement('div');
+    arrowUp.className   = 'scroll-arrow up';
+    arrowDown.className = 'scroll-arrow down';
+    arrowUp.textContent   = '▲';
+    arrowDown.textContent = '▼';
+    wrap.appendChild(arrowUp);
+    wrap.appendChild(arrowDown);
+
+    function update() {
+        arrowUp.classList.toggle('visible',   el.scrollTop > 2);
+        arrowDown.classList.toggle('visible', el.scrollTop + el.clientHeight < el.scrollHeight - 2);
+    }
+
+    el.addEventListener('scroll', update);
+    // re-check whenever content might change
+    const observer = new MutationObserver(update);
+    observer.observe(el, { childList: true, subtree: true });
+    update();
+}
+
+initScrollIndicator(document.getElementById('workers'));
+initScrollIndicator(document.getElementById('log'));
