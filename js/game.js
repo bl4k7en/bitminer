@@ -183,10 +183,16 @@ const ranks = [
     {name: 'Transcendent', req: 1000000000000, bonus: 400},
     {name: 'Omniscient', req: 10000000000000, bonus: 600},
     {name: 'Infinite', req: 100000000000000, bonus: 1000},
-    {name: 'Eternal', req: 1000000000000000, bonus: 1500}
+    {name: 'Eternal', req: 1000000000000000, bonus: 1500},
+    {name: 'Cosmic',      req: 1e18, bonus: 2000},
+    {name: 'Stellar',     req: 1e21, bonus: 3000},
+    {name: 'Galactic',    req: 1e24, bonus: 5000},
+    {name: 'Universal',   req: 1e27, bonus: 8000},
+    {name: 'Omnipotent',  req: 1e30, bonus: 12000},
+    {name: 'Absolute',    req: 1e33, bonus: 20000}
 ];
 
-const rankColors = ['#444', '#6c432b', '#e108e9', '#fff', '#1cb992', '#5bb91c', '#008fff', '#ff9900', '#ff00ff', '#ffd700', '#00ffff', '#ff00ff', '#ffffff', '#ffd700'];
+const rankColors = ['#444', '#6c432b', '#e108e9', '#fff', '#1cb992', '#5bb91c', '#008fff', '#ff9900', '#ff00ff', '#ffd700', '#00ffff', '#ff00ff', '#ffffff', '#ffd700', '#ff4488', '#88aaff', '#ffaa00', '#00ffaa', '#ff00aa', '#aaffee'];
 
 // Themes
 const themes = [
@@ -406,10 +412,17 @@ function fmt(n) {
     if (n < 1e6) {
         return Math.floor(n).toLocaleString('en');
     }
-    if (n < 1e9) return (n/1e6).toFixed(3).replace(/\.?0+$/, '') + 'M';
-    if (n < 1e12) return (n/1e9).toFixed(3).replace(/\.?0+$/, '') + 'B';
+    if (n < 1e9)  return (n/1e6).toFixed(3).replace(/\.?0+$/, '')  + 'M';
+    if (n < 1e12) return (n/1e9).toFixed(3).replace(/\.?0+$/, '')  + 'B';
     if (n < 1e15) return (n/1e12).toFixed(3).replace(/\.?0+$/, '') + 'T';
-    return (n/1e15).toFixed(3).replace(/\.?0+$/, '') + 'Q';
+    if (n < 1e18) return (n/1e15).toFixed(3).replace(/\.?0+$/, '') + 'Q';
+    if (n < 1e21) return (n/1e18).toFixed(3).replace(/\.?0+$/, '') + 'Qi';
+    if (n < 1e24) return (n/1e21).toFixed(3).replace(/\.?0+$/, '') + 'Sx';
+    if (n < 1e27) return (n/1e24).toFixed(3).replace(/\.?0+$/, '') + 'Sp';
+    if (n < 1e30) return (n/1e27).toFixed(3).replace(/\.?0+$/, '') + 'Oc';
+    if (n < 1e33) return (n/1e30).toFixed(3).replace(/\.?0+$/, '') + 'No';
+    if (n < 1e36) return (n/1e33).toFixed(3).replace(/\.?0+$/, '') + 'Dc';
+    return n.toExponential(2);
 }
 
 function fmtTime(s) {
@@ -460,6 +473,21 @@ function getMulti() {
     return 1 + (bonusPercent / 100);
 }
 
+function getBaseWorkerRate() {
+    let total = 0;
+    if (game.workers) {
+        Object.values(game.workers).forEach(w => {
+            total += w.count * w.rate;
+        });
+    }
+    if (game.secretWorkers) {
+        Object.values(game.secretWorkers).forEach(w => {
+            if (w.unlocked) total += w.count * w.rate;
+        });
+    }
+    return total;
+}
+
 function getWorkerRate() {
     let total = 0;
     if (game.workers) {
@@ -471,7 +499,7 @@ function getWorkerRate() {
         Object.values(game.secretWorkers).forEach(w => {
             if (w.unlocked) {
                 if (w.name === 'Quantum Miner') {
-                    total += w.count * (Math.random() * 1000000);
+                    total += w.count * (Math.random() * w.rate * 2);
                 } else {
                     total += w.count * w.rate;
                 }
@@ -612,7 +640,11 @@ function updateSkinSelector() {
         
         const div = document.createElement('div');
         div.className = 'skin-btn' + (game.clickSkin === skin.icon ? ' active' : '') + (unlocked ? '' : ' locked');
-        div.textContent = skin.icon;
+        
+        const subLabel = unlocked
+            ? `<div class="skin-power">+${skin.powerBonus} PWR</div>`
+            : `<div class="skin-req">${fmt(skin.requirement)}</div>`;
+        div.innerHTML = `<div class="skin-icon">${skin.icon}</div>${subLabel}`;
         
         const tooltipText = skin.name + 
             (unlocked || skin.requirement === 0 ? '' : `\nUnlock at ${fmt(skin.requirement)} total`) + 
@@ -881,7 +913,7 @@ function updateRanks() {
         const badge = document.getElementById('rank-badge');
         if (badge) {
             badge.textContent = game.rankIndex;
-            badge.style.background = rankColors[game.rankIndex];
+            badge.style.color = rankColors[game.rankIndex];
             if (game.rainbowRank) {
                 badge.classList.add('rainbow');
             } else {
@@ -963,7 +995,7 @@ function updateWorkers() {
             const div = document.createElement('div');
             div.className = 'worker secret';
             
-            const rateDisplay = w.name === 'Quantum Miner' ? 'Random/s' : fmt(w.rate * getMulti()) + '/s';
+            const rateDisplay = w.name === 'Quantum Miner' ? '~' + fmt(w.rate) + '/s (random)' : fmt(w.rate * getMulti()) + '/s';
             
             div.innerHTML = `
                 <div class="worker-icon">${w.icon}</div>
@@ -1150,6 +1182,78 @@ function handleClick(e, isSpacebar = false) {
     }
     
     update();
+}
+
+// ==================== OFFLINE SIMULATION ====================
+function simulateOffline(offlineSeconds) {
+    const cappedSeconds = Math.min(offlineSeconds, 28800);
+    const baseRate = getBaseWorkerRate();
+    if (baseRate <= 0 || cappedSeconds < 60) return;
+
+    const staticBonus = getAchievementBonus() + getRareBitsBonus() +
+        (game.prestige > 0 ? (10 * game.prestige + 5 * game.prestige * (game.prestige - 1)) : 0);
+
+    function effectiveRate(rankIdx) {
+        const rankBonus = ranks[rankIdx]?.bonus || 0;
+        return baseRate * (1 + (staticBonus + rankBonus) / 100) * 0.5;
+    }
+
+    let simTotalMined = game.totalMined;
+    let simRankIndex  = game.rankIndex;
+    let timeLeft      = cappedSeconds;
+    let totalGain     = 0;
+    const rankUps     = [];
+    let steps = 0;
+
+    while (timeLeft > 0 && steps++ < 200) {
+        const nextRank = ranks[simRankIndex + 1];
+        const rate     = effectiveRate(simRankIndex);
+        if (rate <= 0) break;
+
+        if (!nextRank) {
+            totalGain     += rate * timeLeft;
+            simTotalMined += rate * timeLeft;
+            timeLeft = 0;
+            break;
+        }
+
+        const gap = nextRank.req - simTotalMined;
+        if (gap <= 0) { simRankIndex++; continue; }
+
+        const timeToRank = gap / rate;
+        if (timeToRank >= timeLeft) {
+            totalGain     += rate * timeLeft;
+            simTotalMined += rate * timeLeft;
+            timeLeft = 0;
+        } else {
+            totalGain     += rate * timeToRank;
+            simTotalMined  = nextRank.req;
+            timeLeft      -= timeToRank;
+            simRankIndex++;
+            rankUps.push(ranks[simRankIndex]);
+        }
+    }
+
+    if (totalGain > 0) {
+        game.bits       += totalGain;
+        game.totalMined += totalGain;
+
+        if (simRankIndex > game.rankIndex) {
+            rankUps.forEach(r => log('⬆ ' + r.name + ' (offline)'));
+            game.rankIndex = simRankIndex;
+            if (rankUps.length > 0) notify(`Ranked up ${rankUps.length}× while away!`, 'rank');
+        }
+
+        clickSkins.forEach(skin => {
+            if (skin.requirement && !game.unlockedSkins.includes(skin.icon) && game.totalMined >= skin.requirement) {
+                game.unlockedSkins.push(skin.icon);
+                notify('Click skin unlocked: ' + skin.name + '!', 'secret');
+            }
+        });
+
+        log('⏰ +' + fmt(totalGain) + ' (' + fmtTime(Math.round(cappedSeconds)) + ' offline)');
+        notify('Earned ' + fmt(totalGain) + ' Bits offline', 'offline');
+    }
 }
 
 // ==================== EVENT LISTENERS ====================
@@ -1522,17 +1626,10 @@ if (saved) {
         
         const now = Date.now();
         const lastSave = game.lastSaveTime || now;
-        const offlineTime = Math.min((now - lastSave) / 1000, 28800);
+        const offlineTime = (now - lastSave) / 1000;
         
         if (offlineTime > 60) {
-            const offlineRate = getWorkerRate();
-            const offlineGain = offlineRate * offlineTime * 0.5;
-            if (offlineGain > 0) {
-                game.bits += offlineGain;
-                game.totalMined += offlineGain;
-                log('⏰ +' + fmt(offlineGain));
-                notify('Earned ' + fmt(offlineGain) + ' Bits offline', 'offline');
-            }
+            simulateOffline(offlineTime);
         }
         log('✓ LOADED');
     } catch (e) {
