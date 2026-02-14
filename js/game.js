@@ -28,6 +28,7 @@ const defaultGame = {
     peakBitsPerSecond: 0,
     longestSession: 0,
     timesPrestiged: 0,
+    lastAscensionTime: 0,
     rarestBitFound: '',
     workers: {
         bot: {name: 'Mining Bot', icon: '⚙️', count: 0, baseCost: 50, rate: 1, costMult: 1.15},
@@ -97,7 +98,7 @@ const achievements = {
     enlightened: {name: 'Enlightened', desc: 'Reach Ascension 3', icon: '✨', requirement: () => game.prestige >= 3, reward: 100},
     transcended: {name: 'Transcended', desc: 'Reach Ascension 10', icon: '🔆', requirement: () => game.prestige >= 10, reward: 200},
     trueMiner: {name: 'True Miner', desc: 'Reach God Rank', icon: '🏆', requirement: () => game.rankIndex >= 9, reward: 500},
-    speedrunner: {name: 'Speedrunner', desc: 'Get 1M bits in under 5 min', icon: '⚡', requirement: () => game.totalMined >= 1000000 && game.time <= 300, reward: 100, secret: true},
+    speedrunner: {name: 'Speedrunner', desc: 'Get 1M bits in under 5 min', icon: '⚡', requirement: () => game.totalMined >= 1000000 && (game.time - (game.lastAscensionTime || 0)) <= 300, reward: 100, secret: true},
     idleLegend: {name: 'Idle Legend', desc: 'Get 1M bits without clicking', icon: '😴', requirement: () => game.totalMined >= 1000000 && game.clicks === 0, reward: 150, secret: true},
     starCatcher: {name: 'Star Catcher', desc: 'Catch a golden star', icon: '⭐', requirement: () => false, reward: 75, secret: true},
     nightOwl: {name: 'Night Owl', desc: 'Play between 2-4 AM', icon: '🦉', requirement: () => {
@@ -131,7 +132,7 @@ const achievements = {
         return (recent[recent.length - 1] - recent[0]) < 5000;
     }, reward: 50, secret: true},
     fingerDestroyer: {name: 'Finger Destroyer', desc: 'Click 500 times in one session', icon: '💪', requirement: () => game.clicks >= 500, reward: 75, secret: true},
-    noLife: {name: 'No Life', desc: 'Click 10,000 times total', icon: '🎮', requirement: () => game.clicks >= 10000, reward: 100, secret: true},
+    noLife: {name: 'No Life', desc: 'Click 10,000 times total', icon: '🎮', requirement: () => game.totalClicks >= 10000, reward: 100, secret: true},
     midnightMiner: {name: 'Midnight Miner', desc: 'Play at exactly midnight', icon: '🌙', requirement: () => {
         const now = new Date();
         return now.getHours() === 0 && now.getMinutes() === 0;
@@ -590,6 +591,22 @@ function checkAchievements() {
             if (key === 'theGlitch') {
                 unlockTheme('matrix');
                 log('🎨 MATRIX THEME UNLOCKED!');
+            }
+            if (key === 'trueMiner') {
+                unlockTheme('neon');
+                log('🎨 NEON THEME UNLOCKED!');
+            }
+            if (key === 'workforce') {
+                unlockTheme('craftsman');
+                log('🎨 CRAFTSMAN THEME UNLOCKED!');
+            }
+            if (key === 'trillionaire') {
+                unlockTheme('gaming');
+                log('🎨 GAMING THEME UNLOCKED!');
+            }
+            if (key === 'transcended') {
+                unlockTheme('retro');
+                log('🎨 RETRO THEME UNLOCKED!');
             }
             
             updateAchievements();
@@ -1369,6 +1386,7 @@ if (prestigeBtn) {
         game.prestige++;
         game.sessionPrestiges++;
         game.timesPrestiged = (game.timesPrestiged || 0) + 1;
+        game.lastAscensionTime = game.time;
         game.bits = 0;
         game.totalMined = 0;
         game.clickPower = 1;
